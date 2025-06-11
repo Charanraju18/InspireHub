@@ -1,25 +1,53 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useAuth } from "../authContext";
 
 const SignInInner = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+  const { login } = useAuth();
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post("http://localhost:5000/api/auth/login", {
+        email,
+        password
+      });
+      if (res.data && res.data.user) {
+        login(res.data.user, res.data.token); 
+        navigate("/"); 
+      } else {
+        setError("Invalid credentials or account does not exist.");
+      }
+    } catch (err) {
+      setError(
+        err.response?.data?.message || "Invalid credentials or account does not exist."
+      );
+    }
+  };
+
   return (
-    <div className='account py-120 position-relative'>
-      <div className='container'>
-        <div className='row gy-4 align-items-center'>
-          <div className='col-lg-6'>
-            <div className='bg-main-25 border border-neutral-30 rounded-8 p-32'>
+    <div className='account py-120 position-relative d-flex align-items-center justify-content-center' style={{ minHeight: '100vh' }}>
+      <div className='container d-flex justify-content-center align-items-center' style={{ minHeight: '80vh' }}>
+        <div className='row gy-4 align-items-center justify-content-center w-100'>
+          <div className='col-lg-6 d-flex justify-content-center'>
+            <div className='bg-main-25 border border-neutral-30 rounded-8 p-32' style={{ minWidth: 400, maxWidth: 800, width: '100%' }}>
               <div className='mb-40'>
                 <h3 className='mb-16 text-neutral-500'>Welcome Back!</h3>
                 <p className='text-neutral-500'>
                   Sign in to your account and join us
                 </p>
               </div>
-              <form action='#'>
+              <form onSubmit={handleSubmit}>
                 <div className='mb-24'>
                   <label
                     htmlFor='email'
@@ -32,6 +60,8 @@ const SignInInner = () => {
                     className='common-input rounded-pill'
                     id='email'
                     placeholder='Enter Your Email...'
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
                   />
                 </div>
                 <div className='mb-16'>
@@ -47,15 +77,17 @@ const SignInInner = () => {
                       className='common-input rounded-pill pe-44'
                       id='password'
                       placeholder='Enter Your Password...'
+                      value={password}
+                      onChange={e => setPassword(e.target.value)}
                     />
                     <span
-                      className={`toggle-password position-absolute top-50 inset-inline-end-0 me-16 translate-middle-y ph-bold ${
-                        passwordVisible ? "ph-eye" : "ph-eye-closed"
-                      }`}
+                      className={`toggle-password position-absolute top-50 inset-inline-end-0 me-16 translate-middle-y ph-bold ${passwordVisible ? "ph-eye" : "ph-eye-closed"
+                        }`}
                       onClick={togglePasswordVisibility}
                     ></span>
                   </div>
                 </div>
+                {error && <div className="text-danger mb-2">{error}</div>}
                 <div className='mb-16 text-end'>
                   <Link
                     to='#'
@@ -87,11 +119,11 @@ const SignInInner = () => {
               </form>
             </div>
           </div>
-          <div className='col-lg-6 d-lg-block d-none'>
+          {/* <div className='col-lg-6 d-lg-block d-none'>
             <div className='account-img'>
               <img src='assets/images/thumbs/account-img.png' alt='' />
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
@@ -99,3 +131,4 @@ const SignInInner = () => {
 };
 
 export default SignInInner;
+

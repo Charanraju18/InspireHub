@@ -1,12 +1,15 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import $ from "jquery";
 import "select2/dist/css/select2.min.css";
 import "select2/dist/js/select2.full.min.js";
 import "select2";
+import { useAuth } from "../authContext";
 
 const HeaderOne = () => {
   let { pathname } = useLocation();
+  const navigate = useNavigate();
+  const { isAuthenticated, logout } = useAuth();
   const [scroll, setScroll] = useState(false);
   const [isMenuActive, setIsMenuActive] = useState(false);
 
@@ -58,6 +61,25 @@ const HeaderOne = () => {
   const handleSubmenuClick = (index) => {
     if (windowWidth < 992) {
       setActiveSubmenu((prevIndex) => (prevIndex === index ? null : index));
+    }
+  };
+
+  // Profile tab logic
+  const handleProfileClick = () => {
+    if (isAuthenticated) {
+      navigate("/profile");
+    } else {
+      navigate("/sign-in");
+    }
+  };
+
+  // Header right user icon logic
+  const handleUserIconClick = () => {
+    if (isAuthenticated) {
+      logout();
+      navigate("/"); // Redirect to home page after logout
+    } else {
+      navigate("/sign-in");
     }
   };
 
@@ -184,12 +206,12 @@ const HeaderOne = () => {
                                 pathname === link.to && "activePage"
                               }`}
                             >
-                              <Link
-                                to={link.to}
+                              <a
+                                href={link.to}
                                 className='nav-submenu__link hover-bg-neutral-30'
                               >
                                 {link.label}
-                              </Link>
+                              </a>
                             </li>
                           ))}
                         </ul>
@@ -201,12 +223,23 @@ const HeaderOne = () => {
                           pathname === item.to && "activePage"
                         }`}
                       >
-                        <Link to={item.to} className='nav-menu__link'>
+                        <a href={item.to} className='nav-menu__link'>
                           {item.label}
-                        </Link>
+                        </a>
                       </li>
                     )
                   )}
+                  {/* Profile tab beside Contact */}
+                  {/* REMOVE underline and icon from Profile tab */}
+                  <li className='nav-menu__item'>
+                    <button
+                      onClick={handleProfileClick}
+                      className='nav-menu__link btn btn-link p-0 text-main-600'
+                      style={{ fontWeight: 600, fontSize: "1rem", textDecoration: "none" }}
+                    >
+                      Profile
+                    </button>
+                  </li>
                 </ul>
               </div>
               {/* Menu End  */}
@@ -229,12 +262,14 @@ const HeaderOne = () => {
                   <i className='ph-bold ph-magnifying-glass' />
                 </button>
               </form>
-              <Link
-                to='/sign-in'
+              <button
+                onClick={handleUserIconClick}
                 className='info-action w-52 h-52 bg-main-25 hover-bg-main-600 border border-neutral-30 rounded-circle flex-center text-2xl text-neutral-500 hover-text-white hover-border-main-600'
+                style={{ marginRight: 8 }}
+                title={isAuthenticated ? 'Sign Out' : 'Sign In'}
               >
-                <i className='ph ph-user-circle' />
-              </Link>
+                <i className={`ph ${isAuthenticated ? 'ph-sign-out' : 'ph-user-circle'}`} />
+              </button>
               <button
                 type='button'
                 className='toggle-mobileMenu d-lg-none text-neutral-200 flex-center'
