@@ -19,7 +19,7 @@ const EventsPage = () => {
       <HeaderOne />
 
       {/* Breadcrumb */}
-      <Breadcrumb title={"Events"} />
+      <Breadcrumb title={"Live Events"} />
 
       {/* EventsAllOne */}
       <EventsAllOne />
