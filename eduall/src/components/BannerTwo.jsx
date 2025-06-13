@@ -53,8 +53,10 @@ const BannerTwo = () => {
                 And Succeed
               </h1>
               <p className='text-neutral-500 text-line-2 wow bounceInUp'>
-                Welcome to EduAll, where learning knows no bounds. Whether
-                you're a student, professional, or lifelong learner...
+                {/* Welcome to EduAll, where learning knows no bounds. Whether
+                you're a student, professional, or lifelong learner... */}
+                Welcome to InspireHub, Real Stories. Real Skills.
+                Learn from Experience. Grow with InspireHub...
               </p>
               <div className='buttons-wrapper flex-align flex-wrap gap-24 mt-40'>
                 <Link
@@ -79,7 +81,8 @@ const BannerTwo = () => {
           <div className='col-xl-6'>
             <div className='banner-thumb position-relative'>
               <img
-                src='assets/images/thumbs/banner-img-2.png'
+                // src='assets/images/thumbs/banner-img-2.png'
+                src='assets/images/thumbs/homebanner.png'
                 alt=''
                 className='banner-thumb__img rounded-12'
                 data-aos='fade-up'

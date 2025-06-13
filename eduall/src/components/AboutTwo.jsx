@@ -9,7 +9,7 @@ const AboutTwo = () => {
             <div className='col-xl-6 pe-xl-5'>
               <div className='about-two__thumb position-relative'>
                 <img
-                  src='assets/images/thumbs/about-two-img.png'
+                  src='assets/images/thumbs/HomeAboutPiccc.png'
                   className='rounded-16 cover-img  wow bounceIn'
                   alt=''
                   data-tilt=''
@@ -18,23 +18,41 @@ const AboutTwo = () => {
                   data-tilt-perspective={5000}
                   data-tilt-full-page-listening=''
                 />
-                <span className='shadow-main-three w-80 h-80 flex-center bg-main-three-600 rounded-circle position-absolute inset-block-start-0 inset-inline-start-0 mt-40 ms--40 animation-upDown'>
+                {/* <span className='shadow-main-three w-80 h-80 flex-center bg-main-three-600 rounded-circle position-absolute inset-block-start-0 inset-inline-start-0 mt-40 ms--40 animation-upDown'>
                   <img
                     src='assets/images/icons/bulb-icon.png'
                     className=''
                     alt=''
                   />
-                </span>
+                </span> */}
+
+                {/*  */}
+                <div
+                    className='offer-message style-two position-absolute px-24 py-12 rounded-12 bg-white fw-medium d-inline-flex align-items-center gap-16 box-shadow-lg animation-upDown'
+                    style={{ left: '0px', top: '0', maxWidth: 'max-content' }}
+                  >
+                    <span className='flex-shrink-0 w-48 h-48 bg-main-two-600 text-white text-2xl d-flex justify-content-center align-items-center rounded-circle'>
+                      <img src='assets/images/icons/stars-white.png' alt='' />
+                    </span>
+                    <div>
+                      <span className='text-lg text-neutral-700 d-block'>
+                        4.6
+                        <span className='text-neutral-100'>(2.4k)</span>
+                      </span>
+                      <span className='text-neutral-500'>AVG Reviews</span>
+                    </div>
+                  </div>
+                  {/*  */}
                 <div className='offer-message  two px-24 py-12 rounded-12 bg-white fw-medium box-shadow-lg flex-align d-inline-flex gap-16 animation-upDown'>
                   <span className='flex-shrink-0 w-48 h-48 bg-purple-400 text-white text-2xl flex-center rounded-circle'>
                     <i className='ph ph-watch' />
                   </span>
                   <div>
-                    <h6 className='mb-4'>20% OFF</h6>
-                    <span className=''>For All Courses</span>
+                    <h6 className='mb-4'>Time Saving</h6>
+                    <span className=''>Flexible Timings</span>
                   </div>
                 </div>
-                <div className='offer-message style-two  me-lg-0 me-24 px-24 py-12 rounded-12 bg-white fw-medium flex-align d-inline-flex gap-16 box-shadow-lg animation-upDown'>
+                {/* <div className='offer-message style-two  me-lg-0 me-24 px-24 py-12 rounded-12 bg-white fw-medium flex-align d-inline-flex gap-16 box-shadow-lg animation-upDown'>
                   <span className='flex-shrink-0 w-48 h-48 bg-main-two-600 text-white text-2xl flex-center rounded-circle'>
                     <img src='assets/images/icons/stars-white.png' alt='' />
                   </span>
@@ -45,7 +63,7 @@ const AboutTwo = () => {
                     </span>
                     <span className='text-neutral-500'>AVG Reviews</span>
                   </div>
-                </div>
+                </div> */}
                 <div className='position-absolute inset-block-end-0 inset-inline-end-0 me-lg-0 me-24 px-24 py-12 rounded-12 bg-white fw-medium flex-align d-inline-flex gap-16 box-shadow-lg animation-upDown'>
                   <div className='text-center'>
                     <img
@@ -53,9 +71,9 @@ const AboutTwo = () => {
                       className='d-sm-flex d-none mb-24'
                       alt=''
                     />
-                    <h6 className='mb-4 text-neutral-700 text-2xl'>Excelent</h6>
+                    <h6 className='mb-4 text-neutral-700 text-2xl'>Excellent</h6>
                     <span className='text-sm text-neutral-500'>
-                      90% Satisfied Clients
+                      90% Satisfied Learners
                     </span>
                   </div>
                 </div>
@@ -71,13 +89,14 @@ const AboutTwo = () => {
                     <h5 className='text-main-600 mb-0'>Why Choose Us</h5>
                   </div>
                   <h2 className='mb-24 wow bounceIn'>
-                    Over 16 Years in Distant learning for Skill Development
+                   Shaping the Future of Learning — One Story at a Time
                   </h2>
                   <p className='text-neutral-500 text-line-2 wow bounceInUp'>
-                    We are passionate about transforming lives through
-                    education. Founded with a vision to make learning accessible
-                    to all, we believe in the power of knowledge to unlock
-                    opportunities and shape the future.
+                    At InspireHub, we're driven by a mission to make learning more human, relatable, 
+                    and impactful. While we're just getting started, our vision is bold — to connect 
+                    learners with real professionals who share their journeys, struggles, and skills. 
+                    We believe education becomes powerful when it's guided by experience, and we're here
+                    to build that bridge, one learner and one mentor at a time..
                   </p>
                 </div>
                 <div className='grid-cols-2'>
@@ -98,7 +117,7 @@ const AboutTwo = () => {
                         Academic Excellence
                       </h6>
                       <p className='text-neutral-500 text-line-2'>
-                        Through our curated courses, interactive content
+                        Through curated, experience-driven content, we empower learners with real-world knowledge and insights.
                       </p>
                     </div>
                   </div>
@@ -116,11 +135,10 @@ const AboutTwo = () => {
                     </span>
                     <div className='flex-grow-1'>
                       <h6 className='text-neutral-800 text-xl fw-medium mb-8'>
-                        Course Offerings
+                         Learning Paths
                       </h6>
                       <p className='text-neutral-500 text-line-2'>
-                        Personalized learning paths, we empower learners to
-                        acquire{" "}
+                        Personalized guidance through posts and journeys shared by professionals — matched to your interests and goals.{" "}
                       </p>
                     </div>
                   </div>
@@ -141,7 +159,7 @@ const AboutTwo = () => {
                         Innovative Learning{" "}
                       </h6>
                       <p className='text-neutral-500 text-line-2'>
-                        Immerse yourself in an innovative learning
+                        Immerse yourself in a platform where interactive content and real experiences come together to fuel practical learning.
                       </p>
                     </div>
                   </div>
@@ -159,10 +177,10 @@ const AboutTwo = () => {
                     </span>
                     <div className='flex-grow-1'>
                       <h6 className='text-neutral-800 text-xl fw-medium mb-8'>
-                        Sustainability Initiative
+                        Mentorship-Led Growth
                       </h6>
                       <p className='text-neutral-500 text-line-2'>
-                        Be part of a university that cares about the planet.{" "}
+                        Gain wisdom from mentors who've lived the tech journey — because learning is better when it’s inspired by experience.{" "}
                       </p>
                     </div>
                   </div>

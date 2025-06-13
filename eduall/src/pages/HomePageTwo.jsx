@@ -41,7 +41,7 @@ const HomePageTwo = () => {
       <FeaturesTwo />
 
       {/* CertificateTwo */}
-      <CertificateTwo />
+      {/* <CertificateTwo /> */}
 
       {/* ExploreCourseTwo */}
       <ExploreCourseTwo />

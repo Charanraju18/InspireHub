@@ -14,10 +14,12 @@ const InfoSectionOne = () => {
               </span>
               <div className='flex-grow-1'>
                 <h5 className='mb-8 text-white fw-medium'>
-                  50,000 online courses
+                  {/* 50,000 online courses */}
+                  Live Online Sessions
                 </h5>
                 <span className='text-sm text-white'>
-                  Enjoy a variety of fresh topics
+                  {/* Enjoy a variety of fresh topics */}
+                  Real-Time Learning from Real Tech Pros.
                 </span>
               </div>
             </div>
@@ -51,9 +53,13 @@ const InfoSectionOne = () => {
                 <i className='animate__heartBeat ph-bold ph-clock' />
               </span>
               <div className='flex-grow-1'>
-                <h5 className='mb-8 text-white fw-medium'>Life time access</h5>
+                <h5 className='mb-8 text-white fw-medium'>
+                  {/* Life time access */}
+                  Learn at Your Own Pace
+                  </h5>
                 <span className='text-sm text-white'>
-                  Learn on your schedule{" "}
+                  {/* Learn on your schedule */}
+                  Flexible sessions that fit your schedule{" "}
                 </span>
               </div>
             </div>
@@ -68,9 +74,13 @@ const InfoSectionOne = () => {
                 <i className='animate__heartBeat ph-bold ph-certificate' />
               </span>
               <div className='flex-grow-1'>
-                <h5 className='mb-8 text-white fw-medium'>Get Certificate</h5>
+                <h5 className='mb-8 text-white fw-medium'>
+                  {/* Get Certificate */}
+                  Certified by Experience
+                  </h5>
                 <span className='text-sm text-white'>
-                  When Courses Complete
+                  {/* When Courses Complete */}
+                   Certificates guided by real-world mentors.
                 </span>
               </div>
             </div>

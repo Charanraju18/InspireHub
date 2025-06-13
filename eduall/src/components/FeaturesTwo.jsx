@@ -26,7 +26,7 @@ const FeaturesTwo = () => {
               creativity. What you find just might...
             </p>
             <Link
-              to='/course-list-view'
+              to='/course'
               className='item-hover__text flex-align d-inline-flex gap-8 text-main-600 mt-24 hover-text-decoration-underline transition-1 fw-semibold'
             >
               Read More
@@ -49,11 +49,11 @@ const FeaturesTwo = () => {
                 />
               </span>
               <h4 className='mb-16 transition-1 item-hover__text'>
-                Learn the latest skills
+                Learn the latest skills until now 
               </h4>
               <p className='transition-1 item-hover__text text-line-2'>
-                Quality education shouldn't break the bank. We offer competitive
-                pricing and payment options
+               Discover valuable insights and practical tips from industry professionals. 
+               Stay updated with trending skills through engaging posts.
               </p>
               <span className='item-hover__bg w-48 h-1 bg-neutral-500 mt-32' />
             </div>
@@ -72,11 +72,11 @@ const FeaturesTwo = () => {
                 />
               </span>
               <h4 className='mb-16 transition-1 item-hover__text'>
-                Get ready for a career
+                Shape Your Career Path
               </h4>
               <p className='transition-1 item-hover__text text-line-2'>
-                Engage in dynamic and interactive learning experiences. Our
-                courses are designed
+                Explore real-world experiences, advice, and techniques shared 
+                by experienced learners and mentors to guide your professional growth.
               </p>
               <span className='item-hover__bg w-48 h-1 bg-neutral-500 mt-32' />
             </div>
@@ -95,11 +95,11 @@ const FeaturesTwo = () => {
                 />
               </span>
               <h4 className='mb-16 transition-1 item-hover__text'>
-                Earn a Certificate
+                Learn at Your Own Pace
               </h4>
               <p className='transition-1 item-hover__text text-line-2'>
-                Join a vibrant and supportive learning community. Connect with
-                fellow learners
+                Scroll through posts that match your interests. Whether you're 
+                browsing or diving deep, the journey is yours to choose.
               </p>
               <span className='item-hover__bg w-48 h-1 bg-neutral-500 mt-32' />
             </div>
