@@ -84,6 +84,7 @@ const HeaderOne = () => {
   };
 
   const menuItems = [
+    { to: "/", label: "Home" },
     { to: "/about", label: "About" },
     { to: "/roadmaps", label: "Roadmaps" },
     { to: "/events", label: "Live Events" },
