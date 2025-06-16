@@ -1,9 +1,10 @@
 // import React, { useState, useEffect } from "react";
 // import { LikeOutlined, LikeFilled } from "@ant-design/icons";
+// import { CommentOutlined, ShareAltOutlined } from "@ant-design/icons";
 // import axios from "axios";
 
 // const CourseListView = () => {
-//      const [postList, setPostList] = useState([]);
+//   const [postList, setPostList] = useState([]);
 
 //   // Fetch posts from backend
 //   useEffect(() => {
@@ -43,6 +44,14 @@
 
 //   const handleFollow = (id) => {
 //     alert(`You are now following the user with ID: ${id}`);
+//   };
+
+//   const handleComment = (id) => {
+//     alert(`Comment on post ID: ${id}`);
+//   };
+
+//   const handleShare = (id) => {
+//     alert(`Shared post ID: ${id}`);
 //   };
 
 //   return (
@@ -99,7 +108,7 @@
 //                     onClick={() => handleFollow(post._id)}
 //                     style={{
 //                       padding: "8px 16px",
-//                       backgroundColor: "#0661B7", // Updated color
+//                       backgroundColor: "#0661B7",
 //                       color: "#fff",
 //                       borderRadius: "8px",
 //                       border: "none",
@@ -122,8 +131,8 @@
 //                       borderRadius: "12px",
 //                       marginBottom: "16px",
 //                       width: "100%",
-//                       height: "auto", // Dynamic height
-//                       maxHeight: "400px", // Optional
+//                       height: "auto",
+//                       maxHeight: "400px",
 //                       objectFit: "cover",
 //                     }}
 //                   />
@@ -174,6 +183,34 @@
 //                       )}
 //                       {post.likes} Likes
 //                     </button>
+//                     <button
+//                       type="button"
+//                       onClick={() => handleComment(post._id)}
+//                       style={{
+//                         marginLeft: "16px",
+//                         color: "#888",
+//                         background: "none",
+//                         border: "none",
+//                         cursor: "pointer",
+//                         fontSize: "16px",
+//                       }}
+//                     >
+//                       <CommentOutlined /> Comment
+//                     </button>
+//                     <button
+//                       type="button"
+//                       onClick={() => handleShare(post._id)}
+//                       style={{
+//                         marginLeft: "16px",
+//                         color: "#888",
+//                         background: "none",
+//                         border: "none",
+//                         cursor: "pointer",
+//                         fontSize: "16px",
+//                       }}
+//                     >
+//                       <ShareAltOutlined /> Share
+//                     </button>
 //                   </div>
 //                   <div>
 //                     <p
@@ -198,20 +235,29 @@
 
 // export default CourseListView;
 
+
 import React, { useState, useEffect } from "react";
-import { LikeOutlined, LikeFilled } from "@ant-design/icons";
-import { CommentOutlined, ShareAltOutlined } from "@ant-design/icons";
+import {
+  LikeOutlined,
+  LikeFilled,
+  CommentOutlined,
+  ShareAltOutlined,
+} from "@ant-design/icons";
 import axios from "axios";
 
 const CourseListView = () => {
   const [postList, setPostList] = useState([]);
 
-  // Fetch posts from backend
+  // Fetch posts from the backend
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const response = await axios.get("http://localhost:5000/api/posts");
-        setPostList(response.data);
+        const postsWithLikes = response.data.map((post) => ({
+          ...post,
+          isLiked: false, // Default state
+        }));
+        setPostList(postsWithLikes);
       } catch (error) {
         console.error("Error fetching posts:", error);
       }
@@ -221,6 +267,7 @@ const CourseListView = () => {
 
   const handleLike = async (id) => {
     try {
+      // Find the post to update
       const post = postList.find((p) => p._id === id);
       const updatedPost = {
         ...post,
@@ -228,12 +275,12 @@ const CourseListView = () => {
         isLiked: !post.isLiked,
       };
 
-      // Update backend
+      // Update the backend
       await axios.put(`http://localhost:5000/api/posts/${id}`, {
         likes: updatedPost.likes,
       });
 
-      // Update local state
+      // Update the frontend state
       setPostList((prevPosts) =>
         prevPosts.map((p) => (p._id === id ? updatedPost : p))
       );
@@ -244,14 +291,6 @@ const CourseListView = () => {
 
   const handleFollow = (id) => {
     alert(`You are now following the user with ID: ${id}`);
-  };
-
-  const handleComment = (id) => {
-    alert(`Comment on post ID: ${id}`);
-  };
-
-  const handleShare = (id) => {
-    alert(`Shared post ID: ${id}`);
   };
 
   return (
@@ -273,7 +312,7 @@ const CourseListView = () => {
                 <div className="flex-between mb-16">
                   <div className="flex-align gap-12">
                     <img
-                      src={post.profilePicture}
+                      src={post.profilePicture || "default-image.jpg"}
                       alt="Instructor"
                       className="w-48 h-48 object-fit-cover rounded-circle"
                       style={{
@@ -360,20 +399,25 @@ const CourseListView = () => {
 
                 {/* Post Footer */}
                 <div className="post-footer flex-between mt-12">
-                  <div>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "16px",
+                    }}
+                  >
+                    {/* Like Button */}
                     <button
                       type="button"
-                      className="flex-align gap-4 text-main-600 text-lg"
                       onClick={() => handleLike(post._id)}
                       style={{
                         display: "flex",
                         alignItems: "center",
                         gap: "8px",
-                        color: post.isLiked ? "#007BFF" : "#888",
-                        fontSize: "16px",
                         background: "none",
                         border: "none",
                         cursor: "pointer",
+                        color: post.isLiked ? "#007BFF" : "#888",
                       }}
                     >
                       {post.isLiked ? (
@@ -381,37 +425,26 @@ const CourseListView = () => {
                       ) : (
                         <LikeOutlined style={{ fontSize: "20px" }} />
                       )}
-                      {post.likes} Likes
+                      <span>{post.likes}</span>
                     </button>
-                    <button
-                      type="button"
-                      onClick={() => handleComment(post._id)}
+
+                    {/* Comment and Share Icons */}
+                    <CommentOutlined
                       style={{
-                        marginLeft: "16px",
-                        color: "#888",
-                        background: "none",
-                        border: "none",
+                        fontSize: "20px",
                         cursor: "pointer",
-                        fontSize: "16px",
+                        color: "#888",
                       }}
-                    >
-                      <CommentOutlined /> Comment
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleShare(post._id)}
+                    />
+                    <ShareAltOutlined
                       style={{
-                        marginLeft: "16px",
-                        color: "#888",
-                        background: "none",
-                        border: "none",
+                        fontSize: "20px",
                         cursor: "pointer",
-                        fontSize: "16px",
+                        color: "#888",
                       }}
-                    >
-                      <ShareAltOutlined /> Share
-                    </button>
+                    />
                   </div>
+
                   <div>
                     <p
                       className="text-sm text-neutral-500"
@@ -434,3 +467,4 @@ const CourseListView = () => {
 };
 
 export default CourseListView;
+

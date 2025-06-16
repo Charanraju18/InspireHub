@@ -1,4 +1,3 @@
-
 const express = require("express");
 const multer = require("multer");
 const Post = require("../models/post");
@@ -40,6 +39,24 @@ router.get("/", async (req, res) => {
     res.status(200).json(posts);
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch posts" });
+  }
+});
+
+// Update likes for a post
+router.put("/:id", async (req, res) => {
+  try {
+    const { likes } = req.body;
+    const post = await Post.findById(req.params.id);
+
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    post.likes = likes;
+    const updatedPost = await post.save();
+    res.status(200).json(updatedPost);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to update likes" });
   }
 });
 
