@@ -18,7 +18,7 @@ import CoursePage from "./pages/CoursePage.jsx";
 import CourseDetailsPage from "./pages/CourseDetailsPage.jsx";
 import CourseListViewPage from "./pages/CourseListViewPage.jsx";
 import CreateEventsPage from "./pages/CreateEventPage.jsx";
-import CreateRoadMap from "./pages/CreateRoadMap.jsx";
+// import CreateRoadMap from "./pages/CreateRoadMap.jsx";
 import EventDetailsPage from "./pages/EventDetailsPage.jsx";
 import EventsPage from "./pages/EventsPage.jsx";
 import FaqPage from "./pages/FaqPage.jsx";
