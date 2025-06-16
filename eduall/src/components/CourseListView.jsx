@@ -1,17 +1,25 @@
 // import React, { useState, useEffect } from "react";
-// import { LikeOutlined, LikeFilled } from "@ant-design/icons";
-// import { CommentOutlined, ShareAltOutlined } from "@ant-design/icons";
+// import {
+//   LikeOutlined,
+//   LikeFilled,
+//   CommentOutlined,
+//   ShareAltOutlined,
+// } from "@ant-design/icons";
 // import axios from "axios";
 
 // const CourseListView = () => {
 //   const [postList, setPostList] = useState([]);
 
-//   // Fetch posts from backend
+//   // Fetch posts from the backend
 //   useEffect(() => {
 //     const fetchPosts = async () => {
 //       try {
 //         const response = await axios.get("http://localhost:5000/api/posts");
-//         setPostList(response.data);
+//         const postsWithLikes = response.data.map((post) => ({
+//           ...post,
+//           isLiked: false, // Default state
+//         }));
+//         setPostList(postsWithLikes);
 //       } catch (error) {
 //         console.error("Error fetching posts:", error);
 //       }
@@ -22,36 +30,40 @@
 //   const handleLike = async (id) => {
 //     try {
 //       const post = postList.find((p) => p._id === id);
+
+//       if (!post) return;
+
 //       const updatedPost = {
 //         ...post,
-//         likes: post.isLiked ? post.likes - 1 : post.likes + 1,
 //         isLiked: !post.isLiked,
+//         likes: post.isLiked ? post.likes - 1 : post.likes + 1,
 //       };
 
-//       // Update backend
-//       await axios.put(`http://localhost:5000/api/posts/${id}`, {
-//         likes: updatedPost.likes,
-//       });
-
-//       // Update local state
+//       // Optimistically update the frontend state
 //       setPostList((prevPosts) =>
 //         prevPosts.map((p) => (p._id === id ? updatedPost : p))
 //       );
+
+//       // Update the backend
+//       await axios.put(`http://localhost:5000/api/posts/${id}`, {
+//         likes: updatedPost.likes,
+//       });
 //     } catch (error) {
 //       console.error("Error updating likes:", error);
+
+//       // Revert state if the API call fails
+//       setPostList((prevPosts) =>
+//         prevPosts.map((p) =>
+//           p._id === id
+//             ? { ...p, isLiked: !p.isLiked, likes: p.likes + (p.isLiked ? -1 : 1) }
+//             : p
+//         )
+//       );
 //     }
 //   };
 
 //   const handleFollow = (id) => {
 //     alert(`You are now following the user with ID: ${id}`);
-//   };
-
-//   const handleComment = (id) => {
-//     alert(`Comment on post ID: ${id}`);
-//   };
-
-//   const handleShare = (id) => {
-//     alert(`Shared post ID: ${id}`);
 //   };
 
 //   return (
@@ -73,7 +85,7 @@
 //                 <div className="flex-between mb-16">
 //                   <div className="flex-align gap-12">
 //                     <img
-//                       src={post.profilePicture}
+//                       src={post.profilePicture || "default-image.jpg"}
 //                       alt="Instructor"
 //                       className="w-48 h-48 object-fit-cover rounded-circle"
 //                       style={{
@@ -160,20 +172,25 @@
 
 //                 {/* Post Footer */}
 //                 <div className="post-footer flex-between mt-12">
-//                   <div>
+//                   <div
+//                     style={{
+//                       display: "flex",
+//                       alignItems: "center",
+//                       gap: "16px",
+//                     }}
+//                   >
+//                     {/* Like Button */}
 //                     <button
 //                       type="button"
-//                       className="flex-align gap-4 text-main-600 text-lg"
 //                       onClick={() => handleLike(post._id)}
 //                       style={{
 //                         display: "flex",
 //                         alignItems: "center",
 //                         gap: "8px",
-//                         color: post.isLiked ? "#007BFF" : "#888",
-//                         fontSize: "16px",
 //                         background: "none",
 //                         border: "none",
 //                         cursor: "pointer",
+//                         color: post.isLiked ? "#007BFF" : "#888",
 //                       }}
 //                     >
 //                       {post.isLiked ? (
@@ -181,37 +198,26 @@
 //                       ) : (
 //                         <LikeOutlined style={{ fontSize: "20px" }} />
 //                       )}
-//                       {post.likes} Likes
+//                       <span>{post.likes}</span>
 //                     </button>
-//                     <button
-//                       type="button"
-//                       onClick={() => handleComment(post._id)}
+
+//                     {/* Comment and Share Icons */}
+//                     <CommentOutlined
 //                       style={{
-//                         marginLeft: "16px",
-//                         color: "#888",
-//                         background: "none",
-//                         border: "none",
+//                         fontSize: "20px",
 //                         cursor: "pointer",
-//                         fontSize: "16px",
+//                         color: "#888",
 //                       }}
-//                     >
-//                       <CommentOutlined /> Comment
-//                     </button>
-//                     <button
-//                       type="button"
-//                       onClick={() => handleShare(post._id)}
+//                     />
+//                     <ShareAltOutlined
 //                       style={{
-//                         marginLeft: "16px",
-//                         color: "#888",
-//                         background: "none",
-//                         border: "none",
+//                         fontSize: "20px",
 //                         cursor: "pointer",
-//                         fontSize: "16px",
+//                         color: "#888",
 //                       }}
-//                     >
-//                       <ShareAltOutlined /> Share
-//                     </button>
+//                     />
 //                   </div>
+
 //                   <div>
 //                     <p
 //                       className="text-sm text-neutral-500"
@@ -241,8 +247,8 @@ import {
   LikeOutlined,
   LikeFilled,
   CommentOutlined,
-  ShareAltOutlined,
 } from "@ant-design/icons";
+import { FaShareAlt } from "react-icons/fa"; // FontAwesome Share Icon
 import axios from "axios";
 
 const CourseListView = () => {
@@ -267,25 +273,36 @@ const CourseListView = () => {
 
   const handleLike = async (id) => {
     try {
-      // Find the post to update
       const post = postList.find((p) => p._id === id);
+
+      if (!post) return;
+
       const updatedPost = {
         ...post,
-        likes: post.isLiked ? post.likes - 1 : post.likes + 1,
         isLiked: !post.isLiked,
+        likes: post.isLiked ? post.likes - 1 : post.likes + 1,
       };
+
+      // Optimistically update the frontend state
+      setPostList((prevPosts) =>
+        prevPosts.map((p) => (p._id === id ? updatedPost : p))
+      );
 
       // Update the backend
       await axios.put(`http://localhost:5000/api/posts/${id}`, {
         likes: updatedPost.likes,
       });
-
-      // Update the frontend state
-      setPostList((prevPosts) =>
-        prevPosts.map((p) => (p._id === id ? updatedPost : p))
-      );
     } catch (error) {
       console.error("Error updating likes:", error);
+
+      // Revert state if the API call fails
+      setPostList((prevPosts) =>
+        prevPosts.map((p) =>
+          p._id === id
+            ? { ...p, isLiked: !p.isLiked, likes: p.likes + (p.isLiked ? -1 : 1) }
+            : p
+        )
+      );
     }
   };
 
@@ -436,7 +453,7 @@ const CourseListView = () => {
                         color: "#888",
                       }}
                     />
-                    <ShareAltOutlined
+                    <FaShareAlt
                       style={{
                         fontSize: "20px",
                         cursor: "pointer",
@@ -467,4 +484,3 @@ const CourseListView = () => {
 };
 
 export default CourseListView;
-

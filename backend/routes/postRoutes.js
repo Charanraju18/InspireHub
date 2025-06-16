@@ -4,19 +4,18 @@ const Post = require("../models/post");
 
 const router = express.Router();
 
-// Configure multer for image upload
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/"); // Directory to save uploaded images
+    cb(null, "uploads/");
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname); // Unique file name
+    cb(null, Date.now() + "-" + file.originalname);
   },
 });
 
 const upload = multer({ storage });
 
-// Create a post with image upload
+// Create post
 router.post("/", upload.single("postImage"), async (req, res) => {
   try {
     const newPost = new Post({
@@ -32,7 +31,7 @@ router.post("/", upload.single("postImage"), async (req, res) => {
   }
 });
 
-// Get all posts
+// Get posts
 router.get("/", async (req, res) => {
   try {
     const posts = await Post.find();
@@ -42,10 +41,15 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Update likes for a post
+// Update likes
 router.put("/:id", async (req, res) => {
   try {
     const { likes } = req.body;
+
+    if (typeof likes !== "number" || likes < 0) {
+      return res.status(400).json({ error: "Invalid likes count" });
+    }
+
     const post = await Post.findById(req.params.id);
 
     if (!post) {
