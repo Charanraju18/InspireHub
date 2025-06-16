@@ -20,6 +20,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // Routes
 app.use("/api/events", require("./routes/eventRoutes"));
 app.use("/api/auth", require("./routes/authRoutes"));
+//alekhya2 branch merge changed
 app.use("/api/posts", require("./routes/postRoutes"));
 
 // Root Route
