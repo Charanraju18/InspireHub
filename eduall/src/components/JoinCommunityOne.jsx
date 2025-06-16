@@ -9,11 +9,11 @@ const JoinCommunityOne = () => {
                 <div className='join-community__content'>
                   <div className='mb-40'>
                     <h2 className='mb-24 wow bounceIn'>
-                      Join the EduAll Community: Start Now
+                      Join the InspireHub Community: Start Now
                     </h2>
                     <p className='text-neutral-500 text-line-2 wow bounceInUp'>
-                      Ready to explore our courses firsthand? Sign up for a free
-                      trial lesson today and get a taste of the engaging.
+                      Ready to explore insightful content and connect with fellow learners? Sign up now and start 
+                      discovering  — all at your own pace.
                     </p>
                   </div>
                   <form action='#'>
@@ -78,7 +78,8 @@ const JoinCommunityOne = () => {
               <div className='col-lg-6'>
                 <div className='join-community__thumb text-end position-relative'>
                   <img
-                    src='assets/images/thumbs/join-community-img.png'
+                    // src='assets/images/thumbs/join-community-img.png'
+                    src='assets/images/thumbs/joinCommunity.png'
                     alt=''
                     className='wow bounceIn'
                     data-tilt=''

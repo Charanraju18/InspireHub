@@ -1,7 +1,7 @@
 import AboutTwo from "../components/AboutTwo";
 import BannerTwo from "../components/BannerTwo";
 import CategoryOne from "../components/CategoryOne";
-import CertificateTwo from "../components/CertificateTwo";
+// import CertificateTwo from "../components/CertificateTwo";
 import ExploreCourseTwo from "../components/ExploreCourseTwo";
 import FaqOne from "../components/FaqOne";
 import FeaturesTwo from "../components/FeaturesTwo";
