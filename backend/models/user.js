@@ -33,9 +33,6 @@ const userSchema = new mongoose.Schema(
             roadmapsShared: [
               { type: mongoose.Schema.Types.ObjectId, ref: "Roadmap" },
             ],
-            articlesWritten: [
-              { type: mongoose.Schema.Types.ObjectId, ref: "Article" },
-            ],
             liveEventsHosted: [
               { type: mongoose.Schema.Types.ObjectId, ref: "LiveEvent" },
             ],
@@ -70,16 +67,10 @@ const userSchema = new mongoose.Schema(
             roadmaps: [
               { type: mongoose.Schema.Types.ObjectId, ref: "Roadmap" },
             ],
-            articles: [
-              { type: mongoose.Schema.Types.ObjectId, ref: "Article" },
-            ],
           },
           completedContent: {
             roadmaps: [
               { type: mongoose.Schema.Types.ObjectId, ref: "Roadmap" },
-            ],
-            articles: [
-              { type: mongoose.Schema.Types.ObjectId, ref: "Article" },
             ],
             liveEvents: [
               { type: mongoose.Schema.Types.ObjectId, ref: "LiveEvent" },
@@ -97,9 +88,6 @@ const userSchema = new mongoose.Schema(
           wishlist: {
             roadmaps: [
               { type: mongoose.Schema.Types.ObjectId, ref: "Roadmap" },
-            ],
-            articles: [
-              { type: mongoose.Schema.Types.ObjectId, ref: "Article" },
             ],
             liveEvents: [
               { type: mongoose.Schema.Types.ObjectId, ref: "LiveEvent" },
@@ -120,38 +108,12 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-const ResourceSchema = new mongoose.Schema({
-  title: String,
-  link: String,
-  type: String,
-});
-
-const StepSchema = new mongoose.Schema({
-  title: String,
-  description: String,
-  resources: [ResourceSchema],
-});
-
-const RoadmapSchema = new mongoose.Schema(
-  {
-    title: String,
-    domain: String,
-    description: String,
-    difficulty: String,
-    estimatedDurationWeeks: Number,
-    prerequisites: [String],
-    tags: [String],
-    steps: [StepSchema],
-  },
-  { timestamps: true }
-);
-
-const articleSchema = new mongoose.Schema(
+const roadmapSchema = new mongoose.Schema(
   {
     title: { type: String, required: true, trim: true },
-    content: { type: String, required: true },
-    tags: [{ type: String, trim: true }],
-    coverImage: { type: String, trim: true },
+    description: { type: String, trim: true },
+    domain: { type: String, trim: true },
+    steps: [{ type: String, trim: true }],
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }
@@ -185,8 +147,7 @@ const liveEventSchema = new mongoose.Schema(
 );
 
 const User = mongoose.model("User", userSchema);
-const Roadmap = mongoose.model("Roadmap", RoadmapSchema);
-const Article = mongoose.model("Article", articleSchema);
+const Roadmap = mongoose.model("Roadmap", roadmapSchema);
 const LiveEvent = mongoose.model("LiveEvent", liveEventSchema);
 
-module.exports = { User, Roadmap, Article, LiveEvent };
+module.exports = { User, Roadmap, LiveEvent };
