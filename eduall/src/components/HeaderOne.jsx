@@ -62,68 +62,11 @@ const HeaderOne = () => {
   };
 
   const menuItems = [
-    // {
-    //   label: "Home",
-    //   links: [
-    //     { to: "/index-2", label: "Home" },
-    //     { to: "/", label: "Home LMS" },
-    //     { to: "/index-2", label: "Home Online Course" },
-    //     { to: "/index-3", label: "Home University" },
-    //     { to: "/index-4", label: "Home Tutor" },
-    //     { to: "/index-5", label: "Home Kindergarten" },
-    //     { to: "/index-6", label: " Home Kindergarten two" },
-    //   ],
-    // },
-    // // { to: "/index-2", label: "Home" },
     { to: "/", label: "Home" },
-    {
-      label: "Courses",
-      links: [
-        { to: "/course", label: "Course Grid View" },
-        { to: "/course-list-view", label: "Course List View" },
-        { to: "/course-details", label: "Course Details" },
-        { to: "/lesson-details", label: "Lesson Details" },
-      ],
-    },
-    {
-      label: "Pages",
-      links: [
-        { to: "/about", label: "About" },
-        { to: "/about-two", label: "About Two" },
-        { to: "/about-three", label: "About Three" },
-        { to: "/about-four", label: "About Four" },
-        { to: "/product", label: "Product" },
-        { to: "/product-details", label: "Product Details" },
-        { to: "/cart", label: "Cart" },
-        { to: "/checkout", label: "Checkout" },
-        { to: "/pricing-plan", label: "Pricing Plan" },
-        { to: "/instructor", label: "Instructor" },
-        { to: "/instructor-two", label: "Instructor Two" },
-        { to: "/instructor-details", label: "Instructor Details" },
-        { to: "/tutor", label: "Premium Tutors" },
-        { to: "/tutor-details", label: "Premium Tutors Details" },
-        { to: "/faq", label: "FAQ" },
-        { to: "/tuition-jobs", label: "Tuition Jobs" },
-        { to: "/events", label: "Events" },
-        { to: "/event-details", label: "Event Details" },
-        { to: "/apply-admission", label: "Apply Admission" },
-        { to: "/gallery", label: "Gallery" },
-        { to: "/privacy-policy", label: "Privacy Policy" },
-        { to: "/favorite-course", label: "Favorite Course" },
-        { to: "/find-tutors", label: "Find Best Tutors" },
-        { to: "/book-online-class", label: "Book Online Class" },
-      ],
-    },
-
-    {
-      label: "Blog",
-      links: [
-        { to: "/blog", label: "Blog Grid" },
-        { to: "/blog-list", label: "Blog List" },
-        { to: "/blog-classic", label: "Blog Classic" },
-        { to: "/blog-details", label: "Blog Details" },
-      ],
-    },
+    { to: "/about", label: "About" },
+    { to: "/roadmaps", label: "Roadmaps" },
+    { to: "/events", label: "Live Events" },
+    { to: "/instructor", label: "Instructors" },
     { to: "/contact", label: "Contact" },
   ];
 

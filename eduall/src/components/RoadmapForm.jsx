@@ -88,10 +88,31 @@ const RoadmapForm = () => {
     setForm({ ...form, steps: updatedSteps });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Submit to backend here
+
+    try {
+      const res = await fetch("http://localhost:5000/api/roadmaps/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.error || "Something went wrong");
+
+      alert("Roadmap submitted successfully!");
+      // Optionally reset the form
+      // setForm({ ... });
+    } catch (error) {
+      console.error(error);
+      alert("Error: " + error.message);
+    }
   };
+
 
   const inputStyle = {
     width: "100%",

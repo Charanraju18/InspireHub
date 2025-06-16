@@ -36,6 +36,8 @@ import PricingPlanPage from "./pages/PricingPlanPage.jsx";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage.jsx";
 import ProductPage from "./pages/ProductPage.jsx";
 import ProductDetailsPage from "./pages/ProductDetailsPage.jsx";
+import RoadmapsPage from "./pages/RoadmapsPage.jsx";
+import RoadmapDetailsPage from "./pages/RoadmapDetails.jsx";
 import SignInPage from "./pages/SignInPage.jsx";
 import SignUpPage from "./pages/SignUpPage.jsx";
 import TuitionJobsPage from "./pages/TuitionJobsPage.jsx";
@@ -87,6 +89,8 @@ function App() {
         <Route exact path="/create-roadmap" element={<CreateRoadMap />} />
         <Route exact path="/event-details/:id" element={<EventDetailsPage />} />
         <Route exact path="/events" element={<EventsPage />} />
+        <Route exact path="/roadmaps" element={<RoadmapsPage />} />
+        <Route exact path="/roadmap/:id" element={<RoadmapDetailsPage />} />
         <Route exact path="/faq" element={<FaqPage />} />
         <Route exact path="/favorite-course" element={<FavoriteCoursePage />} />
         <Route exact path="/find-tutors" element={<FindTutorsPage />} />
