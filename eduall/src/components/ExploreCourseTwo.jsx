@@ -14,7 +14,7 @@ const ExploreCourseTwo = () => {
             <span className='text-main-600 text-2xl d-flex'>
               <i className='ph-bold ph-book' />
             </span>
-            <h5 className='text-main-600 mb-0'>Popular Courses</h5>
+            <h5 className='text-main-600 mb-0'>Popular Roadmaps</h5>
           </div>
           <h2 className='mb-24 wow bounceIn'>Pick A Course To Get Started</h2>
           <p className=' wow bounceInUp'>
@@ -126,6 +126,7 @@ const ExploreCourseTwo = () => {
           </div>
         </div>
         <div className='tab-content' id='pills-tabContent'>
+          {/* down 6 cards content  along with see all courses */}
           <div
             className='tab-pane fade show active'
             id='pills-categories'
@@ -594,11 +595,13 @@ const ExploreCourseTwo = () => {
                   </div>
                 </div>
               </div>
+              {/* cardd */}
               <div
                 className='col-lg-4 col-sm-6 wow fadeInUp'
                 data-aos='fade-up'
                 data-aos-duration={600}
               >
+                
                 <div className='course-item bg-white rounded-16 p-12 h-100 box-shadow-md'>
                   <div className='course-item__thumb rounded-12 overflow-hidden position-relative'>
                     <Link to='/course-details' className='w-100 h-100'>
@@ -609,6 +612,7 @@ const ExploreCourseTwo = () => {
                       />
                     </Link>
                   </div>
+                  {/* Card */}
                   <div className='course-item__content position-relative'>
                     <span className='course-item__user border border-white flex-center w-60 h-60 bg-white text-main-600 rounded-circle text-2xl transition-2'>
                       <img
@@ -697,6 +701,8 @@ const ExploreCourseTwo = () => {
               </Link>
             </div>
           </div>
+
+
           <div
             className='tab-pane fade'
             id='pills-design'

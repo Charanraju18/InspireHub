@@ -50,7 +50,7 @@ const HomePageTwo = () => {
       <TestimonialsTwo />
 
       {/* JoinCommunityOne */}
-      <JoinCommunityOne />
+      {/* <JoinCommunityOne /> */}
 
       {/* FaqOne */}
       <FaqOne />

@@ -60,7 +60,7 @@ const BannerTwo = () => {
               </p>
               <div className='buttons-wrapper flex-align flex-wrap gap-24 mt-40'>
                 <Link
-                  to='/course'
+                  to='/roadmaps'
                   className='btn btn-main rounded-pill flex-align gap-8'
                   data-aos='fade-right'
                 >
