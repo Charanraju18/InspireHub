@@ -1,99 +1,167 @@
+import { useState } from "react";
+import axios from "axios";
 const JoinCommunityOne = () => {
+  const [email, setEmail] = useState("");
+  const [fname, setName] = useState("");
+  const [pos, setJobPos] = useState("Front End Developer");
+  const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState("");
+  const CollectInfo = async (event) => {
+    event.preventDefault();
+
+    const payload = {
+      name: fname,
+      email: email,
+      role: pos,
+    };
+
+    if (!fname || !email || !pos) {
+      setMessage("All fields are required.");
+      setMessageType("error");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/mailSender",
+        payload
+      );
+
+      if (response.status === 200 || response.status === 201) {
+        setMessage("✅ You have successfully joined the community!");
+        setMessageType("success");
+      } else {
+        setMessage("❌ Submission failed. Try again later.");
+        setMessageType("error");
+      }
+    } catch (error) {
+      console.error("Submission error:", error.response?.data || error.message);
+      setMessage("❌ An error occurred while submitting the form.");
+      setMessageType("error");
+    }
+  };
+
   return (
-    <section className='join-community'>
-      <div className='container container--lg'>
-        <div className='bg-main-25 rounded-20 py-120 px-8'>
-          <div className='container'>
-            <div className='row gy-4 align-items-center'>
-              <div className='col-lg-6'>
-                <div className='join-community__content'>
-                  <div className='mb-40'>
-                    <h2 className='mb-24 wow bounceIn'>
+    <section className="join-community">
+      <div className="container container--lg">
+        <div className="bg-main-25 rounded-20 py-120 px-8">
+          <div className="container">
+            <div className="row gy-4 align-items-center">
+              <div className="col-lg-6">
+                <div className="join-community__content">
+                  <div className="mb-40">
+                    <h2 className="mb-24 wow bounceIn">
                       Join the EduAll Community: Start Now
                     </h2>
-                    <p className='text-neutral-500 text-line-2 wow bounceInUp'>
-                      Ready to explore our courses firsthand? Sign up for a free
-                      trial lesson today and get a taste of the engaging.
+                    <p className="text-neutral-500 text-line-2 wow bounceInUp">
+                      Eduall community is the place where you can get the
+                      information about Roadmap postings fastly
                     </p>
                   </div>
-                  <form action='#'>
+                  <form action="#">
                     <div
-                      className='mb-24 position-relative'
-                      data-aos='fade-up-left'
+                      className="mb-24 position-relative"
+                      data-aos="fade-up-left"
                       data-aos-duration={400}
                     >
                       <input
-                        type='text'
-                        className='bg-white text-black border border-transparent focus-border-main-600 h-48 rounded-pill px-16 ps-60 outline-0 w-100'
-                        placeholder='Enter Name...'
+                        type="text"
+                        id="name"
+                        onChange={(e) => setName(e.target.value)}
+                        className="bg-white text-black border border-transparent focus-border-main-600 h-48 rounded-pill px-16 ps-60 outline-0 w-100"
+                        placeholder="Enter Name..."
                       />
-                      <span className='bg-white text-neutral-200 text-2xl flex-center w-48 h-48 rounded-circle border border-main-25 border-4 position-absolute inset-inline-start-0 top-50 translate-middle-y'>
-                        <i className='ph-bold ph-user-circle' />
+                      <span className="bg-white text-neutral-200 text-2xl flex-center w-48 h-48 rounded-circle border border-main-25 border-4 position-absolute inset-inline-start-0 top-50 translate-middle-y">
+                        <i className="ph-bold ph-user-circle" />
                       </span>
                     </div>
                     <div
-                      className='mb-24 position-relative'
-                      data-aos='fade-up-left'
+                      className="mb-24 position-relative"
+                      data-aos="fade-up-left"
                       data-aos-duration={600}
                     >
                       <input
-                        type='email'
-                        className='bg-white text-black border border-transparent focus-border-main-600 h-48 rounded-pill px-16 ps-60 outline-0 w-100'
-                        placeholder='Enter Email'
+                        type="email"
+                        id="email"
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="bg-white text-black border border-transparent focus-border-main-600 h-48 rounded-pill px-16 ps-60 outline-0 w-100"
+                        placeholder="Enter Email"
                       />
-                      <span className='bg-white text-neutral-200 text-2xl flex-center w-48 h-48 rounded-circle border border-main-25 border-4 position-absolute inset-inline-start-0 top-50 translate-middle-y'>
-                        <i className='ph-bold ph-envelope-open' />
+                      <span className="bg-white text-neutral-200 text-2xl flex-center w-48 h-48 rounded-circle border border-main-25 border-4 position-absolute inset-inline-start-0 top-50 translate-middle-y">
+                        <i className="ph-bold ph-envelope-open" />
                       </span>
                     </div>
                     <div
-                      className='mb-24 position-relative'
-                      data-aos='fade-up-left'
+                      className="mb-24 position-relative"
+                      data-aos="fade-up-left"
                       data-aos-duration={800}
                     >
-                      <select className='bg-white text-black border border-transparent focus-border-main-600 h-48 rounded-pill px-16 ps-60 outline-0 w-100 text-neutral-300'>
-                        <option value={1}>Front End Developer</option>
-                        <option value={1}>Back End Developer</option>
-                        <option value={1}>UX/UI Designer</option>
+                      <select
+                        id="job-position"
+                        onChange={(e) => setJobPos(e.target.value)}
+                        className="bg-white text-black border border-transparent focus-border-main-600 h-48 rounded-pill px-16 ps-60 outline-0 w-100 text-neutral-300"
+                      >
+                        <option value="Front End Developer">
+                          Front End Developer
+                        </option>
+                        <option value="Back End Developer">
+                          Back End Developer
+                        </option>
+                        <option value="UX/UI Designer">UX/UI Designer</option>
                       </select>
-                      <span className='bg-white text-neutral-200 text-2xl flex-center w-48 h-48 rounded-circle border border-main-25 border-4 position-absolute inset-inline-start-0 top-50 translate-middle-y'>
-                        <i className='ph-bold ph-book' />
+                      <span className="bg-white text-neutral-200 text-2xl flex-center w-48 h-48 rounded-circle border border-main-25 border-4 position-absolute inset-inline-start-0 top-50 translate-middle-y">
+                        <i className="ph-bold ph-book" />
                       </span>
                     </div>
                     <div
-                      className='mt-40 position-relative'
-                      data-aos='fade-up-left'
+                      className="mt-40 position-relative"
+                      data-aos="fade-up-left"
                       data-aos-duration={1000}
                     >
                       <button
-                        type='submit'
-                        className='btn btn-main rounded-pill flex-align d-inline-flex gap-8'
+                        type="submit"
+                        onClick={CollectInfo}
+                        className="btn btn-main rounded-pill flex-align d-inline-flex gap-8"
                       >
                         Join Now
-                        <i className='ph-bold ph-arrow-up-right d-flex text-lg' />
+                        <i className="ph-bold ph-arrow-up-right d-flex text-lg" />
                       </button>
                     </div>
+                    {message && (
+                      <div className="mt-16 ps-2">
+                        <p
+                          className={`fw-medium ${
+                            messageType === "success"
+                              ? "text-main-600"
+                              : "text-red-500"
+                          }`}
+                        >
+                          {message}
+                        </p>
+                      </div>
+                    )}
                   </form>
                 </div>
               </div>
-              <div className='col-lg-6'>
-                <div className='join-community__thumb text-end position-relative'>
+              <div className="col-lg-6">
+                <div className="join-community__thumb text-end position-relative">
                   <img
-                    src='assets/images/thumbs/join-community-img.png'
-                    alt=''
-                    className='wow bounceIn'
-                    data-tilt=''
+                    src="assets/images/thumbs/community.jpg"
+                    alt=""
+                    className="wow bounceIn"
+                    data-tilt=""
                     data-tilt-max={12}
                     data-tilt-speed={500}
                     data-tilt-perspective={5000}
-                    data-tilt-full-page-listening=''
+                    data-tilt-full-page-listening=""
                   />
-                  <div className='offer-message style-two px-24 py-12 rounded-12 bg-white fw-medium flex-align d-inline-flex gap-16 box-shadow-lg animation-upDown'>
-                    <span className='banner-box__icon flex-shrink-0 w-48 h-48 bg-purple-400 text-white text-2xl flex-center rounded-circle'>
-                      <i className='ph-bold ph-users' />
+                  <div className="offer-message style-two px-24 py-12 rounded-12 bg-white fw-medium flex-align d-inline-flex gap-16 box-shadow-lg animation-upDown">
+                    <span className="banner-box__icon flex-shrink-0 w-48 h-48 bg-purple-400 text-white text-2xl flex-center rounded-circle">
+                      <i className="ph-bold ph-users" />
                     </span>
-                    <div className='text-start'>
-                      <h6 className='mb-4'>56K</h6>
-                      <span className=''>All Students</span>
+                    <div className="text-start">
+                      <h6 className="mb-4">56K</h6>
+                      <span className="">All Students</span>
                     </div>
                   </div>
                 </div>
