@@ -9,9 +9,10 @@ import { useAuth } from "../authContext";
 const HeaderOne = () => {
   let { pathname } = useLocation();
   const navigate = useNavigate();
-  const { isAuthenticated, logout, user } = useAuth();
+  const { isAuthenticated, logout } = useAuth();
   const [scroll, setScroll] = useState(false);
   const [isMenuActive, setIsMenuActive] = useState(false);
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       import("select2").then(() => {
@@ -76,9 +77,20 @@ const HeaderOne = () => {
   const handleUserIconClick = () => {
     if (isAuthenticated) {
       logout();
-      navigate("/"); // Redirect to home page after logout
+      navigate("/");
     } else {
       navigate("/sign-in");
+    }
+  };
+
+  const handleProtectedMenuClick = (to) => {
+    if (
+      !isAuthenticated &&
+      ["/roadmaps", "/instructor", "/events"].includes(to)
+    ) {
+      navigate("/sign-in");
+    } else {
+      navigate(to);
     }
   };
 
@@ -168,9 +180,26 @@ const HeaderOne = () => {
                           pathname === item.to && "activePage"
                         }`}
                       >
-                        <a href={item.to} className="nav-menu__link">
-                          {item.label}
-                        </a>
+                        {["/roadmaps", "/instructor", "/events"].includes(
+                          item.to
+                        ) ? (
+                          <button
+                            className="nav-menu__link"
+                            style={{
+                              background: "none",
+                              border: "none",
+                              padding: 0,
+                              cursor: "pointer",
+                            }}
+                            onClick={() => handleProtectedMenuClick(item.to)}
+                          >
+                            {item.label}
+                          </button>
+                        ) : (
+                          <a href={item.to} className="nav-menu__link">
+                            {item.label}
+                          </a>
+                        )}
                       </li>
                     )
                   )}
@@ -193,25 +222,14 @@ const HeaderOne = () => {
             <div className="header-right flex-align">
               {isAuthenticated && (
                 <>
-                  {user?.role === "Instructor" ? (
-                    <button
-                      className="info-action w-52 h-52 bg-main-25 hover-bg-main-600 border border-neutral-30 rounded-circle flex-center text-2xl text-neutral-500 hover-text-white hover-border-main-600"
-                      style={{ marginRight: 8 }}
-                      title="Create"
-                      onClick={() => navigate("/create-content")}
-                    >
-                      <i className="ph ph-plus" />
-                    </button>
-                  ) : (
-                    <button
-                      className="info-action w-52 h-52 bg-main-25 hover-bg-main-600 border border-neutral-30 rounded-circle flex-center text-2xl text-neutral-500 hover-text-white hover-border-main-600"
-                      style={{ marginRight: 8 }}
-                      title="Wishlist"
-                      onClick={() => navigate("/wishlist")}
-                    >
-                      <i className="ph ph-heart" />
-                    </button>
-                  )}
+                  <button
+                    className="info-action w-52 h-52 bg-main-25 hover-bg-main-600 border border-neutral-30 rounded-circle flex-center text-2xl text-neutral-500 hover-text-white hover-border-main-600"
+                    style={{ marginRight: 8 }}
+                    title="Wishlist"
+                    onClick={() => navigate("/wishlist")}
+                  >
+                    <i className="ph ph-heart" />
+                  </button>
                   <button
                     onClick={handleProfileClick}
                     className="info-action w-52 h-52 bg-main-25 hover-bg-main-600 border border-neutral-30 rounded-circle flex-center text-2xl text-neutral-500 hover-text-white hover-border-main-600"
@@ -222,7 +240,6 @@ const HeaderOne = () => {
                   </button>
                 </>
               )}
-
               <button
                 onClick={handleUserIconClick}
                 className="info-action w-52 h-52 bg-main-25 hover-bg-main-600 border border-neutral-30 rounded-circle flex-center text-2xl text-neutral-500 hover-text-white hover-border-main-600"
@@ -292,9 +309,29 @@ const HeaderOne = () => {
                     }`}
                     key={index}
                   >
-                    <Link to={item.to} className="nav-menu__link">
-                      {item.label}
-                    </Link>
+                    {["/roadmaps", "/instructor", "/events"].includes(
+                      item.to
+                    ) ? (
+                      <button
+                        className="nav-menu__link"
+                        style={{
+                          background: "none",
+                          border: "none",
+                          padding: 0,
+                          cursor: "pointer",
+                        }}
+                        onClick={() => {
+                          handleProtectedMenuClick(item.to);
+                          closeMenu();
+                        }}
+                      >
+                        {item.label}
+                      </button>
+                    ) : (
+                      <Link to={item.to} className="nav-menu__link">
+                        {item.label}
+                      </Link>
+                    )}
                   </li>
                 )
               )}
