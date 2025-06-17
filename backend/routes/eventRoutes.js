@@ -12,7 +12,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 // Routes
-router.post("/", upload.single("image"), createEvent);
+router.post("/createEvent", upload.single("image"), createEvent);
 router.get("/", getAllEvents);
 router.get("/:id", getEventById);
 

@@ -1,4 +1,5 @@
 const Roadmap = require("../models/roadmaps");
+const { User } = require("../models/user");
 // Get all roadmaps
 const getAllRoadmaps = async (req, res) => {
   try {
@@ -12,13 +13,22 @@ const getAllRoadmaps = async (req, res) => {
 // Create a new roadmap
 const createRoadmap = async (req, res) => {
   try {
-    const newRoadmap = new Roadmap(req.body);
+    const newRoadmap = new Roadmap({
+      ...req.body
+    });
     await newRoadmap.save();
-    res.status(201).json({message: "Roadmap created successfully", });
+    await User.findByIdAndUpdate(
+      req.body.createdBy,
+      { $push: { "instructorProfile.content.roadmapsShared": newRoadmap._id } },
+      { new: true }
+    );
+    res.status(201).json({ message: "Roadmap created and added to instructor's profile.", roadmap: newRoadmap });
   } catch (error) {
-    res.status(400).json({ message: "Failed to create roadmap", error });
+    res.status(400).json({ message: "Failed to create roadmap", error: error.message });
   }
 };
+
+
 
 const getRoadmapById = async (req, res) => {
   // Get roadmap by ID

@@ -1,4 +1,6 @@
 const { User } = require("../models/user");
+const Roadmap = require("../models/roadmaps");
+const Event = require("../models/events");
 
 exports.getUserProfile = async (req, res) => {
   try {
@@ -36,3 +38,17 @@ exports.getSelectedInstructor = async (req, res) => {
     res.status(500).json({ msg: "Server error", error: err.message });
   }
 };
+
+// exports.getInstructorRoadmaps = async (req, res) => {
+//   const { id } = req.params; 
+//   try {
+//     const instructor = await User.findOne({ _id: id, role: "Instructor" });
+//     if (!instructor) {
+//       return res.status(404).json({ msg: "Instructor not found" });
+//     }
+//     const courses = await Roadmap.find({ createdBy: id });
+//     res.status(200).json(courses);
+//   } catch (err) {
+//     res.status(500).json({ msg: "Server error", error: err.message });
+//   }
+// };
