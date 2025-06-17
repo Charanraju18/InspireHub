@@ -20,9 +20,14 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // Routes
 app.use("/api/events", require("./routes/eventRoutes"));
 app.use("/api/auth", require("./routes/authRoutes"));
+// <<<<<<< HEAD
 app.use("/api/posts", require("./routes/postRoutes"));
 
 // Root Route
+// =======
+app.use("/api/roadmaps", require("./routes/roadmapRoutes"));
+
+// >>>>>>> main
 app.get("/", (req, res) => {
   res.send("Hello from Express and MongoDB!");
 });

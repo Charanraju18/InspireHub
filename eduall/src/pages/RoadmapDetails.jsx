@@ -1,12 +1,12 @@
 import Breadcrumb from "../components/Breadcrumb";
 import CertificateOne from "../components/CertificateOne";
-import RoadmapForm from "../components/RoadmapForm";
+import RoadmapDetailsOne from "../components/RoadmapDetailsOne";
 import FooterOne from "../components/FooterOne";
 import HeaderOne from "../components/HeaderOne";
 import Animation from "../helper/Animation";
 import Preloader from "../helper/Preloader";
 
-const CreateRoadMap = () => {
+const RoadmapDetailsPage = () => {
   return (
     <>
       {/* Preloader */}
@@ -19,10 +19,10 @@ const CreateRoadMap = () => {
       <HeaderOne />
 
       {/* Breadcrumb */}
-      <Breadcrumb title={"Create Roadmap"} />
+      <Breadcrumb title={"Roadmap Details"} />
 
-      {/* Roadmap */}
-      <RoadmapForm />
+      {/* EventDetailsOne */}
+      <RoadmapDetailsOne />
 
       {/* CertificateOne */}
       <CertificateOne />
@@ -33,4 +33,4 @@ const CreateRoadMap = () => {
   );
 };
 
-export default CreateRoadMap;
+export default RoadmapDetailsPage;

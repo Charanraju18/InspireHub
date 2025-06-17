@@ -1,25 +1,34 @@
 import React, { useState } from "react";
+import { useAuth } from "../authContext";
 
 const RoadmapForm = () => {
+  const { user } = useAuth();
+
   const [form, setForm] = useState({
+    createdBy: "",
     title: "",
     domain: "",
     description: "",
     difficulty: "Beginner",
-    estimatedDurationWeeks: "",
+    duration: "",
     prerequisites: [""],
     tags: [""],
+    thumbnail: null, // ✅ thumbnail file
     steps: [
       {
         title: "",
         description: "",
-        resources: [{ title: "", link: "", type: "" }],
+        resources: [{ title: "", link: "", type: "video" }],
       },
     ],
   });
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleFileChange = (e) => {
+    setForm({ ...form, thumbnail: e.target.files[0] });
   };
 
   const handleArrayChange = (field, index, value) => {
@@ -33,10 +42,6 @@ const RoadmapForm = () => {
   };
 
   const removeFromArray = (field, index) => {
-    // Ensure at least one prerequisite remains
-    if (field === "prerequisites" && form[field].length <= 1) {
-      return;
-    }
     const updated = [...form[field]];
     updated.splice(index, 1);
     setForm({ ...form, [field]: updated });
@@ -62,35 +67,77 @@ const RoadmapForm = () => {
         {
           title: "",
           description: "",
-          resources: [{ title: "", link: "", type: "" }],
+          resources: [{ title: "", link: "", type: "video" }],
         },
       ],
     });
   };
 
-  const removeStep = (stepIndex) => {
-    if (form.steps.length <= 1) return; // Keep at least one step
-    const updatedSteps = [...form.steps];
-    updatedSteps.splice(stepIndex, 1);
-    setForm({ ...form, steps: updatedSteps });
+  const removeStep = (i) => {
+    const updated = [...form.steps];
+    updated.splice(i, 1);
+    setForm({ ...form, steps: updated });
   };
 
   const addResource = (stepIndex) => {
-    const updatedSteps = [...form.steps];
-    updatedSteps[stepIndex].resources.push({ title: "", link: "", type: "" });
-    setForm({ ...form, steps: updatedSteps });
+    const updated = [...form.steps];
+    updated[stepIndex].resources.push({ title: "", link: "", type: "video" });
+    setForm({ ...form, steps: updated });
   };
 
   const removeResource = (stepIndex, resIndex) => {
-    const updatedSteps = [...form.steps];
-    if (updatedSteps[stepIndex].resources.length <= 1) return; // Keep at least one resource
-    updatedSteps[stepIndex].resources.splice(resIndex, 1);
-    setForm({ ...form, steps: updatedSteps });
+    const updated = [...form.steps];
+    updated[stepIndex].resources.splice(resIndex, 1);
+    setForm({ ...form, steps: updated });
   };
 
-  const handleSubmit = (e) => {
+  const toBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (err) => reject(err);
+    });
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Submit to backend here
+    const userId = user?._id || user?.id;
+    if (!userId) return alert("Login required");
+
+    try {
+      let base64Thumbnail = "";
+      if (form.thumbnail) {
+        base64Thumbnail = await toBase64(form.thumbnail); // ✅ convert image to base64
+      }
+
+      const submitData = {
+        createdBy: userId,
+        title: form.title,
+        domain: form.domain,
+        description: form.description,
+        difficulty: form.difficulty,
+        duration: Number(form.duration),
+        thumbnail: base64Thumbnail, // ✅ send base64 string
+        prerequisites: form.prerequisites,
+        tags: form.tags,
+        steps: form.steps,
+      };
+
+      const res = await fetch("http://localhost:5000/api/roadmaps/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(submitData),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || JSON.stringify(data));
+      alert("Roadmap created!");
+    } catch (err) {
+      console.error(err);
+      alert("Error: " + err.message);
+    }
   };
 
   const inputStyle = {
@@ -244,6 +291,17 @@ const RoadmapForm = () => {
 
       <div style={gridStyle}>
         <div>
+          <label>Thumbnail Image</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setForm({ ...form, thumbnail: e.target.files[0] })}
+          />
+        </div>
+      </div>
+
+      <div style={gridStyle}>
+        <div>
           <label>Difficulty</label>
           <select
             name="difficulty"
@@ -260,8 +318,8 @@ const RoadmapForm = () => {
           <label>Duration (in weeks)</label>
           <input
             type="number"
-            name="estimatedDurationWeeks"
-            value={form.estimatedDurationWeeks}
+            name="duration"
+            value={form.duration}
             onChange={handleChange}
             placeholder="Duration (in weeks)"
             style={inputStyle}
@@ -411,14 +469,18 @@ const RoadmapForm = () => {
                       <label style={{ fontSize: "14px", color: "#666" }}>
                         Type
                       </label>
-                      <input
+                      <select
                         value={res.type}
                         onChange={(e) =>
                           handleResourceChange(i, j, "type", e.target.value)
                         }
-                        placeholder="Type (video, article...)"
                         style={inputStyle}
-                      />
+                      >
+                        <option value="video">video</option>
+                        <option value="article">article</option>
+                        <option value="book">book</option>
+                        <option value="course">course</option>
+                      </select>
                     </div>
                   </div>
                   <label style={{ fontSize: "14px", color: "#666" }}>
