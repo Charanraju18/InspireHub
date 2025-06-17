@@ -43,7 +43,7 @@ const RoadmapsAll = () => {
                     tabIndex={0}
                   >
                     <img
-                      src="/assets/images/thumbs/event-img1.png"
+                      src={roadmap.thumbnail || "/images/default-thumbnail.jpg"}
                       alt="Roadmap Thumbnail"
                       className="scale-hover-item__img rounded-12 cover-img transition-2"
                     />

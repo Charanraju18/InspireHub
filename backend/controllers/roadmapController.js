@@ -14,7 +14,8 @@ const getAllRoadmaps = async (req, res) => {
 const createRoadmap = async (req, res) => {
   try {
     const newRoadmap = new Roadmap({
-      ...req.body
+      ...req.body,
+      duration: Number(req.body.duration),
     });
     await newRoadmap.save();
     await User.findByIdAndUpdate(
@@ -24,6 +25,7 @@ const createRoadmap = async (req, res) => {
     );
     res.status(201).json({ message: "Roadmap created and added to instructor's profile.", roadmap: newRoadmap });
   } catch (error) {
+    console.error("Error creating roadmap:", error);
     res.status(400).json({ message: "Failed to create roadmap", error: error.message });
   }
 };
