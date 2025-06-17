@@ -246,6 +246,169 @@
 // export default ContactInner;
 
 
+// import React, { useState } from "react";
+
+// const ContactInner = () => {
+//   const [post, setPost] = useState({
+//     name: "",
+//     role: "",
+//     title: "",
+//     description: "",
+//   });
+//   const [profilePicture, setProfilePicture] = useState(null);
+
+//   const handleChange = (e) => {
+//     const { name, value } = e.target;
+//     setPost((prev) => ({ ...prev, [name]: value }));
+//   };
+
+//   const handleFileChange = (e) => {
+//     const file = e.target.files[0];
+//     if (file) {
+//       setProfilePicture(file);
+//     }
+//   };
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     const formData = new FormData();
+
+//     formData.append("name", post.name);
+//     formData.append("role", post.role);
+//     formData.append("title", post.title);
+//     formData.append("description", post.description);
+//     if (profilePicture) {
+//       formData.append("postImage", profilePicture);
+//     }
+
+//     try {
+//       const response = await fetch("http://localhost:5000/api/posts", {
+//         method: "POST",
+//         body: formData,
+//       });
+
+//       if (!response.ok) {
+//         throw new Error("Failed to save post");
+//       }
+
+//       const data = await response.json();
+//       console.log("Post saved to backend:", data);
+
+//       setPost({
+//         name: "",
+//         role: "",
+//         title: "",
+//         description: "",
+//       });
+//       setProfilePicture(null);
+//     } catch (error) {
+//       console.error("Error saving post:", error);
+//       alert("Failed to save post. Please try again.");
+//     }
+//   };
+
+//   return (
+//     <div style={styles.container}>
+//       <h2 style={styles.heading}>Create a Post</h2>
+//       <form onSubmit={handleSubmit} style={styles.form}>
+//         <input
+//           type="text"
+//           name="name"
+//           value={post.name}
+//           onChange={handleChange}
+//           placeholder="Instructor Name"
+//           required
+//           style={styles.input}
+//         />
+//         <input
+//           type="text"
+//           name="role"
+//           value={post.role}
+//           onChange={handleChange}
+//           placeholder="Role"
+//           required
+//           style={styles.input}
+//         />
+//         <input
+//           type="file"
+//           accept="image/*"
+//           onChange={handleFileChange}
+//           style={styles.fileInput}
+//         />
+//         <input
+//           type="text"
+//           name="title"
+//           value={post.title}
+//           onChange={handleChange}
+//           placeholder="Post Title"
+//           required
+//           style={styles.input}
+//         />
+//         <textarea
+//           name="description"
+//           value={post.description}
+//           onChange={handleChange}
+//           placeholder="Post Description"
+//           required
+//           style={styles.textarea}
+//         ></textarea>
+//         <button type="submit" style={styles.button}>
+//           Add Post
+//         </button>
+//       </form>
+//     </div>
+//   );
+// };
+
+// const styles = {
+//   container: {
+//     display: "flex",
+//     flexDirection: "column",
+//     alignItems: "center",
+//     padding: "20px",
+//   },
+//   heading: {
+//     fontSize: "24px",
+//     fontWeight: "bold",
+//     margin: "10px 0",
+//   },
+//   form: {
+//     display: "flex",
+//     flexDirection: "column",
+//     gap: "10px",
+//     width: "100%",
+//     maxWidth: "400px",
+//   },
+//   input: {
+//     padding: "10px",
+//     border: "1px solid #ccc",
+//     borderRadius: "4px",
+//     fontSize: "16px",
+//   },
+//   textarea: {
+//     padding: "10px",
+//     border: "1px solid #ccc",
+//     borderRadius: "4px",
+//     fontSize: "16px",
+//     minHeight: "100px",
+//   },
+//   button: {
+//     padding: "10px",
+//     fontSize: "16px",
+//     fontWeight: "bold",
+//     color: "#fff",
+//     backgroundColor: "#007bff",
+//     border: "none",
+//     borderRadius: "4px",
+//     cursor: "pointer",
+//   },
+//   fileInput: {
+//     fontSize: "14px",
+//   },
+// };
+
+// export default ContactInner;
+
 import React, { useState } from "react";
 
 const ContactInner = () => {
@@ -255,11 +418,28 @@ const ContactInner = () => {
     title: "",
     description: "",
   });
+  const [steps, setSteps] = useState([{ stepTitle: "", stepDescription: "" }]);
   const [profilePicture, setProfilePicture] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setPost((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleStepChange = (index, e) => {
+    const { name, value } = e.target;
+    const updatedSteps = steps.map((step, i) =>
+      i === index ? { ...step, [name]: value } : step
+    );
+    setSteps(updatedSteps);
+  };
+
+  const addStep = () => {
+    setSteps([...steps, { stepTitle: "", stepDescription: "" }]);
+  };
+
+  const removeStep = (index) => {
+    setSteps(steps.filter((_, i) => i !== index));
   };
 
   const handleFileChange = (e) => {
@@ -277,6 +457,7 @@ const ContactInner = () => {
     formData.append("role", post.role);
     formData.append("title", post.title);
     formData.append("description", post.description);
+    formData.append("steps", JSON.stringify(steps));
     if (profilePicture) {
       formData.append("postImage", profilePicture);
     }
@@ -300,6 +481,7 @@ const ContactInner = () => {
         title: "",
         description: "",
       });
+      setSteps([{ stepTitle: "", stepDescription: "" }]);
       setProfilePicture(null);
     } catch (error) {
       console.error("Error saving post:", error);
@@ -352,6 +534,42 @@ const ContactInner = () => {
           required
           style={styles.textarea}
         ></textarea>
+
+        <h3 style={styles.heading}>Steps</h3>
+        {steps.map((step, index) => (
+          <div key={index} style={styles.stepContainer}>
+            <input
+              type="text"
+              name="stepTitle"
+              value={step.stepTitle}
+              onChange={(e) => handleStepChange(index, e)}
+              placeholder="Step Title"
+              required
+              style={styles.input}
+            />
+            <textarea
+              name="stepDescription"
+              value={step.stepDescription}
+              onChange={(e) => handleStepChange(index, e)}
+              placeholder="Step Description"
+              required
+              style={styles.textarea}
+            ></textarea>
+            {steps.length > 1 && (
+              <button
+                type="button"
+                onClick={() => removeStep(index)}
+                style={styles.removeButton}
+              >
+                Remove Step
+              </button>
+            )}
+          </div>
+        ))}
+        <button type="button" onClick={addStep} style={styles.addButton}>
+          Add Step
+        </button>
+
         <button type="submit" style={styles.button}>
           Add Post
         </button>
@@ -404,6 +622,32 @@ const styles = {
   },
   fileInput: {
     fontSize: "14px",
+  },
+  stepContainer: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "10px",
+    marginBottom: "10px",
+  },
+  addButton: {
+    padding: "10px",
+    fontSize: "16px",
+    fontWeight: "bold",
+    color: "#fff",
+    backgroundColor: "#28a745",
+    border: "none",
+    borderRadius: "4px",
+    cursor: "pointer",
+  },
+  removeButton: {
+    padding: "5px",
+    fontSize: "14px",
+    fontWeight: "bold",
+    color: "#fff",
+    backgroundColor: "#dc3545",
+    border: "none",
+    borderRadius: "4px",
+    cursor: "pointer",
   },
 };
 
