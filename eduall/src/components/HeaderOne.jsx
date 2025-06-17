@@ -1,9 +1,10 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import $ from "jquery";
 import "select2/dist/css/select2.min.css";
 import "select2/dist/js/select2.full.min.js";
 import "select2";
+import { useAuth } from "../authContext";
 
 const HeaderOne = () => {
   let { pathname } = useLocation();
@@ -106,25 +107,25 @@ const HeaderOne = () => {
     <>
       <div className={`side-overlay ${isMenuActive ? "show" : ""}`}></div>
       <header className={`header ${scroll ? "fixed-header" : ""}`}>
-        <div className='container container--xl'>
-          <nav className='header-inner flex-between gap-8'>
-            <div className='header-content-wrapper flex-align flex-grow-1'>
+        <div className="container container--xl">
+          <nav className="header-inner flex-between gap-8">
+            <div className="header-content-wrapper flex-align flex-grow-1">
               {/* Logo Start */}
-              <div className='logo'>
-                <Link to='/' className='link'>
-                  <img src='assets/images/logo/logoo.png' alt='Logo' />
+              <div className="logo">
+                <Link to="/" className="link">
+                  <img src="assets/images/logo/logo.png" alt="Logo" />
                 </Link>
               </div>
               {/* Menu Start  */}
-              <div className='header-menu d-lg-block d-none'>
-                <ul className='nav-menu flex-align'>
+              <div className="header-menu d-lg-block d-none">
+                <ul className="nav-menu flex-align">
                   {menuItems.map((item, index) =>
                     item.links ? (
                       <li
                         key={`menu-item-${index}`}
-                        className='nav-menu__item has-submenu'
+                        className="nav-menu__item has-submenu"
                       >
-                        <span to='#' className='nav-menu__link'>
+                        <span to="#" className="nav-menu__link">
                           {item.label}
                         </span>
                         <ul className={`nav-submenu scroll-sm`}>
@@ -135,12 +136,12 @@ const HeaderOne = () => {
                                 pathname === link.to && "activePage"
                               }`}
                             >
-                              <Link
-                                to={link.to}
-                                className='nav-submenu__link hover-bg-neutral-30'
+                              <a
+                                href={link.to}
+                                className="nav-submenu__link hover-bg-neutral-30"
                               >
                                 {link.label}
-                              </Link>
+                              </a>
                             </li>
                           ))}
                         </ul>
@@ -227,11 +228,11 @@ const HeaderOne = () => {
                 />
               </button>
               <button
-                type='button'
-                className='toggle-mobileMenu d-lg-none text-neutral-200 flex-center'
+                type="button"
+                className="toggle-mobileMenu d-lg-none text-neutral-200 flex-center"
                 onClick={toggleMenu}
               >
-                <i className='ph ph-list' />
+                <i className="ph ph-list" />
               </button>
             </div>
             {/* Header Right End  */}
@@ -244,15 +245,15 @@ const HeaderOne = () => {
           isMenuActive ? "active" : ""
         }`}
       >
-        <button type='button' className='close-button' onClick={closeMenu}>
-          <i className='ph ph-x' />{" "}
+        <button type="button" className="close-button" onClick={closeMenu}>
+          <i className="ph ph-x" />{" "}
         </button>
-        <div className='mobile-menu__inner'>
-          <Link to='/' className='mobile-menu__logo'>
-            <img src='assets/images/logo/logo.png' alt='Logo' />
+        <div className="mobile-menu__inner">
+          <Link to="/" className="mobile-menu__logo">
+            <img src="assets/images/logo/logo.png" alt="Logo" />
           </Link>
-          <div className='mobile-menu__menu'>
-            <ul className='nav-menu flex-align nav-menu--mobile'>
+          <div className="mobile-menu__menu">
+            <ul className="nav-menu flex-align nav-menu--mobile">
               {menuItems.map((item, index) =>
                 item.links ? (
                   <li
@@ -262,13 +263,13 @@ const HeaderOne = () => {
                     }`}
                     onClick={() => handleSubmenuClick(index)}
                   >
-                    <span className='nav-menu__link'>{item.label}</span>
+                    <span className="nav-menu__link">{item.label}</span>
                     <ul className={`nav-submenu scroll-sm`}>
                       {item.links.map((link, linkIndex) => (
-                        <li key={linkIndex} className='nav-submenu__item'>
+                        <li key={linkIndex} className="nav-submenu__item">
                           <Link
                             to={link.to}
-                            className='nav-submenu__link hover-bg-neutral-30'
+                            className="nav-submenu__link hover-bg-neutral-30"
                           >
                             {link.label}
                           </Link>
@@ -310,14 +311,14 @@ const HeaderOne = () => {
                 )
               )}
             </ul>
-            <div className='d-sm-none d-block mt-24'>
-              <div className='header-select mobile border border-neutral-30 bg-main-25 rounded-pill position-relative'>
-                <span className='select-icon position-absolute top-50 translate-middle-y inset-inline-start-0 z-1 ms-lg-4 ms-12 text-xl pointer-event-none d-flex'>
-                  <i className='ph-bold ph-squares-four' />
+            <div className="d-sm-none d-block mt-24">
+              <div className="header-select mobile border border-neutral-30 bg-main-25 rounded-pill position-relative">
+                <span className="select-icon position-absolute top-50 translate-middle-y inset-inline-start-0 z-1 ms-lg-4 ms-12 text-xl pointer-event-none d-flex">
+                  <i className="ph-bold ph-squares-four" />
                 </span>
                 <select
-                  className='js-example-basic-single border-0'
-                  name='state'
+                  className="js-example-basic-single border-0"
+                  name="state"
                 >
                   <option value={"Categories"}>Categories</option>
                   <option value={"Design"}>Design</option>
