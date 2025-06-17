@@ -12,6 +12,7 @@ const HeaderOne = () => {
   const { isAuthenticated, logout, user } = useAuth();
   const [scroll, setScroll] = useState(false);
   const [isMenuActive, setIsMenuActive] = useState(false);
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       import("select2").then(() => {
@@ -76,9 +77,20 @@ const HeaderOne = () => {
   const handleUserIconClick = () => {
     if (isAuthenticated) {
       logout();
-      navigate("/"); // Redirect to home page after logout
+      navigate("/");
     } else {
       navigate("/sign-in");
+    }
+  };
+
+  const handleProtectedMenuClick = (to) => {
+    if (
+      !isAuthenticated &&
+      ["/roadmaps", "/instructor", "/events"].includes(to)
+    ) {
+      navigate("/sign-in");
+    } else {
+      navigate(to);
     }
   };
 
@@ -104,33 +116,6 @@ const HeaderOne = () => {
                   <img src="assets/images/logo/logo.png" alt="Logo" />
                 </Link>
               </div>
-              {/* Logo End  */}
-              {/* Select Start */}
-              {/* <div className="d-sm-block d-none">
-                <div className="header-select border border-neutral-30 bg-main-25 rounded-pill position-relative">
-                  <span className="select-icon position-absolute top-50 translate-middle-y inset-inline-start-0 z-1 ms-lg-4 ms-12 text-xl pointer-event-none d-flex">
-                    <i className="ph-bold ph-squares-four" />
-                  </span>
-                  <select
-                    className="js-example-basic-single border-0"
-                    name="state"
-                    defaultValue="categories"
-                  >
-                    <option value={"Categories"}>Categories</option>
-                    <option value={"Design"}>Design</option>
-                    <option value={"Development"}>Development</option>
-                    <option value={"Architecture"}>Architecture</option>
-                    <option value={"Life Style"}>Life Style</option>
-                    <option value={"Data Science"}>Data Science</option>
-                    <option value={"Marketing"}>Marketing</option>
-                    <option value={"Music"}>Music</option>
-                    <option value={"Typography"}>Typography</option>
-                    <option value={"Finance"}>Finance</option>
-                    <option value={"Motivation"}>Motivation</option>
-                  </select>
-                </div>
-              </div> */}
-              {/* Select End */}
               {/* Menu Start  */}
               <div className="header-menu d-lg-block d-none">
                 <ul className="nav-menu flex-align">
@@ -168,23 +153,29 @@ const HeaderOne = () => {
                           pathname === item.to && "activePage"
                         }`}
                       >
-                        <a href={item.to} className="nav-menu__link">
-                          {item.label}
-                        </a>
+                        {["/roadmaps", "/instructor", "/events"].includes(
+                          item.to
+                        ) ? (
+                          <button
+                            className="nav-menu__link"
+                            style={{
+                              background: "none",
+                              border: "none",
+                              padding: 0,
+                              cursor: "pointer",
+                            }}
+                            onClick={() => handleProtectedMenuClick(item.to)}
+                          >
+                            {item.label}
+                          </button>
+                        ) : (
+                          <a href={item.to} className="nav-menu__link">
+                            {item.label}
+                          </a>
+                        )}
                       </li>
                     )
                   )}
-                  {/* Profile tab beside Contact */}
-                  {/* REMOVE underline and icon from Profile tab */}
-                  {/* <li className='nav-menu__item'>
-                    <button
-                      onClick={handleProfileClick}
-                      className='nav-menu__item btn btn-link p-0 text-main-600'
-                      style={{ fontWeight: 600, fontSize: "1rem", textDecoration: "none" }}
-                    >
-                      Profile
-                    </button>
-                  </li> */}
                 </ul>
               </div>
               {/* Menu End  */}
@@ -194,15 +185,17 @@ const HeaderOne = () => {
               {isAuthenticated && (
                 <>
                   {user?.role === "Instructor" ? (
+                    // ✅ Show plus icon for Instructors
                     <button
+                      onClick={() => navigate("/create-content")} // or desired path
                       className="info-action w-52 h-52 bg-main-25 hover-bg-main-600 border border-neutral-30 rounded-circle flex-center text-2xl text-neutral-500 hover-text-white hover-border-main-600"
                       style={{ marginRight: 8 }}
-                      title="Create"
-                      onClick={() => navigate("/create-content")}
+                      title="Create Roadmap"
                     >
                       <i className="ph ph-plus" />
                     </button>
                   ) : (
+                    // ✅ Show wishlist icon for non-Instructors
                     <button
                       className="info-action w-52 h-52 bg-main-25 hover-bg-main-600 border border-neutral-30 rounded-circle flex-center text-2xl text-neutral-500 hover-text-white hover-border-main-600"
                       style={{ marginRight: 8 }}
@@ -222,7 +215,6 @@ const HeaderOne = () => {
                   </button>
                 </>
               )}
-
               <button
                 onClick={handleUserIconClick}
                 className="info-action w-52 h-52 bg-main-25 hover-bg-main-600 border border-neutral-30 rounded-circle flex-center text-2xl text-neutral-500 hover-text-white hover-border-main-600"
@@ -292,9 +284,29 @@ const HeaderOne = () => {
                     }`}
                     key={index}
                   >
-                    <Link to={item.to} className="nav-menu__link">
-                      {item.label}
-                    </Link>
+                    {["/roadmaps", "/instructor", "/events"].includes(
+                      item.to
+                    ) ? (
+                      <button
+                        className="nav-menu__link"
+                        style={{
+                          background: "none",
+                          border: "none",
+                          padding: 0,
+                          cursor: "pointer",
+                        }}
+                        onClick={() => {
+                          handleProtectedMenuClick(item.to);
+                          closeMenu();
+                        }}
+                      >
+                        {item.label}
+                      </button>
+                    ) : (
+                      <Link to={item.to} className="nav-menu__link">
+                        {item.label}
+                      </Link>
+                    )}
                   </li>
                 )
               )}

@@ -34,7 +34,7 @@ const userSchema = new mongoose.Schema(
               { type: mongoose.Schema.Types.ObjectId, ref: "Roadmap" },
             ],
             liveEventsHosted: [
-              { type: mongoose.Schema.Types.ObjectId, ref: "LiveEvent" },
+              { type: mongoose.Schema.Types.ObjectId, ref: "event" },
             ],
           },
           followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
@@ -73,7 +73,7 @@ const userSchema = new mongoose.Schema(
               { type: mongoose.Schema.Types.ObjectId, ref: "Roadmap" },
             ],
             liveEvents: [
-              { type: mongoose.Schema.Types.ObjectId, ref: "LiveEvent" },
+              { type: mongoose.Schema.Types.ObjectId, ref: "event" },
             ],
           },
           learningGoal: String,
@@ -90,7 +90,7 @@ const userSchema = new mongoose.Schema(
               { type: mongoose.Schema.Types.ObjectId, ref: "Roadmap" },
             ],
             liveEvents: [
-              { type: mongoose.Schema.Types.ObjectId, ref: "LiveEvent" },
+              { type: mongoose.Schema.Types.ObjectId, ref: "event" },
             ],
           },
         },
@@ -108,46 +108,6 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-const roadmapSchema = new mongoose.Schema(
-  {
-    title: { type: String, required: true, trim: true },
-    description: { type: String, trim: true },
-    domain: { type: String, trim: true },
-    steps: [{ type: String, trim: true }],
-    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-  },
-  { timestamps: true }
-);
-
-const liveEventSchema = new mongoose.Schema(
-  {
-    title: { type: String, required: true, trim: true },
-    intro: { type: String, required: true, trim: true },
-    sections: [
-      {
-        heading: { type: String, required: true, trim: true },
-        points: [{ type: String, required: true, trim: true }],
-        paragraph: { type: String, required: true, trim: true },
-      },
-    ],
-    schedule: {
-      price: { type: String, required: true, trim: true },
-      instructor: { type: String, required: true, trim: true },
-      image: { type: String, required: true },
-      startTime: { type: Date, required: true },
-      endTime: { type: Date, required: true },
-      participants: { type: Number, default: 0 },
-      location: { type: String, required: true, trim: true },
-    },
-    joinLink: { type: String, required: true, trim: true },
-    registeredUsers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-    isLive: { type: Boolean, default: false },
-  },
-  { timestamps: true }
-);
-
 const User = mongoose.model("User", userSchema);
-const Roadmap = mongoose.model("Roadmap", roadmapSchema);
-const LiveEvent = mongoose.model("LiveEvent", liveEventSchema);
 
-module.exports = { User, Roadmap, LiveEvent };
+module.exports = { User };
