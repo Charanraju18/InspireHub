@@ -26,6 +26,7 @@ app.use("/api/posts", require("./routes/postRoutes"));
 // Root Route
 // =======
 app.use("/api/roadmaps", require("./routes/roadmapRoutes"));
+app.use("/api/mail", require("./routes/nodeMailerRoute"));
 
 // >>>>>>> main
 app.get("/", (req, res) => {

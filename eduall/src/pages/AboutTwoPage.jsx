@@ -23,7 +23,7 @@ const AboutTwoPage = () => {
       <HeaderOne />
 
       {/* Breadcrumb */}
-      <Breadcrumb title={"About Us 02"} />
+      <Breadcrumb title={"About Us"} />
 
       {/* FeaturesTwo */}
       <FeaturesTwo />
@@ -32,7 +32,7 @@ const AboutTwoPage = () => {
       <InfoSectionOne />
 
       {/* AboutTwo */}
-      <AboutTwo />
+      {/* <AboutTwo />   */}
 
       {/* CertificateTwo */}
       <CertificateTwo />
