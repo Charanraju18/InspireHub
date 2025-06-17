@@ -1,19 +1,23 @@
 import React, { useState } from "react";
+import { useAuth } from "../authContext";
 
 const RoadmapForm = () => {
+  const { user } = useAuth();
+  console.log('Current user in RoadmapForm:', user);
   const [form, setForm] = useState({
+    createdBy: "",
     title: "",
     domain: "",
     description: "",
     difficulty: "Beginner",
-    estimatedDurationWeeks: "",
+    duration: "", 
     prerequisites: [""],
     tags: [""],
     steps: [
       {
         title: "",
         description: "",
-        resources: [{ title: "", link: "", type: "" }],
+        resources: [{ title: "", link: "", type: "video" }], 
       },
     ],
   });
@@ -33,7 +37,6 @@ const RoadmapForm = () => {
   };
 
   const removeFromArray = (field, index) => {
-    // Ensure at least one prerequisite remains
     if (field === "prerequisites" && form[field].length <= 1) {
       return;
     }
@@ -62,14 +65,14 @@ const RoadmapForm = () => {
         {
           title: "",
           description: "",
-          resources: [{ title: "", link: "", type: "" }],
+          resources: [{ title: "", link: "", type: "video" }],
         },
       ],
     });
   };
 
   const removeStep = (stepIndex) => {
-    if (form.steps.length <= 1) return; // Keep at least one step
+    if (form.steps.length <= 1) return; 
     const updatedSteps = [...form.steps];
     updatedSteps.splice(stepIndex, 1);
     setForm({ ...form, steps: updatedSteps });
@@ -77,39 +80,62 @@ const RoadmapForm = () => {
 
   const addResource = (stepIndex) => {
     const updatedSteps = [...form.steps];
-    updatedSteps[stepIndex].resources.push({ title: "", link: "", type: "" });
+    updatedSteps[stepIndex].resources.push({ title: "", link: "", type: "video" });
     setForm({ ...form, steps: updatedSteps });
   };
 
   const removeResource = (stepIndex, resIndex) => {
     const updatedSteps = [...form.steps];
-    if (updatedSteps[stepIndex].resources.length <= 1) return; // Keep at least one resource
+    if (updatedSteps[stepIndex].resources.length <= 1) return; 
     updatedSteps[stepIndex].resources.splice(resIndex, 1);
     setForm({ ...form, steps: updatedSteps });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    // Accept both _id and id for user
+    const userId = user?._id || user?.id;
+    if (!userId) {
+      alert("You must be logged in as an instructor to create a roadmap.");
+      return;
+    }
+    const submitData = {
+      ...form,
+      createdBy: userId,
+      duration: Number(form.duration),
+    };
     try {
       const res = await fetch("http://localhost:5000/api/roadmaps/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(form),
+        body: JSON.stringify(submitData),
       });
-
       const data = await res.json();
-
-      if (!res.ok) throw new Error(data.error || "Something went wrong");
-
+      if (!res.ok) throw new Error(data.message || JSON.stringify(data));
       alert("Roadmap submitted successfully!");
-      // Optionally reset the form
-      // setForm({ ... });
+      // Reset form fields to initial state
+      setForm({
+        createdBy: "",
+        title: "",
+        domain: "",
+        description: "",
+        difficulty: "Beginner",
+        duration: "",
+        prerequisites: [""],
+        tags: [""],
+        steps: [
+          {
+            title: "",
+            description: "",
+            resources: [{ title: "", link: "", type: "video" }],
+          },
+        ],
+      });
     } catch (error) {
       console.error(error);
-      alert("Error: " + error.message);
+      alert("Error: " + (error.message || JSON.stringify(error)));
     }
   };
 
@@ -281,8 +307,8 @@ const RoadmapForm = () => {
           <label>Duration (in weeks)</label>
           <input
             type="number"
-            name="estimatedDurationWeeks"
-            value={form.estimatedDurationWeeks}
+            name="duration"
+            value={form.duration}
             onChange={handleChange}
             placeholder="Duration (in weeks)"
             style={inputStyle}
@@ -432,14 +458,18 @@ const RoadmapForm = () => {
                       <label style={{ fontSize: "14px", color: "#666" }}>
                         Type
                       </label>
-                      <input
+                      <select
                         value={res.type}
                         onChange={(e) =>
                           handleResourceChange(i, j, "type", e.target.value)
                         }
-                        placeholder="Type (video, article...)"
                         style={inputStyle}
-                      />
+                      >
+                        <option value="video">video</option>
+                        <option value="article">article</option>
+                        <option value="book">book</option>
+                        <option value="course">course</option>
+                      </select>
                     </div>
                   </div>
                   <label style={{ fontSize: "14px", color: "#666" }}>

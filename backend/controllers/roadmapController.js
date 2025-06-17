@@ -1,5 +1,4 @@
-const { Roadmap } = require("../models/user");
-
+const Roadmap = require("../models/roadmaps");
 // Get all roadmaps
 const getAllRoadmaps = async (req, res) => {
   try {
@@ -15,7 +14,7 @@ const createRoadmap = async (req, res) => {
   try {
     const newRoadmap = new Roadmap(req.body);
     await newRoadmap.save();
-    res.status(201).json(newRoadmap);
+    res.status(201).json({message: "Roadmap created successfully", });
   } catch (error) {
     res.status(400).json({ message: "Failed to create roadmap", error });
   }
