@@ -25,7 +25,11 @@ exports.getUserProfile = async (req, res) => {
 
 exports.getAllInstructors = async (req, res) => {
   try {
-    const instructors = await User.find({ role: "Instructor" });
+    const loggedInId = req.user.id;
+    const instructors = await User.find({
+      role: "Instructor",
+      _id: { $ne: loggedInId }
+    });
     if (!instructors || instructors.length === 0) {
       return res.status(404).json({ msg: "No instructors found" });
     }

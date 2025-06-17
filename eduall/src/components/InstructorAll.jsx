@@ -9,7 +9,13 @@ const InstructorAll = () => {
   useEffect(() => {
     const fetchInstructors = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/auth/instructors");
+        const token = localStorage.getItem("token");
+        const res = await fetch("http://localhost:5000/api/auth/instructors", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
         if (!res.ok) throw new Error("Failed to fetch instructors");
         const data = await res.json();
         setInstructors(data);
