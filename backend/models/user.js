@@ -33,11 +33,8 @@ const userSchema = new mongoose.Schema(
             roadmapsShared: [
               { type: mongoose.Schema.Types.ObjectId, ref: "Roadmap" },
             ],
-            articlesWritten: [
-              { type: mongoose.Schema.Types.ObjectId, ref: "Article" },
-            ],
             liveEventsHosted: [
-              { type: mongoose.Schema.Types.ObjectId, ref: "LiveEvent" },
+              { type: mongoose.Schema.Types.ObjectId, ref: "event" },
             ],
           },
           followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
@@ -70,19 +67,13 @@ const userSchema = new mongoose.Schema(
             roadmaps: [
               { type: mongoose.Schema.Types.ObjectId, ref: "Roadmap" },
             ],
-            articles: [
-              { type: mongoose.Schema.Types.ObjectId, ref: "Article" },
-            ],
           },
           completedContent: {
             roadmaps: [
               { type: mongoose.Schema.Types.ObjectId, ref: "Roadmap" },
             ],
-            articles: [
-              { type: mongoose.Schema.Types.ObjectId, ref: "Article" },
-            ],
             liveEvents: [
-              { type: mongoose.Schema.Types.ObjectId, ref: "LiveEvent" },
+              { type: mongoose.Schema.Types.ObjectId, ref: "event" },
             ],
           },
           learningGoal: String,
@@ -98,11 +89,8 @@ const userSchema = new mongoose.Schema(
             roadmaps: [
               { type: mongoose.Schema.Types.ObjectId, ref: "Roadmap" },
             ],
-            articles: [
-              { type: mongoose.Schema.Types.ObjectId, ref: "Article" },
-            ],
             liveEvents: [
-              { type: mongoose.Schema.Types.ObjectId, ref: "LiveEvent" },
+              { type: mongoose.Schema.Types.ObjectId, ref: "event" },
             ],
           },
         },
@@ -120,73 +108,6 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-const ResourceSchema = new mongoose.Schema({
-  title: String,
-  link: String,
-  type: String,
-});
-
-const StepSchema = new mongoose.Schema({
-  title: String,
-  description: String,
-  resources: [ResourceSchema],
-});
-
-const RoadmapSchema = new mongoose.Schema(
-  {
-    title: String,
-    domain: String,
-    description: String,
-    difficulty: String,
-    estimatedDurationWeeks: Number,
-    prerequisites: [String],
-    tags: [String],
-    steps: [StepSchema],
-  },
-  { timestamps: true }
-);
-
-const articleSchema = new mongoose.Schema(
-  {
-    title: { type: String, required: true, trim: true },
-    content: { type: String, required: true },
-    tags: [{ type: String, trim: true }],
-    coverImage: { type: String, trim: true },
-    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-  },
-  { timestamps: true }
-);
-
-const liveEventSchema = new mongoose.Schema(
-  {
-    title: { type: String, required: true, trim: true },
-    intro: { type: String, required: true, trim: true },
-    sections: [
-      {
-        heading: { type: String, required: true, trim: true },
-        points: [{ type: String, required: true, trim: true }],
-        paragraph: { type: String, required: true, trim: true },
-      },
-    ],
-    schedule: {
-      price: { type: String, required: true, trim: true },
-      instructor: { type: String, required: true, trim: true },
-      image: { type: String, required: true },
-      startTime: { type: Date, required: true },
-      endTime: { type: Date, required: true },
-      participants: { type: Number, default: 0 },
-      location: { type: String, required: true, trim: true },
-    },
-    joinLink: { type: String, required: true, trim: true },
-    registeredUsers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-    isLive: { type: Boolean, default: false },
-  },
-  { timestamps: true }
-);
-
 const User = mongoose.model("User", userSchema);
-const Roadmap = mongoose.model("Roadmap", RoadmapSchema);
-const Article = mongoose.model("Article", articleSchema);
-const LiveEvent = mongoose.model("LiveEvent", liveEventSchema);
 
-module.exports = { User, Roadmap, Article, LiveEvent };
+module.exports = { User };

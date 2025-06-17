@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Preloader from "../helper/Preloader";
 // import img from "../assets/images/thumbs/event-detail-img1.png";
 
 const getImageUrl = (image) => {
@@ -119,7 +120,7 @@ const EventsAllOne = () => {
 
       <div className="d-flex justify-content-start flex-wrap gap-5 pb-10">
         {loading ? (
-          <div className="text-center my-5">Loading...</div>
+          <Preloader />
         ) : error ? (
           <div className="text-center my-5 text-danger">{error}</div>
         ) : filteredEvents.length === 0 ? (

@@ -7,6 +7,8 @@ import "select2";
 
 const HeaderOne = () => {
   let { pathname } = useLocation();
+  const navigate = useNavigate();
+  const { isAuthenticated, logout, user } = useAuth();
   const [scroll, setScroll] = useState(false);
   const [isMenuActive, setIsMenuActive] = useState(false);
 
@@ -61,6 +63,36 @@ const HeaderOne = () => {
     }
   };
 
+  // Profile tab logic
+  const handleProfileClick = () => {
+    if (isAuthenticated) {
+      navigate("/profile");
+    } else {
+      navigate("/sign-in");
+    }
+  };
+
+  // Header right user icon logic
+  const handleUserIconClick = () => {
+    if (isAuthenticated) {
+      logout();
+      navigate("/");
+    } else {
+      navigate("/sign-in");
+    }
+  };
+
+  const handleProtectedMenuClick = (to) => {
+    if (
+      !isAuthenticated &&
+      ["/roadmaps", "/instructor", "/events"].includes(to)
+    ) {
+      navigate("/sign-in");
+    } else {
+      navigate(to);
+    }
+  };
+
   const menuItems = [
     { to: "/", label: "Home" },
     { to: "/about", label: "About" },
@@ -83,33 +115,6 @@ const HeaderOne = () => {
                   <img src='assets/images/logo/logoo.png' alt='Logo' />
                 </Link>
               </div>
-              {/* Logo End  */}
-              {/* Select Start */}
-              <div className='d-sm-block d-none'>
-                <div className='header-select border border-neutral-30 bg-main-25 rounded-pill position-relative'>
-                  <span className='select-icon position-absolute top-50 translate-middle-y inset-inline-start-0 z-1 ms-lg-4 ms-12 text-xl pointer-event-none d-flex'>
-                    <i className='ph-bold ph-squares-four' />
-                  </span>
-                  <select
-                    className='js-example-basic-single border-0'
-                    name='state'
-                    defaultValue='categories'
-                  >
-                    <option value={"Categories"}>Categories</option>
-                    <option value={"Design"}>Design</option>
-                    <option value={"Development"}>Development</option>
-                    <option value={"Architecture"}>Architecture</option>
-                    <option value={"Life Style"}>Life Style</option>
-                    <option value={"Data Science"}>Data Science</option>
-                    <option value={"Marketing"}>Marketing</option>
-                    <option value={"Music"}>Music</option>
-                    <option value={"Typography"}>Typography</option>
-                    <option value={"Finance"}>Finance</option>
-                    <option value={"Motivation"}>Motivation</option>
-                  </select>
-                </div>
-              </div>
-              {/* Select End */}
               {/* Menu Start  */}
               <div className='header-menu d-lg-block d-none'>
                 <ul className='nav-menu flex-align'>
@@ -147,9 +152,26 @@ const HeaderOne = () => {
                           pathname === item.to && "activePage"
                         }`}
                       >
-                        <Link to={item.to} className='nav-menu__link'>
-                          {item.label}
-                        </Link>
+                        {["/roadmaps", "/instructor", "/events"].includes(
+                          item.to
+                        ) ? (
+                          <button
+                            className="nav-menu__link"
+                            style={{
+                              background: "none",
+                              border: "none",
+                              padding: 0,
+                              cursor: "pointer",
+                            }}
+                            onClick={() => handleProtectedMenuClick(item.to)}
+                          >
+                            {item.label}
+                          </button>
+                        ) : (
+                          <a href={item.to} className="nav-menu__link">
+                            {item.label}
+                          </a>
+                        )}
                       </li>
                     )
                   )}
@@ -158,29 +180,52 @@ const HeaderOne = () => {
               {/* Menu End  */}
             </div>
             {/* Header Right start */}
-            <div className='header-right flex-align'>
-              <form
-                action='#'
-                className='search-form position-relative d-xl-block d-none'
+            <div className="header-right flex-align">
+              {isAuthenticated && (
+                <>
+                  {user?.role === "Instructor" ? (
+                    // ✅ Show plus icon for Instructors
+                    <button
+                      onClick={() => navigate("/create-content")} // or desired path
+                      className="info-action w-52 h-52 bg-main-25 hover-bg-main-600 border border-neutral-30 rounded-circle flex-center text-2xl text-neutral-500 hover-text-white hover-border-main-600"
+                      style={{ marginRight: 8 }}
+                      title="Create Roadmap"
+                    >
+                      <i className="ph ph-plus" />
+                    </button>
+                  ) : (
+                    // ✅ Show wishlist icon for non-Instructors
+                    <button
+                      className="info-action w-52 h-52 bg-main-25 hover-bg-main-600 border border-neutral-30 rounded-circle flex-center text-2xl text-neutral-500 hover-text-white hover-border-main-600"
+                      style={{ marginRight: 8 }}
+                      title="Wishlist"
+                      onClick={() => navigate("/wishlist")}
+                    >
+                      <i className="ph ph-heart" />
+                    </button>
+                  )}
+                  <button
+                    onClick={handleProfileClick}
+                    className="info-action w-52 h-52 bg-main-25 hover-bg-main-600 border border-neutral-30 rounded-circle flex-center text-2xl text-neutral-500 hover-text-white hover-border-main-600"
+                    style={{ marginRight: 8 }}
+                    title="Profile"
+                  >
+                    <i className="ph ph-user-circle" />
+                  </button>
+                </>
+              )}
+              <button
+                onClick={handleUserIconClick}
+                className="info-action w-52 h-52 bg-main-25 hover-bg-main-600 border border-neutral-30 rounded-circle flex-center text-2xl text-neutral-500 hover-text-white hover-border-main-600"
+                style={{ marginRight: 8 }}
+                title={isAuthenticated ? "Sign Out" : "Sign In"}
               >
-                <input
-                  type='text'
-                  className='common-input rounded-pill bg-main-25 pe-48 border-neutral-30'
-                  placeholder='Search...'
+                <i
+                  className={`ph ${
+                    isAuthenticated ? "ph-sign-out" : "ph-user-circle"
+                  }`}
                 />
-                <button
-                  type='submit'
-                  className='w-36 h-36 bg-main-600 hover-bg-main-700 rounded-circle flex-center text-md text-white position-absolute top-50 translate-middle-y inset-inline-end-0 me-8'
-                >
-                  <i className='ph-bold ph-magnifying-glass' />
-                </button>
-              </form>
-              <Link
-                to='/sign-in'
-                className='info-action w-52 h-52 bg-main-25 hover-bg-main-600 border border-neutral-30 rounded-circle flex-center text-2xl text-neutral-500 hover-text-white hover-border-main-600'
-              >
-                <i className='ph ph-user-circle' />
-              </Link>
+              </button>
               <button
                 type='button'
                 className='toggle-mobileMenu d-lg-none text-neutral-200 flex-center'
@@ -238,9 +283,29 @@ const HeaderOne = () => {
                     }`}
                     key={index}
                   >
-                    <Link to={item.to} className='nav-menu__link'>
-                      {item.label}
-                    </Link>
+                    {["/roadmaps", "/instructor", "/events"].includes(
+                      item.to
+                    ) ? (
+                      <button
+                        className="nav-menu__link"
+                        style={{
+                          background: "none",
+                          border: "none",
+                          padding: 0,
+                          cursor: "pointer",
+                        }}
+                        onClick={() => {
+                          handleProtectedMenuClick(item.to);
+                          closeMenu();
+                        }}
+                      >
+                        {item.label}
+                      </button>
+                    ) : (
+                      <Link to={item.to} className="nav-menu__link">
+                        {item.label}
+                      </Link>
+                    )}
                   </li>
                 )
               )}

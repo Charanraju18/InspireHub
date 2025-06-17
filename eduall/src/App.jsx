@@ -48,6 +48,7 @@ import TutorDetailsPage from "./pages/TutorDetailsPage.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
 import ResetPassPage from "./pages/ResetPassPage.jsx";
 import ForgotPage from "./pages/ForgotPassPage.jsx";
+import CreateContentPage from "./pages/CreateContentPage.jsx";
 
 function App() {
   return (
@@ -80,6 +81,7 @@ function App() {
         <Route exact path="/contact" element={<ContactPage />} />
         <Route exact path="/course" element={<CoursePage />} />
         <Route exact path="/course-details" element={<CourseDetailsPage />} />
+        <Route exact path="/create-content" element={<CreateContentPage />} />
         <Route
           exact
           path="/course-list-view"
@@ -100,7 +102,7 @@ function App() {
         <Route exact path="/instructor" element={<InstructorPage />} />
         <Route
           exact
-          path="/instructor-details"
+          path="/instructor-details/:id"
           element={<InstructorDetailsPage />}
         />
         <Route exact path="/instructor-two" element={<InstructorTwoPage />} />

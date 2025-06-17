@@ -19,7 +19,7 @@ const CreateEventsPage = () => {
       <HeaderOne />
 
       {/* Breadcrumb */}
-      {/* <Breadcrumb title={"Create Event"} /> */}
+      <Breadcrumb title={"Create Event"} />
 
       {/* EventsAllOne */}
       <EventForm />

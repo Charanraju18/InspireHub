@@ -1,8 +1,11 @@
 import { useState } from "react";
+import { useAuth } from "../authContext"; 
 import axios from "axios";
 
 const EventForm = () => {
+  const { user } = useAuth(); 
   const [form, setForm] = useState({
+    createdBy: user ? user.id : "", 
     title: "",
     intro: "",
     sections: [
@@ -27,7 +30,6 @@ const EventForm = () => {
   const handleChange = (e, sectionIndex, pointIndex) => {
     const { name, value, type } = e.target;
 
-    // For schedule fields
     if (sectionIndex === undefined && name in form.schedule) {
       const newValue =
         type === "datetime-local" ? new Date(value).toISOString() : value;
@@ -40,7 +42,6 @@ const EventForm = () => {
         },
       });
     }
-    // For sections
     else if (sectionIndex !== undefined) {
       const newSections = [...form.sections];
       if (pointIndex !== undefined) {
@@ -50,7 +51,6 @@ const EventForm = () => {
       }
       setForm({ ...form, sections: newSections });
     }
-    // For top-level fields
     else {
       setForm({ ...form, [name]: value });
     }
@@ -75,6 +75,12 @@ const EventForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const userId = user?._id || user?.id;
+    if (!userId) {
+      alert("You must be logged in as an instructor to create an event.");
+      return;
+    }
+
     const updatedSchedule = {
       ...form.schedule,
       startTime: form.schedule.startTime
@@ -86,16 +92,12 @@ const EventForm = () => {
     };
 
     const formData = new FormData();
+    formData.append("createdBy", userId); 
     formData.append("title", form.title);
     formData.append("intro", form.intro);
     formData.append("joinLink", form.joinLink);
-
     formData.append("sections", JSON.stringify(form.sections));
-
-    // Upload image directly (use "image", not "schedule[image]")
     formData.append("image", form.schedule.image);
-
-    // JSON string for schedule except image
     const { image, ...scheduleWithoutImage } = form.schedule;
     formData.append("schedule", JSON.stringify(scheduleWithoutImage));
 

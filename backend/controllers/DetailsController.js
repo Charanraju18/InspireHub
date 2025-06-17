@@ -1,9 +1,20 @@
 const { User } = require("../models/user");
+const Roadmap = require("../models/roadmaps");
+const Event = require("../models/events");
 
 exports.getUserProfile = async (req, res) => {
   try {
     const userId = req.user.id;
-    const user = await User.findById(userId).select("-password");
+    const user = await User.findById(userId)
+      .select("-password")
+      .populate({
+        path: "instructorProfile.content.roadmapsShared",
+        model: "Roadmap"
+      })
+      .populate({
+        path: "instructorProfile.content.liveEventsHosted",
+        model: "Event"
+      });
     if (!user) return res.status(404).json({ msg: "User not found" });
 
     res.status(200).json(user);
@@ -14,7 +25,11 @@ exports.getUserProfile = async (req, res) => {
 
 exports.getAllInstructors = async (req, res) => {
   try {
-    const instructors = await User.find({ role: "Instructor" });
+    const loggedInId = req.user.id;
+    const instructors = await User.find({
+      role: "Instructor",
+      _id: { $ne: loggedInId }
+    });
     if (!instructors || instructors.length === 0) {
       return res.status(404).json({ msg: "No instructors found" });
     }
@@ -27,7 +42,15 @@ exports.getAllInstructors = async (req, res) => {
 exports.getSelectedInstructor = async (req, res) => {
   const { id } = req.params;
   try {
-    const instructor = await User.findOne({ _id: id, role: "Instructor" });
+    const instructor = await User.findOne({ _id: id, role: "Instructor" })
+      .populate({
+        path: "instructorProfile.content.roadmapsShared",
+        model: "Roadmap"
+      })
+      .populate({
+        path: "instructorProfile.content.liveEventsHosted",
+        model: "Event"
+      });
     if (!instructor) {
       return res.status(404).json({ msg: "Instructor not found" });
     }

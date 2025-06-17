@@ -1,11 +1,13 @@
 const Event = require("../models/events");
+const { User } = require("../models/user");
 
 // POST: Create new event
 exports.createEvent = async (req, res) => {
   try {
     const { body, file } = req;
 
-    // Parse schedule JSON if sent as string
+    // Parse schedule and sections first (same as you already do)
+
     let parsedSchedule = {};
     if (body.schedule) {
       try {
@@ -15,9 +17,8 @@ exports.createEvent = async (req, res) => {
         return res.status(400).json({ error: "Invalid schedule format" });
       }
     }
-
-    // Parse sections JSON if sent as string
     let parsedSections = [];
+
     if (body.sections) {
       try {
         parsedSections = JSON.parse(body.sections);
@@ -26,30 +27,48 @@ exports.createEvent = async (req, res) => {
         return res.status(400).json({ error: "Invalid sections format" });
       }
     }
-
-    // Convert uploaded image buffer to base64 string
     const base64Image = file
       ? `data:${file.mimetype};base64,${file.buffer.toString("base64")}`
       : parsedSchedule.image || null;
 
-    const newEvent = new Event({
+    // **Tie the event to a User (instructor)**
+    // Here we take it from the body; alternatively from req.user if you have auth
+    const createdBy = body.createdBy; // make sure to send this from frontend
+
+    if (!createdBy) {
+      return res.status(400).json({ error: "createdBy (User) is required" });
+    }
+  
+    const newEvent = new Event({ 
       title: body.title,
       intro: body.intro,
       joinLink: body.joinLink,
       sections: parsedSections,
-      schedule: {
-        ...parsedSchedule,
-        image: base64Image,
+      schedule: { 
+        ...parsedSchedule, 
+        image: base64Image 
       },
+      createdBy
     });
 
     await newEvent.save();
-    res.status(201).json({ message: "Event created", event: newEvent });
+
+    // Push this event's ID into instructor's profile
+    await User.findByIdAndUpdate(
+      createdBy,
+      { $push: { "instructorProfile.content.liveEventsHosted": newEvent._id } },
+      { new: true }
+    );
+
+    res.status(201).json({ message: "Event created and added to instructor's profile.", event: newEvent });
+
   } catch (err) {
     console.error("Error saving event:", err.message);
     res.status(500).json({ error: "Failed to save event" });
   }
 };
+
+
 
 // GET: All events
 exports.getAllEvents = async (req, res) => {
