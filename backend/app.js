@@ -20,10 +20,15 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // Routes
 app.use("/api/events", require("./routes/eventRoutes"));
 app.use("/api/auth", require("./routes/authRoutes"));
-//alekhya2 branch merge changed
+// <<<<<<< HEAD
 app.use("/api/posts", require("./routes/postRoutes"));
 
 // Root Route
+// =======
+app.use("/api/roadmaps", require("./routes/roadmapRoutes"));
+app.use("/api/mail", require("./routes/nodeMailerRoute"));
+
+// >>>>>>> main
 app.get("/", (req, res) => {
   res.send("Hello from Express and MongoDB!");
 });
