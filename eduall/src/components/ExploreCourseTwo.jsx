@@ -127,6 +127,7 @@ const ExploreCourseTwo = () => {
         </div>
         <div className='tab-content' id='pills-tabContent'>
           {/* down 6 cards content  along with see all courses */}
+{/* -------------------------------------------------------------------- */}
           <div
             className='tab-pane fade show active'
             id='pills-categories'
@@ -134,12 +135,14 @@ const ExploreCourseTwo = () => {
             aria-labelledby='pills-categories-tab'
             tabIndex={0}
           >
+
             <div className='row gy-4'>
               <div
                 className='col-lg-4 col-sm-6 wow fadeInUp'
                 data-aos='fade-up'
                 data-aos-duration={200}
               >
+                {/* -------------------------------------------------- */}
                 <div className='course-item bg-white rounded-16 p-12 h-100 box-shadow-md'>
                   <div className='course-item__thumb rounded-12 overflow-hidden position-relative'>
                     <Link to='/course-details' className='w-100 h-100'>
@@ -226,6 +229,7 @@ const ExploreCourseTwo = () => {
                     </div>
                   </div>
                 </div>
+                {/* ------------------------------------------------------------------- */}
               </div>
               <div
                 className='col-lg-4 col-sm-6 wow fadeInUp'
@@ -701,7 +705,7 @@ const ExploreCourseTwo = () => {
               </Link>
             </div>
           </div>
-
+{/* --------------------------------------------------------- */}
 
           <div
             className='tab-pane fade'
