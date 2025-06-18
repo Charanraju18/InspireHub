@@ -307,7 +307,7 @@ const InstructorDetails = ({
                   {instructor.name}
                 </h2>
                 <span>
-                  {!isOwnProfile && isAuthenticated && (
+                  {!hideGetInTouch && !isOwnProfile && isAuthenticated && (
                     isFollowing ? (
                       <button
                         type="button"
