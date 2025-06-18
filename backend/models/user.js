@@ -38,6 +38,7 @@ const userSchema = new mongoose.Schema(
             ],
           },
           followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+          followingInstructors: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
           awards: [String],
           reviews: [
             {

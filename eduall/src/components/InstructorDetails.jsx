@@ -313,195 +313,98 @@ const InstructorDetails = ({
             </div>
           </div>
         </div>
-        {/* Roadmaps and Events Conducted - Full Screen Below Get in Touch, Grid View */}
+        {/* Roadmaps Shared Section - Grid View */}
         <div className="row mt-5">
           <div className="col-12">
             <span className="d-block border border-neutral-30 my-40 border-dashed" />
-            {/* Roadmaps Section - Grid View */}
-            <h4 className="mb-24">Roadmaps</h4>
-            <div className="row gy-4 mb-32">
-              {(instructor.instructorProfile?.roadmaps?.length > 0
-                ? instructor.instructorProfile.roadmaps
-                : [
-                    "Full Stack Developer Roadmap",
-                    "Data Science Roadmap",
-                    "Frontend Mastery Roadmap",
-                  ]
-              ).map((roadmap, idx) => (
-                <div className="col-lg-4 col-md-6 col-12" key={idx}>
-                  <div className="course-item bg-info-100 rounded-16 p-24 h-100 box-shadow-md d-flex align-items-center gap-16">
-                    <span className="text-info-700 text-2xl d-flex">
-                      <i className="ph-bold ph-map-trifold" />
-                    </span>
-                    <span className="fw-semibold text-info-700 fs-5">
-                      {roadmap}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <span className="d-block border border-neutral-30 my-40 border-dashed" />
-            {/* Events Conducted Section - Grid View */}
-            <h4 className="mb-24">Events Conducted</h4>
-            <div className="row gy-4">
-              {(instructor.instructorProfile?.eventsConducted?.length > 0
-                ? instructor.instructorProfile.eventsConducted
-                : [
-                    {
-                      title: "Webinar: React Basics",
-                      date: "March 10, 2025",
-                      description:
-                        "An introductory webinar covering the fundamentals of React.js for beginners.",
-                      image: "/assets/images/thumbs/course-img1.png",
-                    },
-                    {
-                      title: "Workshop: Data Science Bootcamp",
-                      date: "April 22, 2025",
-                      description:
-                        "A hands-on workshop exploring data science tools and techniques for aspiring analysts.",
-                      image: "/assets/images/thumbs/course-img2.png",
-                    },
-                  ]
-              ).map((event, idx) => (
-                <div className="col-lg-6 col-md-12 col-12" key={idx}>
-                  <div className="course-item bg-white rounded-16 p-12 h-100 box-shadow-md d-flex flex-column flex-md-row align-items-md-center gap-24">
-                    <div
-                      className="course-item__thumb rounded-12 overflow-hidden position-relative mb-3 mb-md-0"
-                      style={{ minWidth: 220, maxWidth: 320 }}
-                    >
-                      {event.image ? (
-                        <img
-                          src={event.image}
-                          alt={event.title}
-                          className="course-item__img rounded-12 cover-img transition-2 w-100"
-                          style={{ height: 180, objectFit: "cover" }}
-                        />
-                      ) : (
-                        <div
-                          className="bg-main-25 rounded-12 d-flex align-items-center justify-content-center"
-                          style={{ height: 180 }}
-                        >
-                          <i className="ph-bold ph-calendar text-4xl text-main-600" />
-                        </div>
-                      )}
-                    </div>
-                    <div className="course-item__content flex-grow-1">
-                      <h5 className="mb-2">{event.title}</h5>
-                      <div className="mb-2 text-neutral-700 fw-medium text-md">
-                        {event.date}
-                      </div>
-                      <div className="mb-2 text-neutral-500">
-                        {event.description}
-                      </div>
-                      {event.link && (
-                        <a
-                          href={event.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-main-600 fw-semibold"
-                        >
-                          View Details <i className="ph ph-arrow-right" />
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <span className="d-block border border-neutral-30 my-40 border-dashed" />
-            {/* Roadmaps Shared Section - Grid View */}
             <h4 className="mb-24">Roadmaps Shared</h4>
             <div className="row gy-4 mb-32">
-              {(instructor.instructorProfile?.roadmapsShared?.length > 0
-                ? instructor.instructorProfile.roadmapsShared
-                : [
-                    "Sample Roadmap 1",
-                    "Sample Roadmap 2",
-                    "Sample Roadmap 3",
-                  ]
-              ).map((roadmap, idx) => (
-                <div className="col-lg-4 col-md-6 col-12" key={idx}>
-                  <div className="course-item bg-info-100 rounded-16 p-24 h-100 box-shadow-md d-flex align-items-center gap-16">
-                    <span className="text-info-700 text-2xl d-flex">
-                      <i className="ph-bold ph-map-trifold" />
-                    </span>
-                    <span className="fw-semibold text-info-700 fs-5">
-                      {typeof roadmap === 'string' ? roadmap : roadmap.title || JSON.stringify(roadmap)}
+              {(instructor.instructorProfile?.content?.roadmapsShared?.length > 0) ? (
+                instructor.instructorProfile.content.roadmapsShared.map((roadmap, idx) => (
+                  <div className="col-lg-4 col-md-6 col-12" key={idx}>
+                    <div className="course-item bg-info-100 rounded-16 p-24 h-100 box-shadow-md d-flex align-items-center gap-16">
+                      <span className="text-info-700 text-2xl d-flex">
+                        <i className="ph-bold ph-map-trifold" />
+                      </span>
+                      <span className="fw-semibold text-info-700 fs-5">
+                        {roadmap.title || 'Untitled Roadmap'}
+                      </span>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="col-12">
+                  <div className="course-item bg-light rounded-16 p-24 h-100 box-shadow-md d-flex align-items-center justify-content-center">
+                    <span className="fw-semibold text-secondary fs-5">
+                      No roadmaps shared by this instructor.
                     </span>
                   </div>
                 </div>
-              ))}
+              )}
             </div>
             <span className="d-block border border-neutral-30 my-40 border-dashed" />
             {/* Live Events Hosted Section - Grid View */}
             <h4 className="mb-24">Live Events Hosted</h4>
             <div className="row gy-4">
-              {(instructor.instructorProfile?.liveEventsHosted?.length > 0
-                ? instructor.instructorProfile.liveEventsHosted
-                : [
-                    {
-                      title: "Sample Live Event 1",
-                      date: "May 1, 2025",
-                      description: "Sample description for live event 1.",
-                      image: "/assets/images/thumbs/course-img1.png",
-                    },
-                    {
-                      title: "Sample Live Event 2",
-                      date: "June 10, 2025",
-                      description: "Sample description for live event 2.",
-                      image: "/assets/images/thumbs/course-img2.png",
-                    },
-                  ]
-              ).map((event, idx) => (
-                <div className="col-lg-6 col-md-12 col-12" key={idx}>
-                  <div className="course-item bg-white rounded-16 p-12 h-100 box-shadow-md d-flex flex-column flex-md-row align-items-md-center gap-24">
-                    <div
-                      className="course-item__thumb rounded-12 overflow-hidden position-relative mb-3 mb-md-0"
-                      style={{ minWidth: 220, maxWidth: 320 }}
-                    >
-                      {event.image ? (
-                        <img
-                          src={event.image}
-                          alt={event.title}
-                          className="course-item__img rounded-12 cover-img transition-2 w-100"
-                          style={{ height: 180, objectFit: "cover" }}
-                        />
-                      ) : (
-                        <div
-                          className="bg-main-25 rounded-12 d-flex align-items-center justify-content-center"
-                          style={{ height: 180 }}
-                        >
-                          <i className="ph-bold ph-calendar text-4xl text-main-600" />
+              {(instructor.instructorProfile?.content?.liveEventsHosted?.length > 0) ? (
+                instructor.instructorProfile.content.liveEventsHosted.map((event, idx) => (
+                  <div className="col-lg-6 col-md-12 col-12" key={idx}>
+                    <div className="course-item bg-white rounded-16 p-12 h-100 box-shadow-md d-flex flex-column flex-md-row align-items-md-center gap-24">
+                      <div
+                        className="course-item__thumb rounded-12 overflow-hidden position-relative mb-3 mb-md-0"
+                        style={{ minWidth: 220, maxWidth: 320 }}
+                      >
+                        {event.image ? (
+                          <img
+                            src={event.image}
+                            alt={event.title || 'Event'}
+                            className="course-item__img rounded-12 cover-img transition-2 w-100"
+                            style={{ height: 180, objectFit: "cover" }}
+                          />
+                        ) : (
+                          <div
+                            className="bg-main-25 rounded-12 d-flex align-items-center justify-content-center"
+                            style={{ height: 180 }}
+                          >
+                            <i className="ph-bold ph-calendar text-4xl text-main-600" />
+                          </div>
+                        )}
+                      </div>
+                      <div className="course-item__content flex-grow-1">
+                        <h5 className="mb-2">{event.title || 'Untitled Event'}</h5>
+                        <div className="mb-2 text-neutral-700 fw-medium text-md">
+                          {event.date || (event.startDate ? new Date(event.startDate).toLocaleDateString() : '')}
                         </div>
-                      )}
-                    </div>
-                    <div className="course-item__content flex-grow-1">
-                      <h5 className="mb-2">{event.title}</h5>
-                      <div className="mb-2 text-neutral-700 fw-medium text-md">
-                        {event.date}
+                        <div className="mb-2 text-neutral-500">
+                          {event.description || 'No description available.'}
+                        </div>
+                        {event.link && (
+                          <a
+                            href={event.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-main-600 fw-semibold"
+                          >
+                            View Details <i className="ph ph-arrow-right" />
+                          </a>
+                        )}
                       </div>
-                      <div className="mb-2 text-neutral-500">
-                        {event.description}
-                      </div>
-                      {event.link && (
-                        <a
-                          href={event.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-main-600 fw-semibold"
-                        >
-                          View Details <i className="ph ph-arrow-right" />
-                        </a>
-                      )}
                     </div>
                   </div>
+                ))
+              ) : (
+                <div className="col-12">
+                  <div className="course-item bg-light rounded-16 p-24 h-100 box-shadow-md d-flex align-items-center justify-content-center">
+                    <span className="fw-semibold text-secondary fs-5">
+                      No live events hosted by this instructor.
+                    </span>
+                  </div>
                 </div>
-              ))}
+              )}
             </div>
             <span className="d-block border border-neutral-30 my-40 border-dashed" />
           </div>
         </div>
-        {/* Additional instructor details can be added here */}
       </div>
     </section>
   );
