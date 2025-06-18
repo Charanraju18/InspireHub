@@ -206,30 +206,27 @@ const getFollowingInstructors = async (req, res) => {
 
 const getFollowers = async (req, res) => {
   try {
-    const instructorId = req.user.id;
-    const userRole = await User.findById(instructorId).select('role');
-    
-    if (!userRole) {
-      return res.status(404).json({ 
-        success: false, 
-        message: "User not found" 
+    const instructorId = req.params.instructorId || req.user?.id;
+    if (!instructorId) {
+      return res.status(400).json({
+        success: false,
+        message: "Instructor ID is required"
       });
     }
-
-    if (userRole.role !== "Instructor") {
-      return res.status(403).json({ 
-        success: false, 
-        message: "Only instructors can view their followers" 
+    const user = await User.findById(instructorId).select('role instructorProfile');
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found"
       });
     }
-    const instructor = await User.findById(instructorId)
-      .populate({
-        path: "instructorProfile.followers",
-        select: "name email role"
+    if (user.role !== "Instructor") {
+      return res.status(403).json({
+        success: false,
+        message: "Only instructors can have followers"
       });
-
-    const followers = instructor.instructorProfile?.followers || [];
-
+    }
+    const followers = user.instructorProfile?.followers || [];
     res.status(200).json({
       success: true,
       message: "Followers retrieved successfully",
@@ -238,12 +235,11 @@ const getFollowers = async (req, res) => {
         followers
       }
     });
-
   } catch (error) {
     console.error("Error in getFollowers:", error);
-    res.status(500).json({ 
-      success: false, 
-      message: "Internal server error" 
+    res.status(500).json({
+      success: false,
+      message: "Internal server error"
     });
   }
 };

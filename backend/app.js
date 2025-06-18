@@ -9,7 +9,12 @@ const PORT = process.env.PORT || 3000;
 
 connectDB();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 app.use(bodyparser.json({ limit: "10mb" }));
 app.use(bodyparser.urlencoded({ limit: "10mb", extended: true }));
 
@@ -17,7 +22,7 @@ app.use(bodyparser.urlencoded({ limit: "10mb", extended: true }));
 app.use("/api/events", require("./routes/eventRoutes"));
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/roadmaps", require("./routes/roadmapRoutes"));
-app.use('/api/follow-instructors', require('./routes/followRoutes'));
+app.use("/api/follow-instructors", require("./routes/followRoutes"));
 
 app.get("/", (req, res) => {
   res.send("Hello from Express and MongoDB!");
