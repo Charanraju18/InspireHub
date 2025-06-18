@@ -17,7 +17,7 @@ app.use(bodyparser.urlencoded({ limit: "10mb", extended: true }));
 app.use("/api/events", require("./routes/eventRoutes"));
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/roadmaps", require("./routes/roadmapRoutes"));
-app.use("/api/mail", require("./routes/nodeMailerRoute"));
+app.use("/", require("./routes/nodeMailerRoute"));
 
 app.get("/", (req, res) => {
   res.send("Hello from Express and MongoDB!");

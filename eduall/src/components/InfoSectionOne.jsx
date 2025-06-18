@@ -67,7 +67,7 @@ const InfoSectionOne = () => {
               </span>
               <div className="flex-grow-1">
                 <h5 className="mb-8 text-white fw-medium">Favorite roadmaps</h5>
-                <span className="text-sm text-white"></span>
+                <span className="text-sm text-white">You can store favourite roadmaps under favourites</span>
               </div>
             </div>
           </div>
