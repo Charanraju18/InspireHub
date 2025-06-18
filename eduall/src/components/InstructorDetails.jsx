@@ -16,6 +16,7 @@ const InstructorDetails = ({
   const [followersCount, setFollowersCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
   const [followLoading, setFollowLoading] = useState(false);
+  const [showUnfollowModal, setShowUnfollowModal] = useState(false);
 
   useEffect(() => {
     if (propInstructor) return;
@@ -157,7 +158,6 @@ const InstructorDetails = ({
     }
   };
 
-
   if (loading) return <div className="text-center my-5">Loading...</div>;
   if (error) return <div className="text-center my-5 text-danger">{error}</div>;
   if (!instructor)
@@ -169,6 +169,64 @@ const InstructorDetails = ({
 
   return (
     <section className="instructor-details py-120 position-relative z-1">
+      {/* Custom Unfollow Confirmation Modal */}
+      {showUnfollowModal && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            background: "rgba(0,0,0,0.4)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 9999,
+          }}
+        >
+          <div
+            style={{
+              background: "#fff",
+              borderRadius: 12,
+              padding: 32,
+              minWidth: 320,
+              boxShadow: "0 4px 32px rgba(0,0,0,0.15)",
+              textAlign: "center",
+            }}
+          >
+            <h5 style={{ marginBottom: 16 }}>Unfollow Instructor?</h5>
+            <p style={{ marginBottom: 24 }}>
+              Are you sure you want to unfollow this instructor?
+            </p>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                gap: 16,
+              }}
+            >
+              <button
+                className="btn btn-danger"
+                onClick={() => {
+                  setShowUnfollowModal(false);
+                  handleUnfollow();
+                }}
+                style={{ minWidth: 80 }}
+              >
+                Unfollow
+              </button>
+              <button
+                className="btn btn-secondary"
+                onClick={() => setShowUnfollowModal(false)}
+                style={{ minWidth: 80 }}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="container">
         <div className="row gy-4">
           <div className="col-lg-4">
@@ -261,7 +319,7 @@ const InstructorDetails = ({
                   <h5 className="mb-20 text-center">Get in Touch</h5>
                   <form
                     onSubmit={(e) => {
-                      e.preventDefault(); 
+                      e.preventDefault();
                     }}
                   >
                     <div className="mb-16">
@@ -311,7 +369,7 @@ const InstructorDetails = ({
                     isFollowing ? (
                       <button
                         type="button"
-                        onClick={handleUnfollow}
+                        onClick={() => setShowUnfollowModal(true)}
                         className="btn w-125 text-white"
                         style={{ backgroundColor: "green" }}
                         disabled={followLoading}
