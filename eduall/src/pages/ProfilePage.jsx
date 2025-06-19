@@ -292,56 +292,7 @@ const ProfilePage = () => {
                         </div>
                       </div>
                     )}
-                    {/* Live Events */}
-                    {learnerProfile.followingContent?.liveEvents?.length > 0 ? (
-                      learnerProfile.followingContent.liveEvents.map((event, idx) => (
-                        <div className="col-md-6 col-12" key={"event-" + idx}>
-                          <div className="course-item bg-warning-100 rounded-16 p-24 h-100 box-shadow-md d-flex flex-column flex-md-row align-items-md-center gap-24">
-                            <div
-                              className="course-item__thumb rounded-12 overflow-hidden position-relative mb-3 mb-md-0"
-                              style={{ minWidth: 120, maxWidth: 180 }}
-                            >
-                              {event.image ? (
-                                <img
-                                  src={event.image}
-                                  alt={event.title}
-                                  className="course-item__img rounded-12 cover-img transition-2 w-100"
-                                  style={{ height: 100, objectFit: "cover" }}
-                                />
-                              ) : (
-                                <div
-                                  className="bg-main-25 rounded-12 d-flex align-items-center justify-content-center"
-                                  style={{ height: 100 }}
-                                >
-                                  <i className="ph-bold ph-calendar text-2xl text-main-600" />
-                                </div>
-                              )}
-                            </div>
-                            <div className="course-item__content flex-grow-1">
-                              <h5 className="mb-2">{event.title}</h5>
-                              {event.date && (
-                                <div className="mb-2 text-neutral-700 fw-medium text-md">
-                                  {event.date}
-                                </div>
-                              )}
-                              {event.description && (
-                                <div className="mb-2 text-neutral-500">
-                                  {event.description}
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      ))
-                    ) : (
-                      <div className="col-12">
-                        <div className="course-item bg-light rounded-16 p-24 h-100 box-shadow-md d-flex align-items-center justify-content-center">
-                          <span className="fw-semibold text-secondary fs-5">
-                            No following live events.
-                          </span>
-                        </div>
-                      </div>
-                    )}
+                    {/* Live Events section removed as per request */}
                   </div>
                   <span className="d-block border border-neutral-30 my-40 border-dashed" />
                   <h4 className="mb-24">Completed Content</h4>
@@ -369,7 +320,7 @@ const ProfilePage = () => {
                         </div>
                       </div>
                     )}
-                    {/* Live Events */}
+                    {/* Completed Live Events */}
                     {learnerProfile.completedContent?.liveEvents?.length > 0 ? (
                       learnerProfile.completedContent.liveEvents.map((event, idx) => (
                         <div className="col-md-6 col-12" key={"event-" + idx}>
