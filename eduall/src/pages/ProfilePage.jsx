@@ -10,6 +10,7 @@ import InstructorDetails from "../components/InstructorDetails";
 const ProfilePage = () => {
   const { user: authUser } = useAuth();
   const [user, setUser] = useState(null);
+  const [learnerProfile, setLearnerProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -36,6 +37,15 @@ const ProfilePage = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUser(res.data);
+        if (res.data.role === "Learner") {
+          const learnerRes = await axios.get(
+            "http://localhost:5000/api/auth/learner-content",
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
+          setLearnerProfile(learnerRes.data);
+        } else {
+          setLearnerProfile(null);
+        } 
       } catch (err) {
         if (err.response && err.response.data && err.response.data.message) {
           setError(err.response.data.message);
@@ -63,7 +73,7 @@ const ProfilePage = () => {
           <InstructorDetails instructor={user} hideGetInTouch={true} />
           <FooterOne />
         </>
-      ) : user.role === "Learner" && user.learnerProfile ? (
+      ) : user.role === "Learner" && learnerProfile ? (
         <>
           <HeaderOne />
           <Breadcrumb title={"Profile"} />
@@ -175,7 +185,7 @@ const ProfilePage = () => {
                       </h2>
                     </div>
                     <div className="mb-16 text-neutral-700 fw-medium text-md">
-                      {user.learnerProfile.skillLevel || "N/A"}
+                      {learnerProfile.skillLevel || "N/A"}
                     </div>
                     <div className="d-flex align-items-center gap-24 mb-32 flex-wrap">
                       <div className="d-flex align-items-center gap-8">
@@ -183,41 +193,31 @@ const ProfilePage = () => {
                           <i className="ph-bold ph-graduation-cap" />
                         </span>
                         <span className="text-neutral-700 text-md fw-medium">
-                          {user.learnerProfile.currentEducation || "N/A"}
+                          {learnerProfile.currentEducation || "N/A"}
                         </span>
                       </div>
                       <span
                         className="vr bg-neutral-200 mx-2"
-                        style={{
-                          width: 2,
-                          height: 24,
-                          display: "inline-block",
-                        }}
+                        style={{ width: 2, height: 24, display: "inline-block" }}
                       ></span>
                       <div className="d-flex align-items-center gap-8">
                         <span className="text-neutral-700 text-2xl d-flex">
                           <i className="ph-bold ph-calendar-blank" />
                         </span>
                         <span className="text-neutral-700 text-md fw-medium">
-                          {user.learnerProfile.yearOfStudy || "N/A"}
+                          {learnerProfile.yearOfStudy || "N/A"}
                         </span>
                       </div>
                       <span
                         className="vr bg-neutral-200 mx-2"
-                        style={{
-                          width: 2,
-                          height: 24,
-                          display: "inline-block",
-                        }}
+                        style={{ width: 2, height: 24, display: "inline-block" }}
                       ></span>
                       <div className="d-flex align-items-center gap-8">
                         <span className="text-neutral-700 text-2xl d-flex">
                           <i className="ph-bold ph-users" />
                         </span>
                         <span className="text-neutral-700 text-md fw-medium">
-                          {user.learnerProfile.followingInstructors?.length ||
-                            0}{" "}
-                          Following
+                          {learnerProfile.followingInstructors?.length || 0} Following
                         </span>
                       </div>
                     </div>
@@ -232,17 +232,15 @@ const ProfilePage = () => {
                     {/* Interested Domains Section */}
                     <h4 className="mb-24">Interested Domains</h4>
                     <div className="d-flex flex-wrap gap-8 mb-32">
-                      {user.learnerProfile.interestedDomains?.length > 0 ? (
-                        user.learnerProfile.interestedDomains.map(
-                          (domain, idx) => (
-                            <span
-                              key={idx}
-                              className="badge bg-main-25 text-main-600 border border-main-600 fw-normal mb-4"
-                            >
-                              {domain}
-                            </span>
-                          )
-                        )
+                      {learnerProfile.interestedDomains?.length > 0 ? (
+                        learnerProfile.interestedDomains.map((domain, idx) => (
+                          <span
+                            key={idx}
+                            className="badge bg-main-25 text-main-600 border border-main-600 fw-normal mb-4"
+                          >
+                            {domain}
+                          </span>
+                        ))
                       ) : (
                         <span className="text-neutral-400">N/A</span>
                       )}
@@ -265,8 +263,6 @@ const ProfilePage = () => {
               </div>{" "}
               {/* end row gy-4 (profile+contact+right details) */}
             </div>{" "}
-            {/* close main profile container */}
-            {/* Following Content Section - Full Width Grid */}
             <div className="container">
               <div className="row mt-5">
                 <div className="col-12">
@@ -274,168 +270,106 @@ const ProfilePage = () => {
                   <h4 className="mb-24">Following Content</h4>
                   <div className="row gy-4 mb-32">
                     {/* Roadmaps */}
-                    {(user.learnerProfile.followingContent?.roadmaps?.length > 0
-                      ? user.learnerProfile.followingContent.roadmaps
-                      : [
-                          { title: "Full Stack Developer Roadmap" },
-                          { title: "Data Science Roadmap" },
-                          { title: "Frontend Mastery Roadmap" },
-                        ]
-                    ).map((roadmap, idx) => (
-                      <div className="col-md-4 col-12" key={idx}>
-                        <div className="course-item bg-info-100 rounded-16 p-24 h-100 box-shadow-md d-flex align-items-center gap-16">
-                          <span className="text-info-700 text-2xl d-flex">
-                            <i className="ph-bold ph-map-trifold" />
-                          </span>
-                          <span className="fw-semibold text-info-700 fs-5">
-                            {roadmap.title || roadmap}
+                    {learnerProfile.followingContent?.roadmaps?.length > 0 ? (
+                      learnerProfile.followingContent.roadmaps.map((roadmap, idx) => (
+                        <div className="col-md-4 col-12" key={idx}>
+                          <div className="course-item bg-info-100 rounded-16 p-24 h-100 box-shadow-md d-flex align-items-center gap-16">
+                            <span className="text-info-700 text-2xl d-flex">
+                              <i className="ph-bold ph-map-trifold" />
+                            </span>
+                            <span className="fw-semibold text-info-700 fs-5">
+                              {roadmap.title || roadmap}
+                            </span>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="col-12">
+                        <div className="course-item bg-light rounded-16 p-24 h-100 box-shadow-md d-flex align-items-center justify-content-center">
+                          <span className="fw-semibold text-secondary fs-5">
+                            No following roadmaps.
                           </span>
                         </div>
                       </div>
-                    ))}
-                    {/* Live Events */}
-                    {(user.learnerProfile.followingContent?.liveEvents?.length >
-                    0
-                      ? user.learnerProfile.followingContent.liveEvents
-                      : [
-                          {
-                            title: "Webinar: React Basics",
-                            date: "March 10, 2025",
-                            description:
-                              "An introductory webinar covering the fundamentals of React.js for beginners.",
-                            image: "/assets/images/thumbs/course-img1.png",
-                          },
-                          {
-                            title: "Workshop: Data Science Bootcamp",
-                            date: "April 22, 2025",
-                            description:
-                              "A hands-on workshop exploring data science tools and techniques for aspiring analysts.",
-                            image: "/assets/images/thumbs/course-img2.png",
-                          },
-                        ]
-                    ).map((event, idx) => (
-                      <div className="col-md-6 col-12" key={"event-" + idx}>
-                        <div className="course-item bg-warning-100 rounded-16 p-24 h-100 box-shadow-md d-flex flex-column flex-md-row align-items-md-center gap-24">
-                          <div
-                            className="course-item__thumb rounded-12 overflow-hidden position-relative mb-3 mb-md-0"
-                            style={{ minWidth: 120, maxWidth: 180 }}
-                          >
-                            {event.image ? (
-                              <img
-                                src={event.image}
-                                alt={event.title}
-                                className="course-item__img rounded-12 cover-img transition-2 w-100"
-                                style={{ height: 100, objectFit: "cover" }}
-                              />
-                            ) : (
-                              <div
-                                className="bg-main-25 rounded-12 d-flex align-items-center justify-content-center"
-                                style={{ height: 100 }}
-                              >
-                                <i className="ph-bold ph-calendar text-2xl text-main-600" />
-                              </div>
-                            )}
-                          </div>
-                          <div className="course-item__content flex-grow-1">
-                            <h5 className="mb-2">{event.title}</h5>
-                            {event.date && (
-                              <div className="mb-2 text-neutral-700 fw-medium text-md">
-                                {event.date}
-                              </div>
-                            )}
-                            {event.description && (
-                              <div className="mb-2 text-neutral-500">
-                                {event.description}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
+                    )}
+                    {/* Live Events section removed as per request */}
                   </div>
                   <span className="d-block border border-neutral-30 my-40 border-dashed" />
-                  {/* Completed Content Section - Full Width Grid */}
                   <h4 className="mb-24">Completed Content</h4>
                   <div className="row gy-4 mb-32">
                     {/* Roadmaps */}
-                    {(user.learnerProfile.completedContent?.roadmaps?.length > 0
-                      ? user.learnerProfile.completedContent.roadmaps
-                      : [
-                          { title: "Full Stack Developer Roadmap" },
-                          { title: "Data Science Roadmap" },
-                          { title: "Frontend Mastery Roadmap" },
-                        ]
-                    ).map((roadmap, idx) => (
-                      <div className="col-md-4 col-12" key={idx}>
-                        <div className="course-item bg-info-100 rounded-16 p-24 h-100 box-shadow-md d-flex align-items-center gap-16">
-                          <span className="text-info-700 text-2xl d-flex">
-                            <i className="ph-bold ph-map-trifold" />
-                          </span>
-                          <span className="fw-semibold text-info-700 fs-5">
-                            {roadmap.title || roadmap}
+                    {learnerProfile.completedContent?.roadmaps?.length > 0 ? (
+                      learnerProfile.completedContent.roadmaps.map((roadmap, idx) => (
+                        <div className="col-md-4 col-12" key={idx}>
+                          <div className="course-item bg-info-100 rounded-16 p-24 h-100 box-shadow-md d-flex align-items-center gap-16">
+                            <span className="text-info-700 text-2xl d-flex">
+                              <i className="ph-bold ph-map-trifold" />
+                            </span>
+                            <span className="fw-semibold text-info-700 fs-5">
+                              {roadmap.title || roadmap}
+                            </span>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="col-12">
+                        <div className="course-item bg-light rounded-16 p-24 h-100 box-shadow-md d-flex align-items-center justify-content-center">
+                          <span className="fw-semibold text-secondary fs-5">
+                            No completed roadmaps.
                           </span>
                         </div>
                       </div>
-                    ))}
-                    {/* Live Events */}
-                    {(user.learnerProfile.completedContent?.liveEvents?.length >
-                    0
-                      ? user.learnerProfile.completedContent.liveEvents
-                      : [
-                          {
-                            title: "Webinar: React Basics",
-                            date: "March 10, 2025",
-                            description:
-                              "An introductory webinar covering the fundamentals of React.js for beginners.",
-                            image: "/assets/images/thumbs/course-img1.png",
-                          },
-                          {
-                            title: "Workshop: Data Science Bootcamp",
-                            date: "April 22, 2025",
-                            description:
-                              "A hands-on workshop exploring data science tools and techniques for aspiring analysts.",
-                            image: "/assets/images/thumbs/course-img2.png",
-                          },
-                        ]
-                    ).map((event, idx) => (
-                      <div className="col-md-6 col-12" key={"event-" + idx}>
-                        <div className="course-item bg-warning-100 rounded-16 p-24 h-100 box-shadow-md d-flex flex-column flex-md-row align-items-md-center gap-24">
-                          <div
-                            className="course-item__thumb rounded-12 overflow-hidden position-relative mb-3 mb-md-0"
-                            style={{ minWidth: 120, maxWidth: 180 }}
-                          >
-                            {event.image ? (
-                              <img
-                                src={event.image}
-                                alt={event.title}
-                                className="course-item__img rounded-12 cover-img transition-2 w-100"
-                                style={{ height: 100, objectFit: "cover" }}
-                              />
-                            ) : (
-                              <div
-                                className="bg-main-25 rounded-12 d-flex align-items-center justify-content-center"
-                                style={{ height: 100 }}
-                              >
-                                <i className="ph-bold ph-calendar text-2xl text-main-600" />
-                              </div>
-                            )}
-                          </div>
-                          <div className="course-item__content flex-grow-1">
-                            <h5 className="mb-2">{event.title}</h5>
-                            {event.date && (
-                              <div className="mb-2 text-neutral-700 fw-medium text-md">
-                                {event.date}
-                              </div>
-                            )}
-                            {event.description && (
-                              <div className="mb-2 text-neutral-500">
-                                {event.description}
-                              </div>
-                            )}
+                    )}
+                    {/* Completed Live Events */}
+                    {learnerProfile.completedContent?.liveEvents?.length > 0 ? (
+                      learnerProfile.completedContent.liveEvents.map((event, idx) => (
+                        <div className="col-md-6 col-12" key={"event-" + idx}>
+                          <div className="course-item bg-warning-100 rounded-16 p-24 h-100 box-shadow-md d-flex flex-column flex-md-row align-items-md-center gap-24">
+                            <div
+                              className="course-item__thumb rounded-12 overflow-hidden position-relative mb-3 mb-md-0"
+                              style={{ minWidth: 120, maxWidth: 180 }}
+                            >
+                              {event.image ? (
+                                <img
+                                  src={event.image}
+                                  alt={event.title}
+                                  className="course-item__img rounded-12 cover-img transition-2 w-100"
+                                  style={{ height: 100, objectFit: "cover" }}
+                                />
+                              ) : (
+                                <div
+                                  className="bg-main-25 rounded-12 d-flex align-items-center justify-content-center"
+                                  style={{ height: 100 }}
+                                >
+                                  <i className="ph-bold ph-calendar text-2xl text-main-600" />
+                                </div>
+                              )}
+                            </div>
+                            <div className="course-item__content flex-grow-1">
+                              <h5 className="mb-2">{event.title}</h5>
+                              {event.date && (
+                                <div className="mb-2 text-neutral-700 fw-medium text-md">
+                                  {event.date}
+                                </div>
+                              )}
+                              {event.description && (
+                                <div className="mb-2 text-neutral-500">
+                                  {event.description}
+                                </div>
+                              )}
+                            </div>
                           </div>
                         </div>
+                      ))
+                    ) : (
+                      <div className="col-12">
+                        <div className="course-item bg-light rounded-16 p-24 h-100 box-shadow-md d-flex align-items-center justify-content-center">
+                          <span className="fw-semibold text-secondary fs-5">
+                            No completed live events.
+                          </span>
+                        </div>
                       </div>
-                    ))}
+                    )}
                   </div>
                 </div>
               </div>
@@ -446,7 +380,6 @@ const ProfilePage = () => {
       ) : (
         <div className="text-center py-5">No profile data found.</div>
       )}
-      ;
     </>
   );
 };
