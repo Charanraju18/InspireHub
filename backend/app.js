@@ -20,13 +20,15 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // Routes
 app.use("/api/events", require("./routes/eventRoutes"));
 app.use("/api/auth", require("./routes/authRoutes"));
-// <<<<<<< HEAD
-app.use("/api/posts", require("./routes/postRoutes"));
+app.use("/api/roadmaps", require("./routes/roadmapRoutes"));
+app.use("/api/follow-instructors", require("./routes/followRoutes"));
 
 // Root Route
 // =======
 app.use("/api/roadmaps", require("./routes/roadmapRoutes"));
 app.use("/", require("./routes/nodeMailerRoute"));
+//comments route
+// app.use("/api/comments", commentRoutes);
 
 // >>>>>>> main
 app.get("/", (req, res) => {

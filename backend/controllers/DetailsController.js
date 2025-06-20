@@ -59,3 +59,29 @@ exports.getSelectedInstructor = async (req, res) => {
     res.status(500).json({ msg: "Server error", error: err.message });
   }
 };
+
+exports.learnerContent = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const user = await User.findById(userId)
+      .select("learnerProfile")
+      .populate({
+        path: "learnerProfile.followingContent.roadmaps",
+        model: "Roadmap"
+      })
+      .populate({
+        path: "learnerProfile.completedContent.roadmaps",
+        model: "Roadmap"
+      })
+      .populate({
+        path: "learnerProfile.completedContent.liveEvents",
+        model: "Event"
+      });
+    if (!user) return res.status(404).json({ msg: "User not found" });
+
+    res.status(200).json(user.learnerProfile);
+  } catch (err) {
+    res.status(500).json({ msg: "Server error", error: err.message });
+  }
+};
+

@@ -24,6 +24,7 @@ const SignInInner = () => {
       });
       if (res.data && res.data.user) {
         login(res.data.user, res.data.token);
+        console.log(res.data.user);
         navigate("/");
       } else {
         setError("Invalid credentials or account does not exist.");

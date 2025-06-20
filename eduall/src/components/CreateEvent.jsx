@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { useAuth } from "../authContext"; 
+import { useAuth } from "../authContext";
 import axios from "axios";
 
 const EventForm = () => {
-  const { user } = useAuth(); 
+  const { user } = useAuth();
   const [form, setForm] = useState({
-    createdBy: user ? user.id : "", 
+    createdBy: user ? user.id : "",
     title: "",
     intro: "",
     sections: [
@@ -41,8 +41,7 @@ const EventForm = () => {
           [name]: newValue,
         },
       });
-    }
-    else if (sectionIndex !== undefined) {
+    } else if (sectionIndex !== undefined) {
       const newSections = [...form.sections];
       if (pointIndex !== undefined) {
         newSections[sectionIndex].points[pointIndex] = value;
@@ -50,8 +49,7 @@ const EventForm = () => {
         newSections[sectionIndex][name] = value;
       }
       setForm({ ...form, sections: newSections });
-    }
-    else {
+    } else {
       setForm({ ...form, [name]: value });
     }
   };
@@ -92,7 +90,7 @@ const EventForm = () => {
     };
 
     const formData = new FormData();
-    formData.append("createdBy", userId); 
+    formData.append("createdBy", userId);
     formData.append("title", form.title);
     formData.append("intro", form.intro);
     formData.append("joinLink", form.joinLink);
@@ -103,7 +101,7 @@ const EventForm = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/events",
+        "http://localhost:5000/api/events/createEvent",
         formData,
         {
           headers: {
