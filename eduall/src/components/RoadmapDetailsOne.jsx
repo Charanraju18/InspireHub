@@ -1140,223 +1140,6 @@
 
 
 
-// import React, { useEffect, useRef, useState } from "react";
-// import { useParams } from "react-router-dom";
-// import axios from "axios";
-
-// const VisualRoadmapSteps = ({ steps }) => {
-//   const roadmapContainerRef = useRef(null);
-//   const [containerDimensions, setContainerDimensions] = useState({ width: 1000, height: 400 });
-
-//   useEffect(() => {
-//     const roadline = document.querySelector(".roadline");
-//     const roadmapSteps = document.querySelectorAll(".roadmap-step");
-
-//     if (steps.length > 0) {
-//       if (roadline) {
-//         roadline.style.animation = "slideInRoadline 3s ease-out forwards";
-//       }
-
-//       roadmapSteps.forEach((step, index) => {
-//         setTimeout(() => {
-//           step.classList.add("animated");
-//         }, index * 400);
-//       });
-//     }
-
-//     const updateContainerDimensions = () => {
-//       if (roadmapContainerRef.current) {
-//         setContainerDimensions({
-//           width: roadmapContainerRef.current.offsetWidth,
-//           height: roadmapContainerRef.current.offsetHeight,
-//         });
-//       }
-//     };
-
-//     updateContainerDimensions();
-//     window.addEventListener("resize", updateContainerDimensions);
-
-//     return () => window.removeEventListener("resize", updateContainerDimensions);
-//   }, [steps]);
-
-//   const roadlineAngleDegrees = -23;
-//   const roadlineAngleRadians = roadlineAngleDegrees * (Math.PI / 180);
-//   const roadlineHeightPx = 40;
-//   const roadlineInitialTopPercent = 85;
-//   const roadlineTranslateYPercent = -50;
-//   const desiredGapPx = 5;
-//   const stepCircleHeightPx = 50;
-//   const containerHeightStyle = `${Math.max(400, 200 + steps.length * 80)}px`;
-
-//   return (
-//     <div
-//       ref={roadmapContainerRef}
-//       className="roadmap-container"
-//       style={{
-//         position: "relative",
-//         width: "100%",
-//         maxWidth: "1000px",
-//         height: containerHeightStyle,
-//         margin: "2rem auto",
-//         background: "#f9f9f9",
-//         borderRadius: "12px",
-//         boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
-//         padding: "20px",
-//         overflow: "hidden",
-//       }}
-//     >
-//       <style>
-//         {`
-//           @keyframes slideInRoadline {
-//             0% { width: 0; opacity: 0; }
-//             100% { width: 100%; opacity: 1; }
-//           }
-
-//           @keyframes fadeInStep {
-//             0% { opacity: 0; transform: translateY(30px); }
-//             100% { opacity: 1; transform: translateY(0); }
-//           }
-
-//           .roadmap-step.animated {
-//             animation: fadeInStep 1.5s ease-out forwards;
-//           }
-//         `}
-//       </style>
-
-//       <div className="roadline" style={{
-//           position: "absolute",
-//           top: `${roadlineInitialTopPercent-10}%`,
-//           left: "0",
-//           width: "100%",
-//           height: `${roadlineHeightPx}px`,
-//           background: "linear-gradient(to right, #3b3b3b, #1c1c1c)",
-//           transform: `translateY(${roadlineTranslateYPercent}%) rotate(${roadlineAngleDegrees}deg)`,
-//           transformOrigin: "left center",
-//           zIndex: 1,
-//         }}>
-//         <div className="lane-divider" style={{
-//           position: "absolute",
-//           top: "50%",
-//           left: "0",
-//           width: "100%",
-//           height: "4px",
-//           background: "repeating-linear-gradient(to right, transparent, transparent 15px, white 15px, white 30px)",
-//         }}></div>
-//       </div>
-
-//       {steps.map((step, index) => {
-//         const horizontalSpreadFactor = 100 / (steps.length + 1);
-//         const leftPositionPercentage = (index + 0.5) * horizontalSpreadFactor;
-//         const leftPosition = `${leftPositionPercentage}%`;
-
-//         const effectiveContainerWidth = containerDimensions.width - 40;
-//         const stepXCenterPx = (leftPositionPercentage / 100) * effectiveContainerWidth + 20;
-//         const roadlineAbsoluteTopPx = (roadlineInitialTopPercent / 100) * containerDimensions.height;
-//         const roadlineTranslateYPx = (roadlineHeightPx * roadlineTranslateYPercent) / 100;
-//         const roadlinePivotY = roadlineAbsoluteTopPx + roadlineTranslateYPx;
-//         const yOffsetDueToRotation = stepXCenterPx * Math.tan(roadlineAngleRadians);
-//         const roadlineCenterYAtStepX = roadlinePivotY + yOffsetDueToRotation;
-//         const targetStepCircleBottomY = roadlineCenterYAtStepX - desiredGapPx;
-//         const topPositionPx = targetStepCircleBottomY - stepCircleHeightPx;
-//         const topPosition = `${(topPositionPx / containerDimensions.height) * 100}%`;
-
-//         return (
-//           <div
-//             key={step._id}
-//             className="roadmap-step"
-//             style={{
-//               position: "absolute",
-//               top: topPosition,
-//               left: leftPosition,
-//               display: "flex",
-//               flexDirection: "column",
-//               alignItems: "center",
-//             }}
-//           >
-//             <div className="step-circle" style={{
-//               width: `${stepCircleHeightPx}px`,
-//               height: `${stepCircleHeightPx}px`,
-//               borderRadius: "50%",
-//               backgroundColor: "#007bff",
-//               color: "#fff",
-//               display: "flex",
-//               justifyContent: "center",
-//               alignItems: "center",
-//               fontSize: "18px",
-//               fontWeight: "bold",
-//               zIndex: 10,
-//             }}>{index + 1}</div>
-//             <div className="step-bubble" style={{
-//               background: "#fff",
-//               borderRadius: "8px",
-//               padding: "10px 15px",
-//               textAlign: "center",
-//               fontSize: "14px",
-//               maxWidth: "200px",
-//               boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-//               zIndex: "10"
-//             }}>
-//               <strong>{step.title}</strong>
-//               <p>{step.description}</p>
-//             </div>
-//           </div>
-//         );
-//       })}
-//     </div>
-//   );
-// };
-
-// const RoadmapDetails = () => {
-//   const { id } = useParams();
-//   const [roadmap, setRoadmap] = useState(null);
-//   const [loading, setLoading] = useState(true);
-
-//   useEffect(() => {
-//     const fetchRoadmap = async () => {
-//       try {
-//         const res = await axios.get(`http://localhost:5000/api/roadmaps/${id}`);
-//         setRoadmap(res.data);
-//       } catch (error) {
-//         console.error("Failed to fetch roadmap", error);
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchRoadmap();
-//   }, [id]);
-
-//   if (loading) return <p className="text-center mt-5">Loading roadmap...</p>;
-//   if (!roadmap)
-//     return <p className="text-center mt-5 text-danger">Roadmap not found</p>;
-
-//   return (
-//     <div className="container py-5">
-//       <h2 className="mb-3">{roadmap.title}</h2>
-//       <p><strong>Domain:</strong> {roadmap.domain}</p>
-//       <p><strong>Difficulty:</strong> {roadmap.difficulty}</p>
-//       <p><strong>Estimated Duration:</strong> {roadmap.estimatedDurationWeeks} weeks</p>
-//       <p><strong>Tags:</strong> {roadmap.tags.join(", ")}</p>
-
-//       <h4 className="mt-4">Description</h4>
-//       <p>{roadmap.description}</p>
-
-//       <h4 className="mt-4">Prerequisites</h4>
-//       <ul>
-//         {roadmap.prerequisites.map((pre, idx) => <li key={idx}>{pre}</li>)}
-//       </ul>
-
-//       <div className="mt-4 steps-container">
-//         <h4 style={{ textAlign: "center", color: "#333" }}>Steps</h4>
-//         <VisualRoadmapSteps steps={roadmap.steps} />
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default RoadmapDetails;
-
-
 import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
@@ -1399,7 +1182,7 @@ const VisualRoadmapSteps = ({ steps }) => {
   const roadlineAngleDegrees = -23;
   const roadlineAngleRadians = roadlineAngleDegrees * (Math.PI / 180);
   const roadlineHeightPx = 40;
-  const roadlineInitialTopPercent = 75;
+  const roadlineInitialTopPercent = 85;
   const roadlineTranslateYPercent = -50;
   const desiredGapPx = 5;
   const stepCircleHeightPx = 50;
@@ -1440,11 +1223,9 @@ const VisualRoadmapSteps = ({ steps }) => {
         `}
       </style>
 
-      <div
-        className="roadline"
-        style={{
+      <div className="roadline" style={{
           position: "absolute",
-          top: `${roadlineInitialTopPercent - 10}%`,
+          top: `${roadlineInitialTopPercent-10}%`,
           left: "0",
           width: "100%",
           height: `${roadlineHeightPx}px`,
@@ -1452,19 +1233,15 @@ const VisualRoadmapSteps = ({ steps }) => {
           transform: `translateY(${roadlineTranslateYPercent}%) rotate(${roadlineAngleDegrees}deg)`,
           transformOrigin: "left center",
           zIndex: 1,
-        }}
-      >
-        <div
-          className="lane-divider"
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "0",
-            width: "100%",
-            height: "4px",
-            background: "repeating-linear-gradient(to right, transparent, transparent 15px, white 15px, white 30px)",
-          }}
-        ></div>
+        }}>
+        <div className="lane-divider" style={{
+          position: "absolute",
+          top: "50%",
+          left: "0",
+          width: "100%",
+          height: "4px",
+          background: "repeating-linear-gradient(to right, transparent, transparent 15px, white 15px, white 30px)",
+        }}></div>
       </div>
 
       {steps.map((step, index) => {
@@ -1496,62 +1273,31 @@ const VisualRoadmapSteps = ({ steps }) => {
               alignItems: "center",
             }}
           >
-            <div
-              className="step-circle"
-              style={{
-                width: `${stepCircleHeightPx}px`,
-                height: `${stepCircleHeightPx}px`,
-                borderRadius: "50%",
-                backgroundColor: "#007bff",
-                color: "#fff",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                fontSize: "18px",
-                fontWeight: "bold",
-                zIndex: 10,
-              }}
-            >
-              {index + 1}
-            </div>
-            <div
-              className="step-bubble"
-              style={{
-                background: "#fff",
-                borderRadius: "8px",
-                padding: "10px 15px",
-                textAlign: "center",
-                fontSize: "14px",
-                maxWidth: "200px",
-                boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-                zIndex: 10,
-              }}
-            >
+            <div className="step-circle" style={{
+              width: `${stepCircleHeightPx}px`,
+              height: `${stepCircleHeightPx}px`,
+              borderRadius: "50%",
+              backgroundColor: "#007bff",
+              color: "#fff",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              fontSize: "18px",
+              fontWeight: "bold",
+              zIndex: 10,
+            }}>{index + 1}</div>
+            <div className="step-bubble" style={{
+              background: "#fff",
+              borderRadius: "8px",
+              padding: "10px 15px",
+              textAlign: "center",
+              fontSize: "14px",
+              maxWidth: "200px",
+              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+              zIndex: "10"
+            }}>
               <strong>{step.title}</strong>
               <p>{step.description}</p>
-              {step.resources && step.resources.length > 0 && (
-                <div style={{ marginTop: "10px", textAlign: "left" }}>
-                  <strong>Resources:</strong>
-                  <ul style={{ paddingLeft: "20px", marginTop: "5px" }}>
-                    {step.resources.map((resource, resIndex) => (
-                      <li key={resIndex}>
-                        <a
-                          href={resource.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          style={{
-                            textDecoration: "none",
-                            color: "#007bff",
-                            fontSize: "12px",
-                          }}
-                        >
-                          {resource.title} ({resource.type})
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
             </div>
           </div>
         );
@@ -1609,3 +1355,4 @@ const RoadmapDetails = () => {
 };
 
 export default RoadmapDetails;
+  
