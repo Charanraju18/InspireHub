@@ -50,6 +50,8 @@ import ProfilePage from "./pages/ProfilePage.jsx";
 import ResetPassPage from "./pages/ResetPassPage.jsx";
 import ForgotPage from "./pages/ForgotPassPage.jsx";
 import CreateContentPage from "./pages/CreateContentPage.jsx";
+import RoadmapDetails from "./components/RoadmapDetails";
+
 
 function App() {
   return (
@@ -95,8 +97,9 @@ function App() {
 
         <Route exact path="/event-details/:id" element={<EventDetailsPage />} />
         <Route exact path="/events" element={<EventsPage />} />
-        <Route exact path="/roadmaps" element={<RoadmapsPage />} />
+        {/* <Route exact path="/roadmaps" element={<RoadmapsPage />} /> */}
         <Route exact path="/roadmap/:id" element={<RoadmapDetailsPage />} />
+        <Route path="/roadmap/:id" element={<RoadmapDetails />} />
         <Route exact path="/faq" element={<FaqPage />} />
         <Route exact path="/favorite-course" element={<FavoriteCoursePage />} />
         <Route exact path="/find-tutors" element={<FindTutorsPage />} />
