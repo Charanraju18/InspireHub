@@ -28,6 +28,7 @@ import GalleryPage from "./pages/GalleryPage.jsx";
 import HomePageTwo from "./pages/HomePageTwo.jsx";
 // import HomePageThree from "./pages/HomePageThree.jsx";
 // import HomePageFour from "./pages/HomePageFour.jsx";
+import RoadmapsPageFull from "./pages/RoadmapsPageFull";
 import InstructorPage from "./pages/InstructorPage.jsx";
 import InstructorDetailsPage from "./pages/InstructorDetailsPage.jsx";
 import InstructorTwoPage from "./pages/InstructorTwoPage.jsx";
@@ -76,6 +77,7 @@ function App() {
           path="/book-online-class"
           element={<BookOnlineClassPage />}
         />
+        <Route exact path="/roadmaps" element={<RoadmapsPageFull />} />
         <Route exact path="/cart" element={<CartPage />} />
         <Route exact path="/checkout" element={<CheckoutPage />} />
         <Route exact path="/contact" element={<ContactPage />} />

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../authContext";
+import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 
 // Available domain options
@@ -42,23 +43,111 @@ const TECH_STACK_OPTIONS = {
     "Time Management", "Research Methods", "Academic Writing", "Note-Taking Systems",
     "Critical Thinking", "Exam Strategies", "Study Tools (Notion, Anki)",
     "Referencing (APA, MLA)", "Presentation Skills", "Online Learning Platforms"
+  ],
+   Marketing: [
+    "Digital Marketing", "SEO", "SEM (Search Engine Marketing)", "Social Media Strategy",
+    "Content Marketing", "Email Marketing", "Google Ads", "Facebook & Instagram Ads",
+    "Analytics Tools (Google Analytics)", "Influencer Marketing", "Copywriting",
+    "Funnel Building", "Affiliate Marketing"
+  ],
+  "Design (General)": [
+    "Graphic Design", "Typography", "Color Theory", "Adobe Photoshop",
+    "Adobe Illustrator", "Canva", "UI/UX Design", "Motion Graphics",
+    "Logo Design", "Print Design", "Brand Identity", "Portfolio Creation"
+  ],
+  Technology: [
+    "Artificial Intelligence", "Machine Learning", "Blockchain", "IoT (Internet of Things)",
+    "Robotics", "AR/VR", "Cloud Computing", "Cybersecurity",
+    "Edge Computing", "5G & Network Technologies", "Computer Vision", "Quantum Computing"
+  ],
+  "Fashion Design": [
+    "Fashion Illustration", "Textile Science", "Sewing & Garment Construction", "Draping",
+    "Fashion Marketing", "Trend Forecasting", "Fashion CAD Tools (CLO 3D)", "Pattern Making",
+    "Sustainable Fashion", "Styling", "Portfolio Development"
+  ],
+  Agriculture: [
+    "Crop Management", "Soil Science", "Organic Farming", "Precision Agriculture",
+    "Agri-Tech (Sensors, Drones)", "Irrigation Systems", "Livestock Management",
+    "Post-Harvest Management", "Agri-Business", "Farm Equipment", "Agri-Finance"
+  ],
+  "Biology & Life Sciences": [
+    "Cell Biology", "Genetics", "Microbiology", "Molecular Biology",
+    "Biochemistry", "Human Anatomy", "Physiology", "Immunology",
+    "Ecology", "Biotechnology", "Bioinformatics", "Lab Techniques"
+  ],
+  "Data Science & Analytics": [
+    "Excel", "SQL", "Python for Data Science", "R Programming",
+    "Data Cleaning", "Data Visualization (Tableau, Power BI)", "Statistics",
+    "Probability", "Machine Learning", "Pandas, NumPy", "Predictive Modeling", "Big Data Concepts"
+  ],
+  "Business & Entrepreneurship": [
+    "Business Planning", "Lean Startup Model", "Market Research", "Product Development",
+    "Business Finance", "Startup Fundraising", "Branding", "Sales Funnels",
+    "Pitch Decks", "Customer Development", "Monetization Models"
+  ],
+  "Mobile App Development": [
+    "React Native", "Flutter", "Swift (iOS)", "Kotlin (Android)",
+    "UI/UX for Mobile", "Firebase Integration", "Mobile APIs",
+    "App Deployment (Play Store, App Store)", "Push Notifications",
+    "Mobile Security", "Cross-Platform Development"
+  ],
+  "Artificial Intelligence": [
+    "Machine Learning", "Deep Learning", "Natural Language Processing", "Computer Vision",
+    "Neural Networks", "TensorFlow", "PyTorch", "Scikit-learn",
+    "Data Preprocessing", "Model Evaluation", "AI Ethics", "Reinforcement Learning"
+  ],
+  Cybersecurity: [
+    "Network Security", "Ethical Hacking", "Penetration Testing", "Incident Response",
+    "Risk Management", "Security Frameworks", "Cryptography", "Malware Analysis",
+    "Digital Forensics", "Compliance Standards", "Security Tools"
+  ],
+  "Video Production & Editing": [
+    "Video Editing Software", "Camera Techniques", "Lighting Setup", "Audio Production",
+    "Post-Production Workflow", "Color Grading", "Motion Graphics", "Storyboarding",
+    "Script Writing", "Video SEO"
+  ],
+  "Health & Nutrition": [
+    "Nutrition Science", "Diet Planning", "Food Safety", "Health Assessment",
+    "Supplement Knowledge", "Meal Prep", "Exercise Physiology", "Weight Management",
+    "Chronic Disease Prevention", "Public Health"
+  ],
+  "Finance & Investing": [
+    "Personal Finance", "Investment Strategies", "Stock Market Analysis", "Portfolio Management",
+    "Risk Assessment", "Financial Planning", "Cryptocurrency", "Real Estate Investing",
+    "Retirement Planning", "Tax Strategies"
+  ],
+  Photography: [
+    "Camera Fundamentals", "Composition Techniques", "Lighting Techniques", "Photo Editing Software",
+    "Portrait Photography", "Landscape Photography", "Product Photography", "Wedding Photography",
+    "Street Photography", "Business Photography"
+  ],
+  "Language & Communication": [
+    "Grammar & Syntax", "Vocabulary Building", "Pronunciation", "Writing Skills",
+    "Reading Comprehension", "Speaking Fluency", "Cultural Context", "Business Communication",
+    "Public Speaking", "Translation Skills"
+  ],
+  "Environmental Science": [
+    "Climate Change", "Sustainability", "Environmental Policy", "Conservation Biology",
+    "Pollution Control", "Renewable Energy", "Environmental Impact Assessment", "Green Technology",
+    "Waste Management", "Environmental Law"
   ]
 };
 
 const RoadmapForm = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false); // ✅ Prevent multiple submissions
 
   const [form, setForm] = useState({
-    createdBy: "",
     title: "",
     domain: "",
-    techstack: [], 
+    techstack: [],
     description: "",
     difficulty: "Beginner",
-    duration: "",
+    duration: 1,
+    thumbnail: null,
     prerequisites: [""],
     tags: [""],
-    thumbnail: null, // ✅ thumbnail file
     steps: [
       {
         title: "",
@@ -68,12 +157,105 @@ const RoadmapForm = () => {
     ],
   });
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+  // Styles
+  const inputStyle = {
+    width: "100%",
+    padding: "12px",
+    border: "1px solid #ccc",
+    borderRadius: "5px",
+    marginBottom: "15px",
   };
 
-  const handleFileChange = (e) => {
-    setForm({ ...form, thumbnail: e.target.files[0] });
+  const textareaStyle = {
+    ...inputStyle,
+    minHeight: "120px",
+    resize: "vertical",
+  };
+
+  const buttonStyle = {
+    padding: "10px 20px",
+    backgroundColor: "#007BFF",
+    color: "white",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
+    marginBottom: "10px",
+  };
+
+  const submitStyle = {
+    ...buttonStyle,
+    backgroundColor: isSubmitting ? "#ccc" : "#28A745", // ✅ Visual feedback
+    fontSize: "18px",
+    padding: "15px 30px",
+    cursor: isSubmitting ? "not-allowed" : "pointer", // ✅ Cursor feedback
+  };
+
+  const gridStyle = {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: "20px",
+    marginBottom: "20px",
+  };
+
+  const fieldContainerStyle = {
+    marginBottom: "25px",
+  };
+
+  const arrayItemStyle = {
+    display: "flex",
+    alignItems: "center",
+    marginBottom: "10px",
+  };
+
+  const removeButtonStyle = {
+    padding: "5px 10px",
+    backgroundColor: "#dc3545",
+    color: "white",
+    border: "none",
+    borderRadius: "3px",
+    cursor: "pointer",
+    marginLeft: "10px",
+  };
+
+  const sectionStyle = {
+    border: "1px solid #ddd",
+    borderRadius: "8px",
+    padding: "20px",
+    marginBottom: "20px",
+    position: "relative",
+    backgroundColor: "#f9f9f9",
+  };
+
+  const removeTopRightStyle = {
+    position: "absolute",
+    top: "10px",
+    right: "10px",
+    width: "25px",
+    height: "25px",
+    backgroundColor: "#dc3545",
+    color: "white",
+    border: "none",
+    borderRadius: "50%",
+    cursor: "pointer",
+    fontSize: "14px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  };
+
+  const resourceBlockStyle = {
+    border: "1px solid #ccc",
+    borderRadius: "5px",
+    padding: "15px",
+    marginBottom: "15px",
+    position: "relative",
+    backgroundColor: "#fff",
+  };
+
+  // Form handlers
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
   };
 
   const handleArrayChange = (field, index, value) => {
@@ -93,15 +275,15 @@ const RoadmapForm = () => {
   };
 
   const handleStepChange = (stepIndex, field, value) => {
-    const updatedSteps = [...form.steps];
-    updatedSteps[stepIndex][field] = value;
-    setForm({ ...form, steps: updatedSteps });
+    const updated = [...form.steps];
+    updated[stepIndex][field] = value;
+    setForm({ ...form, steps: updated });
   };
 
   const handleResourceChange = (stepIndex, resIndex, field, value) => {
-    const updatedSteps = [...form.steps];
-    updatedSteps[stepIndex].resources[resIndex][field] = value;
-    setForm({ ...form, steps: updatedSteps });
+    const updated = [...form.steps];
+    updated[stepIndex].resources[resIndex][field] = value;
+    setForm({ ...form, steps: updated });
   };
 
   const addStep = () => {
@@ -146,13 +328,23 @@ const RoadmapForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // ✅ Prevent multiple submissions
+    if (isSubmitting) return;
+    
     const userId = user?._id || user?.id;
-    if (!userId) return alert("Login required");
+    if (!userId) {
+      alert("Please login to create a roadmap");
+      navigate("/sign-in");
+      return;
+    }
+
+    setIsSubmitting(true); // ✅ Disable button
 
     try {
       let base64Thumbnail = "";
       if (form.thumbnail) {
-        base64Thumbnail = await toBase64(form.thumbnail); // ✅ convert image to base64
+        base64Thumbnail = await toBase64(form.thumbnail);
       }
 
       const submitData = {
@@ -163,140 +355,87 @@ const RoadmapForm = () => {
         description: form.description,
         difficulty: form.difficulty,
         duration: Number(form.duration),
-        thumbnail: base64Thumbnail, // ✅ send base64 string
+        thumbnail: base64Thumbnail,
         prerequisites: form.prerequisites,
         tags: form.tags,
         steps: form.steps,
       };
 
+      // ✅ Get authentication token with fallback
+      const token = localStorage.getItem("token") || user?.token || user?.accessToken;
+      
+      const headers = {
+        "Content-Type": "application/json",
+      };
+
+      // ✅ Only add auth header if token exists
+      if (token && token !== "undefined" && token !== "null") {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
+      
       const res = await fetch("http://localhost:5000/api/roadmaps/create", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: headers,
         body: JSON.stringify(submitData),
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.message || JSON.stringify(data));
-      alert("Roadmap created!");
-    } catch (err) {
-      console.error(err);
-      alert("Error: " + err.message);
+      
+      // ✅ Better error handling
+      if (!res.ok) {
+        if (res.status === 401) {
+          alert("Please login again to create a roadmap");
+          navigate("/sign-in");
+          return;
+        }
+        throw new Error(data.message || `Server error: ${res.status}`);
+      }
+      
+      alert("🎉 Roadmap created successfully!");
+      
+      // ✅ Reset form
+      setForm({
+        title: "",
+        domain: "",
+        techstack: [],
+        description: "",
+        difficulty: "Beginner",
+        duration: 1,
+        thumbnail: null,
+        prerequisites: [""],
+        tags: [""],
+        steps: [
+          {
+            title: "",
+            description: "",
+            resources: [{ title: "", link: "", type: "video" }],
+          },
+        ],
+      });
+
+      navigate("/profile#roadmaps-shared");
+      
+    } catch (error) {
+      console.error("Error creating roadmap:", error);
+      
+      let errorMessage = "Failed to create roadmap. ";
+      if (error.message.includes("token")) {
+        errorMessage += "Please login again.";
+        setTimeout(() => navigate("/sign-in"), 2000);
+      } else if (error.message.includes("createdBy")) {
+        errorMessage += "User authentication required.";
+      } else {
+        errorMessage += error.message;
+      }
+      
+      alert(errorMessage);
+    } finally {
+      setIsSubmitting(false); 
     }
   };
 
-  const inputStyle = {
-    width: "100%",
-    padding: "10px",
-    marginTop: "5px",
-    marginBottom: "10px",
-    borderRadius: "5px",
-    border: "1px solid #ccc",
-  };
-
-  const textareaStyle = {
-    ...inputStyle,
-    minHeight: "80px",
-  };
-
-  const buttonStyle = {
-    display: "inline-block",
-    padding: "8px 12px",
-    margin: "10px 0",
-    backgroundColor: "#007bff",
-    color: "#fff",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer",
-  };
-
-  const removeButtonStyle = {
-    backgroundColor: "#dc3545",
-    color: "#fff",
-    border: "none",
-    borderRadius: "50%",
-    width: "25px",
-    height: "25px",
-    cursor: "pointer",
-    fontSize: "14px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    marginLeft: "10px",
-  };
-
-  const submitStyle = {
-    ...buttonStyle,
-    width: "100%",
-    backgroundColor: "#28a745",
-    fontWeight: "bold",
-  };
-
-  const containerStyle = {
-    maxWidth: "800px",
-    margin: "40px auto",
-    padding: "30px",
-    border: "1px solid #ccc",
-    borderRadius: "10px",
-    backgroundColor: "#f9f9f9",
-    boxShadow: "0 0 10px rgba(0,0,0,0.1)",
-  };
-
-  const sectionStyle = {
-    border: "1px solid #ddd",
-    padding: "15px",
-    borderRadius: "8px",
-    marginBottom: "15px",
-    backgroundColor: "#fff",
-    position: "relative",
-  };
-
-  const fieldContainerStyle = {
-    marginBottom: "15px",
-  };
-
-  const gridStyle = {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: "15px",
-    marginBottom: "15px",
-  };
-
-  const arrayItemStyle = {
-    display: "flex",
-    alignItems: "center",
-    marginBottom: "5px",
-  };
-
-  const resourceBlockStyle = {
-    border: "1px solid #e0e0e0",
-    padding: "15px",
-    borderRadius: "8px",
-    marginBottom: "10px",
-    backgroundColor: "#fafafa",
-    position: "relative",
-  };
-
-  const removeTopRightStyle = {
-    position: "absolute",
-    top: "10px",
-    right: "10px",
-    backgroundColor: "#dc3545",
-    color: "#fff",
-    border: "none",
-    borderRadius: "50%",
-    width: "25px",
-    height: "25px",
-    cursor: "pointer",
-    fontSize: "14px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  };
-
   return (
-    <div style={containerStyle}>
+    <div style={{ maxWidth: "900px", margin: "auto", padding: "20px" }}>
       <h2 style={{ textAlign: "center", marginBottom: "20px" }}>
         Create a New Roadmap
       </h2>
@@ -312,16 +451,6 @@ const RoadmapForm = () => {
             style={inputStyle}
           />
         </div>
-        {/* <div>
-          <label>Domain</label>
-          <input
-            name="domain"
-            value={form.domain}
-            onChange={handleChange}
-            placeholder="Domain (e.g., AI, Frontend)"
-            style={inputStyle}
-          />
-        </div> */}
         <div>
           <label>Domain</label>
           <select
@@ -329,7 +458,7 @@ const RoadmapForm = () => {
             value={form.domain}
             onChange={(e) => {
               const selected = e.target.value;
-              setForm({ ...form, domain: selected, techstack: [] }); // Reset techstack
+              setForm({ ...form, domain: selected, techstack: [] });
             }}
             style={inputStyle}
           >
@@ -342,38 +471,36 @@ const RoadmapForm = () => {
           </select>
         </div>
         {form.domain && TECH_STACK_OPTIONS[form.domain] && (
-  <div style={fieldContainerStyle}>
-    <label>Tech Stack</label>
-    <Select
-  isMulti
-  name="techstack"
-  options={TECH_STACK_OPTIONS[form.domain].map((item) => ({
-    label: item,
-    value: item,
-  }))}
-  value={form.techstack.map((item) => ({ label: item, value: item }))}
-  onChange={(selected) =>
-    setForm({
-      ...form,
-      techstack: selected.map((item) => item.value),
-    })
-  }
-  styles={{
-    control: (base) => ({
-      ...base,
-      border: "1px solid #ccc",
-      borderRadius: "5px",
-      padding: "2px",
-    }),
-  }}
-/>
-
-    <p style={{ fontSize: "12px", color: "#777" }}>
-      Hold Ctrl (or Cmd) to select multiple
-    </p>
-  </div>
-)}
-
+          <div style={fieldContainerStyle}>
+            <label>Tech Stack</label>
+            <Select
+              isMulti
+              name="techstack"
+              options={TECH_STACK_OPTIONS[form.domain].map((item) => ({
+                label: item,
+                value: item,
+              }))}
+              value={form.techstack.map((item) => ({ label: item, value: item }))}
+              onChange={(selected) =>
+                setForm({
+                  ...form,
+                  techstack: selected.map((item) => item.value),
+                })
+              }
+              styles={{
+                control: (base) => ({
+                  ...base,
+                  border: "1px solid #ccc",
+                  borderRadius: "5px",
+                  padding: "2px",
+                }),
+              }}
+            />
+            <p style={{ fontSize: "12px", color: "#777" }}>
+              Hold Ctrl (or Cmd) to select multiple
+            </p>
+          </div>
+        )}
       </div>
 
       <div style={fieldContainerStyle}>
@@ -609,8 +736,13 @@ const RoadmapForm = () => {
         </button>
       </div>
 
-      <button type="button" onClick={handleSubmit} style={submitStyle}>
-        ✅ Submit Roadmap
+      <button 
+        type="button" 
+        onClick={handleSubmit} 
+        style={submitStyle}
+        disabled={isSubmitting} 
+      >
+        {isSubmitting ? "🔄 Creating..." : "✅ Submit Roadmap"}
       </button>
     </div>
   );
