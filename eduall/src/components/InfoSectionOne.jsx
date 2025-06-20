@@ -13,13 +13,16 @@ const InfoSectionOne = () => {
                 <i className="animate__heartBeat ph-bold ph-video-camera" />
               </span>
               <div className="flex-grow-1">
-                <h5 className="mb-8 text-white fw-medium">1000+ roadmaps</h5>
+                <h5 className="mb-8 text-white fw-medium">
+                  Live Online Sessions
+                </h5>
                 <span className="text-sm text-white">
-                  variety of different roadmaps
+                  Real-Time Learning from Real Tech Pros.
                 </span>
               </div>
             </div>
           </div>
+
           <div
             className="col-xl-3 col-sm-6"
             data-aos="fade-up"
@@ -39,6 +42,7 @@ const InfoSectionOne = () => {
               </div>
             </div>
           </div>
+
           <div
             className="col-xl-3 col-sm-6"
             data-aos="fade-up"
@@ -49,13 +53,16 @@ const InfoSectionOne = () => {
                 <i className="animate__heartBeat ph-bold ph-clock" />
               </span>
               <div className="flex-grow-1">
-                <h5 className="mb-8 text-white fw-medium">Life time access</h5>
+                <h5 className="mb-8 text-white fw-medium">
+                  Learn at Your Own Pace
+                </h5>
                 <span className="text-sm text-white">
-                  Learn on your schedule{" "}
+                  Flexible sessions that fit your schedule
                 </span>
               </div>
             </div>
           </div>
+
           <div
             className="col-xl-3 col-sm-6"
             data-aos="fade-up"
@@ -67,7 +74,29 @@ const InfoSectionOne = () => {
               </span>
               <div className="flex-grow-1">
                 <h5 className="mb-8 text-white fw-medium">Favorite roadmaps</h5>
-                <span className="text-sm text-white">You can store favourite roadmaps under favourites</span>
+                <span className="text-sm text-white">
+                  You can store favourite roadmaps under favourites
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div
+            className="col-xl-3 col-sm-6"
+            data-aos="fade-up"
+            data-aos-duration={1000}
+          >
+            <div className="info-item animation-item flex-align gap-20">
+              <span className="w-60 h-60 flex-center bg-white text-main-600 text-28 rounded-circle flex-shrink-0">
+                <i className="animate__heartBeat ph-bold ph-certificate" />
+              </span>
+              <div className="flex-grow-1">
+                <h5 className="mb-8 text-white fw-medium">
+                  Certified by Experience
+                </h5>
+                <span className="text-sm text-white">
+                  Certificates guided by real-world mentors.
+                </span>
               </div>
             </div>
           </div>

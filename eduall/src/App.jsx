@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import RouteScrollToTop from "./helper/RouteScrollToTop.jsx";
-import HomePageOne from "./pages/HomePageOne";
+// import HomePageOne from "./pages/HomePageOne";
 import AboutPage from "./pages/AboutPage.jsx";
 import AboutFourPage from "./pages/AboutFourPage.jsx";
 import AboutThreePage from "./pages/AboutThreePage.jsx";
@@ -26,8 +26,8 @@ import FavoriteCoursePage from "./pages/FavoriteCoursePage.jsx";
 import FindTutorsPage from "./pages/FindTutorsPage.jsx";
 import GalleryPage from "./pages/GalleryPage.jsx";
 import HomePageTwo from "./pages/HomePageTwo.jsx";
-import HomePageThree from "./pages/HomePageThree.jsx";
-import HomePageFour from "./pages/HomePageFour.jsx";
+// import HomePageThree from "./pages/HomePageThree.jsx";
+// import HomePageFour from "./pages/HomePageFour.jsx";
 import InstructorPage from "./pages/InstructorPage.jsx";
 import InstructorDetailsPage from "./pages/InstructorDetailsPage.jsx";
 import InstructorTwoPage from "./pages/InstructorTwoPage.jsx";
@@ -43,8 +43,8 @@ import SignUpPage from "./pages/SignUpPage.jsx";
 import TuitionJobsPage from "./pages/TuitionJobsPage.jsx";
 import TutorPage from "./pages/TutorPage.jsx";
 import TutorDetailsPage from "./pages/TutorDetailsPage.jsx";
-import HomePageFive from "./pages/HomePageFive.jsx";
-import HomePageSix from "./pages/HomePageSix.jsx";
+// import HomePageFive from "./pages/HomePageFive.jsx";
+// import HomePageSix from "./pages/HomePageSix.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
 import ResetPassPage from "./pages/ResetPassPage.jsx";
 import ForgotPage from "./pages/ForgotPassPage.jsx";
@@ -55,12 +55,13 @@ function App() {
     <BrowserRouter>
       <RouteScrollToTop />
       <Routes>
-        <Route exact path="/" element={<HomePageOne />} />
-        <Route exact path="/index-2" element={<HomePageTwo />} />
-        <Route exact path="/index-3" element={<HomePageThree />} />
-        <Route exact path="/index-4" element={<HomePageFour />} />
-        <Route exact path="/index-5" element={<HomePageFive />} />
-        <Route exact path="/index-6" element={<HomePageSix />} />
+        {/* <Route exact path='/' element={<HomePage />} /> */}
+        <Route exact path='/' element={<HomePageTwo />} />
+        {/* <Route exact path='/index-2' element={<HomePageTwo />} /> */}
+        {/* <Route exact path='/index-3' element={<HomePageThree />} />
+        <Route exact path='/index-4' element={<HomePageFour />} />
+        <Route exact path='/index-5' element={<HomePageFive />} />
+        <Route exact path='/index-6' element={<HomePageSix />} /> */}
         <Route exact path="/about-two" element={<AboutPage />} />
         <Route exact path="/about" element={<AboutTwoPage />} />
         <Route exact path="/about-three" element={<AboutThreePage />} />

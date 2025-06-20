@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
     if (token) {
       axios
         .get("http://localhost:5000/api/auth/profile", {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${token}`},
         })
         .then((res) => {
           setUser(res.data);

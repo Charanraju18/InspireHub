@@ -53,8 +53,9 @@ const CategoryOne = () => {
             Elevate Your Learning Experience
           </h2>
           <p className=' wow bounceInUp'>
-            Our platform is built on the principles of innovation, quality, and
-            inclusivity, aiming to provide a seamless learning
+            {/* Our platform is built on the principles of innovation, quality, and
+            inclusivity, aiming to provide a seamless guidance */}
+            At InspireHub, we believe in innovation, learning, and inclusivity  delivering expert guidance for every learner’s tech journey.
           </p>
         </div>
         <Slider ref={sliderRef} {...settings} className='category-item-slider'>
@@ -64,23 +65,27 @@ const CategoryOne = () => {
             data-aos-duration={200}
           >
             <span className='w-96 h-96 flex-center d-inline-flex bg-white text-main-600 text-40 rounded-circle box-shadow-md mb-24'>
+              {/* img 1 technology  */}
               <img
-                src='assets/images/icons/category-icon1.png'
+                src='assets/images/icons/project-management.png'
                 className='animate__flipInY'
                 alt=''
               />
+              
             </span>
             <h4 className='display-four mb-16 text-neutral-700'>
-              Arts &amp; Design
+              {/* Arts &amp; Design */}
+              Technology 
             </h4>
             <p className='text-neutral-500 text-lg text-line-2'>
-              Courses on nutrition, fitness training, yoga...
+              {/* Courses on nutrition, fitness training, yoga... */}
+              Code your future with guidance from experts."
             </p>
             <Link
               to='/courses'
               className='py-12 px-24 bg-white rounded-8 border border-neutral-30 mt-28 fw-semibold text-main-600 hover-bg-main-600 hover-text-white hover-border-main-600'
             >
-              14 Course
+              100+ Posts
             </Link>
           </div>
           <div
@@ -89,21 +94,24 @@ const CategoryOne = () => {
             data-aos-duration={400}
           >
             <span className='w-96 h-96 flex-center d-inline-flex bg-white text-main-600 text-40 rounded-circle box-shadow-md mb-24'>
+              {/* img 2 Agriculture */}
               <img
-                src='assets/images/icons/category-icon2.png'
+                // src='assets/images/icons/category-icon2.png'
+                src='assets/images/icons/leaf.png'
                 className='animate__flipInY'
                 alt=''
               />
             </span>
-            <h4 className='display-four mb-16 text-neutral-700'>ArtsDesign</h4>
+            <h4 className='display-four mb-16 text-neutral-700'>Agriculture</h4>
             <p className='text-neutral-500 text-lg text-line-2'>
-              Courses on nutrition, fitness training, yoga...
+              {/* Courses on nutrition, fitness training, yoga... */}
+              Modern farming guided by those who work the soil .
             </p>
             <Link
               to='/courses'
               className='py-12 px-24 bg-white rounded-8 border border-neutral-30 mt-28 fw-semibold text-main-two-600 hover-bg-main-two-600 hover-text-white hover-border-main-two-600'
             >
-              15 Course
+             50+ Posts
             </Link>
           </div>
           <div
@@ -112,23 +120,25 @@ const CategoryOne = () => {
             data-aos-duration={600}
           >
             <span className='w-96 h-96 flex-center d-inline-flex bg-white text-main-three-600 text-40 rounded-circle box-shadow-md mb-24'>
+              {/* img 3 art and design */}
               <img
-                src='assets/images/icons/category-icon3.png'
+                // src='assets/images/icons/category-icon3.png'
+                src='assets/images/icons/art.png'
                 className='animate__flipInY'
                 alt=''
               />
             </span>
             <h4 className='display-four mb-16 text-neutral-700'>
-              Data Science
+              Art &amp; Design
             </h4>
             <p className='text-neutral-500 text-lg text-line-2'>
-              Courses on nutrition, fitness training, yoga...
+              Unleash creativity, shaped by artists who live the craft.
             </p>
             <Link
               to='/courses'
               className='py-12 px-24 bg-white rounded-8 border border-neutral-30 mt-28 fw-semibold text-main-three-600 hover-bg-main-three-600 hover-text-white hover-border-main-three-600'
             >
-              14 Course
+              30+ Posts
             </Link>
           </div>
           <div
@@ -137,23 +147,25 @@ const CategoryOne = () => {
             data-aos-duration={800}
           >
             <span className='w-96 h-96 flex-center d-inline-flex bg-white text-main-600 text-40 rounded-circle box-shadow-md mb-24'>
+              {/* img 4 finance */}
               <img
-                src='assets/images/icons/category-icon4.png'
+                // src='assets/images/icons/category-icon4.png'
+                src='assets/images/icons/bars.png'
                 className='animate__flipInY'
                 alt=''
               />
             </span>
             <h4 className='display-four mb-16 text-neutral-700'>
-              Business &amp; Finance
+              Finance 
             </h4>
             <p className='text-neutral-500 text-lg text-line-2'>
-              Courses on nutrition, fitness training, yoga...
+              Master your money with guidance from financial pros who’ve been there.
             </p>
             <Link
               to='/courses'
               className='py-12 px-24 bg-white rounded-8 border border-neutral-30 mt-28 fw-semibold text-main-two-600 hover-bg-main-two-600 hover-text-white hover-border-main-two-600'
             >
-              21 Course
+              20+ Posts
             </Link>
           </div>
           <div
@@ -162,23 +174,25 @@ const CategoryOne = () => {
             data-aos-duration={400}
           >
             <span className='w-96 h-96 flex-center d-inline-flex bg-white text-main-three-600 text-40 rounded-circle box-shadow-md mb-24'>
+              {/* img 5 communication  */}
               <img
-                src='assets/images/icons/category-icon3.png'
+                // src='assets/images/icons/category-icon3.png'
+                src='assets/images/icons/communication.png'
                 className='animate__flipInY'
                 alt=''
               />
             </span>
             <h4 className='display-four mb-16 text-neutral-700'>
-              Data Science
+              Communication
             </h4>
             <p className='text-neutral-500 text-lg text-line-2'>
-              Courses on nutrition, fitness training, yoga...
+                Craft your message with the voices that move audiences.
             </p>
             <Link
               to='/courses'
               className='py-12 px-24 bg-white rounded-8 border border-neutral-30 mt-28 fw-semibold text-main-three-600 hover-bg-main-three-600 hover-text-white hover-border-main-three-600'
             >
-              14 Course
+              40+ Posts
             </Link>
           </div>
           <div
@@ -187,21 +201,23 @@ const CategoryOne = () => {
             data-aos-duration={600}
           >
             <span className='w-96 h-96 flex-center d-inline-flex bg-white text-main-600 text-40 rounded-circle box-shadow-md mb-24'>
+              {/* img 6 fashion  */}
               <img
-                src='assets/images/icons/category-icon2.png'
+                // src='assets/images/icons/category-icon2.png'
+                src='assets/images/icons/needle.png'
                 className='animate__flipInY'
                 alt=''
               />
             </span>
-            <h4 className='display-four mb-16 text-neutral-700'>ArtsDesign</h4>
+            <h4 className='display-four mb-16 text-neutral-700'>Fashion</h4>
             <p className='text-neutral-500 text-lg text-line-2'>
-              Courses on nutrition, fitness training, yoga...
+              Style your path with insights from trendsetters and creators.
             </p>
             <Link
               to='/courses'
               className='py-12 px-24 bg-white rounded-8 border border-neutral-30 mt-28 fw-semibold text-main-two-600 hover-bg-main-two-600 hover-text-white hover-border-main-two-600'
             >
-              15 Course
+              10+ posts
             </Link>
           </div>
         </Slider>
@@ -229,3 +245,10 @@ const CategoryOne = () => {
 };
 
 export default CategoryOne;
+
+
+
+// src='assets/images/icons/category-icon1.png'
+// src='assets/images/icons/category-icon2.png'
+// src='assets/images/icons/category-icon3.png'
+// src='assets/images/icons/category-icon4.png'

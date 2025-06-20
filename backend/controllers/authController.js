@@ -97,7 +97,7 @@
 //     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
 //       expiresIn: "15m",
 //     });
-//     const resetLink = `http://localhost:3000/reset-password/${token}`;
+//     const resetLink = http://localhost:3000/reset-password/${token};
 //     const transporter = nodemailer.createTransport({
 //       service: "gmail",
 //       auth: {
@@ -106,10 +106,10 @@
 //       },
 //     });
 //     await transporter.sendMail({
-//       from: `<${process.env.EMAIL_USER}>`,
+//       from: <${process.env.EMAIL_USER}>,
 //       to: user.email,
 //       subject: "Password Reset Link",
-//       html: `<p>Click the link to reset your password:</p><a href="${resetLink}">${resetLink}</a>`,
+//       html: <p>Click the link to reset your password:</p><a href="${resetLink}">${resetLink}</a>,
 //     });
 
 //     res.status(200).json({ message: "Reset link sent to email" });

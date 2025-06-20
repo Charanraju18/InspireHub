@@ -1,5 +1,49 @@
 import React, { useState } from "react";
 import { useAuth } from "../authContext";
+import Select from "react-select";
+
+// Available domain options
+const DOMAIN_OPTIONS = [
+  "Programming",
+  "Web Design & Development",
+  "Academic Skills",
+  "Marketing",
+  "Design (General)",
+  "Technology",
+  "Fashion Design",
+  "Agriculture",
+  "Biology & Life Sciences",
+  "Data Science & Analytics",
+  "Business & Entrepreneurship",
+  "Mobile App Development",
+  "Artificial Intelligence",
+  "Cybersecurity",
+  "Video Production & Editing",
+  "Health & Nutrition",
+  "Finance & Investing",
+  "Photography",
+  "Language & Communication",
+  "Environmental Science",
+];
+
+// Tech stack per domain
+const TECH_STACK_OPTIONS = {
+  Programming: [
+    "C", "C++", "Python", "Java", "JavaScript", "Rust", "Go", "C#",
+    "Ruby", "Kotlin", "Algorithms", "Data Structures",
+    "Git & GitHub", "Debugging Techniques", "Object-Oriented Programming", "Functional Programming"
+  ],
+  "Web Design & Development": [
+    "HTML", "CSS", "JavaScript", "Tailwind CSS", "React.js",
+    "Vue.js", "Angular", "Bootstrap", "UI/UX Basics", "Figma/Adobe XD",
+    "Responsive Design", "Web Accessibility", "SEO Basics", "Web Animations", "Design Systems"
+  ],
+  "Academic Skills": [
+    "Time Management", "Research Methods", "Academic Writing", "Note-Taking Systems",
+    "Critical Thinking", "Exam Strategies", "Study Tools (Notion, Anki)",
+    "Referencing (APA, MLA)", "Presentation Skills", "Online Learning Platforms"
+  ]
+};
 
 const RoadmapForm = () => {
   const { user } = useAuth();
@@ -8,6 +52,7 @@ const RoadmapForm = () => {
     createdBy: "",
     title: "",
     domain: "",
+    techstack: [], 
     description: "",
     difficulty: "Beginner",
     duration: "",
@@ -114,6 +159,7 @@ const RoadmapForm = () => {
         createdBy: userId,
         title: form.title,
         domain: form.domain,
+        techstack: form.techstack,
         description: form.description,
         difficulty: form.difficulty,
         duration: Number(form.duration),
@@ -266,7 +312,7 @@ const RoadmapForm = () => {
             style={inputStyle}
           />
         </div>
-        <div>
+        {/* <div>
           <label>Domain</label>
           <input
             name="domain"
@@ -275,7 +321,59 @@ const RoadmapForm = () => {
             placeholder="Domain (e.g., AI, Frontend)"
             style={inputStyle}
           />
+        </div> */}
+        <div>
+          <label>Domain</label>
+          <select
+            name="domain"
+            value={form.domain}
+            onChange={(e) => {
+              const selected = e.target.value;
+              setForm({ ...form, domain: selected, techstack: [] }); // Reset techstack
+            }}
+            style={inputStyle}
+          >
+            <option value="">-- Select Domain --</option>
+            {DOMAIN_OPTIONS.map((domain) => (
+              <option key={domain} value={domain}>
+                {domain}
+              </option>
+            ))}
+          </select>
         </div>
+        {form.domain && TECH_STACK_OPTIONS[form.domain] && (
+  <div style={fieldContainerStyle}>
+    <label>Tech Stack</label>
+    <Select
+  isMulti
+  name="techstack"
+  options={TECH_STACK_OPTIONS[form.domain].map((item) => ({
+    label: item,
+    value: item,
+  }))}
+  value={form.techstack.map((item) => ({ label: item, value: item }))}
+  onChange={(selected) =>
+    setForm({
+      ...form,
+      techstack: selected.map((item) => item.value),
+    })
+  }
+  styles={{
+    control: (base) => ({
+      ...base,
+      border: "1px solid #ccc",
+      borderRadius: "5px",
+      padding: "2px",
+    }),
+  }}
+/>
+
+    <p style={{ fontSize: "12px", color: "#777" }}>
+      Hold Ctrl (or Cmd) to select multiple
+    </p>
+  </div>
+)}
+
       </div>
 
       <div style={fieldContainerStyle}>

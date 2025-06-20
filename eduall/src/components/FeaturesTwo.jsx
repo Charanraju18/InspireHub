@@ -26,8 +26,8 @@ const FeaturesTwo = () => {
               creativity. What you find just might...
             </p>
             <Link
-              to="/course-list-view"
-              className="item-hover__text flex-align d-inline-flex gap-8 text-main-600 mt-24 hover-text-decoration-underline transition-1 fw-semibold"
+              to='/course'
+              className='item-hover__text flex-align d-inline-flex gap-8 text-main-600 mt-24 hover-text-decoration-underline transition-1 fw-semibold'
             >
               Read More
               <i className="ph ph-arrow-right" />
@@ -48,13 +48,12 @@ const FeaturesTwo = () => {
                   alt=""
                 />
               </span>
-              <h4 className="mb-16 transition-1 item-hover__text">
-                Learn the latest skills
+              <h4 className='mb-16 transition-1 item-hover__text'>
+                Learn the latest skills until now 
               </h4>
-              <p className="transition-1 item-hover__text text-line-2">
-                Master the essential skills required for today’s top jobs. Our
-                curated roadmaps help you focus on what matters, without the
-                overwhelm.
+              <p className='transition-1 item-hover__text text-line-2'>
+               Discover valuable insights and practical tips from industry professionals. 
+               Stay updated with trending skills through engaging posts.
               </p>
               <span className="item-hover__bg w-48 h-1 bg-neutral-500 mt-32" />
             </div>
@@ -72,13 +71,12 @@ const FeaturesTwo = () => {
                   alt=""
                 />
               </span>
-              <h4 className="mb-16 transition-1 item-hover__text">
-                Get ready for a career
+              <h4 className='mb-16 transition-1 item-hover__text'>
+                Shape Your Career Path
               </h4>
-              <p className="transition-1 item-hover__text text-line-2">
-                Start from the basics and follow guided paths to become
-                job-ready. Build projects, grow your knowledge, and prepare for
-                interviews with confidence.
+              <p className='transition-1 item-hover__text text-line-2'>
+                Explore real-world experiences, advice, and techniques shared 
+                by experienced learners and mentors to guide your professional growth.
               </p>
               <span className="item-hover__bg w-48 h-1 bg-neutral-500 mt-32" />
             </div>
@@ -95,13 +93,12 @@ const FeaturesTwo = () => {
                   style={{ fontSize: "48px", color: "#ff4d4f" }}
                 ></i>
               </span>
-              <h4 className="mb-16 transition-1 item-hover__text">
-                Save Your Favorite Roadmaps
+              <h4 className='mb-16 transition-1 item-hover__text'>
+                Learn at Your Own Pace
               </h4>
-              <p className="transition-1 item-hover__text text-line-2">
-                Bookmark the roadmaps you love and revisit them anytime. Build
-                your personalized learning space and keep your goals within easy
-                reach.
+              <p className='transition-1 item-hover__text text-line-2'>
+                Scroll through posts that match your interests. Whether you're 
+                browsing or diving deep, the journey is yours to choose.
               </p>
               <span className="item-hover__bg w-48 h-1 bg-neutral-500 mt-32" />
             </div>
