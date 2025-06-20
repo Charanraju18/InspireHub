@@ -1,23 +1,29 @@
-// routes/roadmapRoutes.js
 const express = require("express");
 const router = express.Router();
-const multer = require("multer");
+const authMiddleware = require("../middleware/authMiddleware");
 const {
   getAllRoadmaps,
   createRoadmap,
   getRoadmapById,
+  searchRoadmaps,       // ✅ Fixed search
+  getUniqueDomains,     // ✅ New - for home page domains
+  deleteRoadmap,
+  addStepToRoadmap,
+  updateRoadmap,
+  getRoadmapsByUser,
 } = require("../controllers/roadmapController");
 
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
-
-// GET all roadmaps
+// ✅ Public routes - IMPORTANT: Order matters! More specific routes first
+router.get("/search", searchRoadmaps);                             // ✅ Must come before /:id
+router.get("/domains", getUniqueDomains);                          // ✅ New - get unique domains
 router.get("/", getAllRoadmaps);
+router.get("/:id", getRoadmapById);                                // ✅ Must come after specific routes
 
-// POST create roadmap
-router.post("/create", upload.single("thumbnail"), createRoadmap);
-
-// GET roadmap by ID
-router.get("/:id", getRoadmapById);
+// Protected routes (require authentication)
+router.post("/create", authMiddleware, createRoadmap);
+router.delete("/:id", authMiddleware, deleteRoadmap);
+router.put("/:id/add-step", authMiddleware, addStepToRoadmap);
+router.put("/:id", authMiddleware, updateRoadmap);
+router.get("/user/my-roadmaps", authMiddleware, getRoadmapsByUser);
 
 module.exports = router;
