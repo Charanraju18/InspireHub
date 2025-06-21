@@ -1,34 +1,32 @@
-import Aos from "aos";
 import { useEffect } from "react";
 
 const Animation = () => {
-  console.warn = () => {};
   useEffect(() => {
+    
+    let WOW;
     if (typeof window !== "undefined") {
-      // Import WOW.js dynamically to ensure it runs only on the client side
-      import("wowjs").then((WOW) => {
-        const wow = new WOW.WOW({
-          boxClass: "wow", // Class name for animations
-          animateClass: "animate__animated", // Animation CSS class
-          offset: 0, // Trigger animations when elements are in view
-          mobile: true, // Enable animations on mobile
-          live: true, // Check for dynamically added elements
-        });
-        wow.init();
-      });
+      try {
+        WOW = require("wowjs");
+        const wowInstance = new WOW.WOW({ live: false }); // ✅ Correct syntax
+        wowInstance.init();
+      } catch (error) {
+        console.warn("WOW.js failed to initialize:", error);
+      }
     }
 
-    // Initialize AOS
-    Aos.init({
-      offset: 0,
-      easing: "ease",
-      once: true,
-      duration: 1200,
-    });
-    Aos.refresh();
+    
+    return () => {
+      if (typeof window !== "undefined") {
+        const wowElements = document.querySelectorAll(".wow");
+        wowElements.forEach((el) => {
+          el.classList.remove("animated");
+          el.style.visibility = "";
+        });
+      }
+    };
   }, []);
 
-  return null;
+  return null; 
 };
 
 export default Animation;

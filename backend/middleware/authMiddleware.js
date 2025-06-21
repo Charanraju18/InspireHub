@@ -1,24 +1,32 @@
 const jwt = require("jsonwebtoken");
+const { User } = require("../models/user");
 
-const auth = (req, res, next) => {
-  const authHeader = req.header("Authorization");
-  console.log("Full Authorization header:", authHeader);
-  
-  const token = authHeader?.split(" ")[1];
-  console.log("Extracted token:", token);
-  console.log("JWT_SECRET exists:", !!process.env.JWT_SECRET);
-  
-  if (!token) return res.status(401).json({ msg: "No token, access denied" });
-
+const authMiddleware = async (req, res, next) => {
   try {
-    const verified = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("Token verified successfully:", verified);
-    req.user = verified;
+    // Get token from header
+    const token = req.header("Authorization")?.replace("Bearer ", "");
+    
+    if (!token) {
+      return res.status(401).json({ message: "No token, authorization denied" });
+    }
+
+    // Verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || "your-secret-key");
+    
+    // Get user from database
+    const user = await User.findById(decoded.id).select("-password");
+    
+    if (!user) {
+      return res.status(401).json({ message: "Token is not valid" });
+    }
+
+    // Add user to request object
+    req.user = user;
     next();
-  } catch (err) {
-    console.log("JWT verification error:", err.message);
-    res.status(400).json({ msg: "Token is not valid" });
+  } catch (error) {
+    console.error("Auth middleware error:", error);
+    res.status(401).json({ message: "Token is not valid" });
   }
 };
 
-module.exports = auth;
+module.exports = authMiddleware;
