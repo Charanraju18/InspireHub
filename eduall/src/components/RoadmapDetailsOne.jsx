@@ -60,9 +60,6 @@ const VisualRoadmapSteps = ({ steps }) => {
         maxWidth: "1000px",
         height: containerHeightStyle,
         margin: "2rem auto",
-        background: "#F3F9FF", // Deep blue background
-        borderRadius: "12px",
-        boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
         padding: "20px",
         overflow: "hidden",
       }}
@@ -306,44 +303,55 @@ const RoadmapDetails = () => {
       return <p className="text-center mt-5 text-danger">Roadmap not found</p>;
 
     return (
-      <div className="container py-5">
+      <div className="container py-5" style={{marginTop: "30px"}}>
         {/* Top Section - User Profile, Bookmark Icon */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", margintop: "10rem"}}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", margintop: "10rem",
+           border:"3px solid #F3F9FF", backgroundColor:"#f9f9f9", borderRadius: "10px", boxShadow:"0px 0px 1px 5px #F3F9FF"}}>
           {/* User Profile */}
           <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
                        <img
                                   src={roadmap.createdBy?.profilePicture || "/assets/images/users/user-img1.png"}
                                   alt={roadmap.createdBy?.name || "Instructor"}
                                   className="rounded-circle"
-                                  style={{ width: "75px", height: "75px", objectFit: "cover" }}
+                                  style={{ width: "70px", height: "70px", objectFit: "cover" }}
                                   onError={(e) => {
                                     e.target.src = "/assets/images/users/user-img1.png";
                                   }}
                                 />
-            <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
-<p className="mb-0 text-sm fw-medium text-neutral-700" style={{ fontSize: "25px", color: "#666" , fontWeight: "400"}}>
+            <div style={{ display: "flex", flexDirection: "column", justifyContent:"center" }}>
+                  <p style={{fontSize: "24px", color:"black", fontWeight: "600"}}>
                                     {roadmap.createdBy?.name || "Anonymous"}
                                   </p>
-              <p className="mb-0" style={{ fontSize: "18px", color: "#666" }}>
+                    <p className="mb-0" style={{ fontSize: "18px", color: "#666" }}>
                                     {roadmap.createdBy.instructorProfile.experienceYears} years exp.
                                   </p>
             </div>
           </div>
 
           {/* Bookmark Icon */}
-          <div style={{ fontSize: "30px", color: "#007bff", display: "flex", flexDirection: "column", alignItems: "center" }}>
-  <FaBookmark className="text-primary" size={35} />
-  
+         <div
+  style={{
+     height: "100%",
+    fontSize: "30px",
+    color: "#007bff",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "10px",
+    width: "10%"
+  }}
+>
+  <FaBookmark className="text-primary" size={30} />
+
   {/* Follow button */}
   <button
     style={{
-      marginTop: "10px",
       backgroundColor: "#007bff",
       color: "#fff",
       border: "none",
       borderRadius: "5px",
       padding: "8px 16px",
-      fontSize: "14px",
+      fontSize: "12px",
       cursor: "pointer",
       boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
       transition: "transform 0.2s, box-shadow 0.2s",
@@ -361,18 +369,33 @@ const RoadmapDetails = () => {
   </button>
 </div>
 
+
         </div>
 
         {/* Title */}
-        <div style={{  paddingBottom: "10px", marginBottom: "20px" }}>
-          <h2 className="mb-0" style={{ color: "#333" }}>{roadmap.title}</h2>
-        </div>
+         <div style={{ paddingTop: "10px", marginBottom: "0px" }}>
+        <p
+          className="mb-0"
+          style={{
+            color: "#333",
+            fontSize: "30px", // Dynamically adjusts based on text length.
+            wordWrap: "break-word", // Ensures long words wrap to the next line.
+          }}
+        >
+          {roadmap.title}
+        </p>
+      </div>
 
-        {/* Description */}
-        <div style={{padding: "15px", marginBottom: "30px", minHeight: "100px", background: "#f8f8f8" }}>
-          {/* <h4 style={{ color: "#555", marginBottom: "10px" }}>Description</h4> */}
-          <p>{roadmap.description}</p>
-        </div>
+      {/* Description */}
+      <div
+        style={{
+          padding: "0px",
+          marginBottom: "30px",
+          minHeight: "auto", // Adjusts height based on content.
+        }}
+      >
+        <p>{roadmap.description}</p>
+      </div>
 
         {/* Left Column (Domain, Difficulty etc.) and Right Column (Steps Animation) */}
         <div style={{ display: "flex", gap: "30px", flexDirection: "row" }}>
@@ -383,7 +406,7 @@ const RoadmapDetails = () => {
       border: "2px solid #dedede",
       padding: "20px",
       borderRadius: "12px",
-      background: "linear-gradient(135deg, #ffffff, #f8f9fa)",
+      background: "#F3F9FF",
       boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
       transition: "transform 0.3s ease, box-shadow 0.3s ease",
       animation: "fadeIn 1s ease-out",
@@ -405,129 +428,308 @@ const RoadmapDetails = () => {
         }
       `}
     </style>
-
-    {/* Domain */}
+        <div
+  style={{
+    display: "flex",
+    flexDirection: "column",
+    gap: "16px",
+    backgroundColor: "#5193DA",
+    padding: "20px",
+    borderRadius: "12px",
+    maxWidth: "400px",
+    margin: "auto",
+  }}
+>
+  {/* Company Address */}
+  <div
+    style={{
+      display: "flex",
+      alignItems: "center",
+      gap: "12px",
+      backgroundColor: "#f8f8f8",
+      borderRadius: "12px",
+      padding: "16px",
+      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+      transition: "transform 0.2s ease, box-shadow 0.2s ease",
+    }}
+    onMouseEnter={(e) => {
+      e.currentTarget.style.transform = "scale(1.02)";
+      e.currentTarget.style.boxShadow = "0 6px 12px rgba(0, 0, 0, 0.2)";
+    }}
+    onMouseLeave={(e) => {
+      e.currentTarget.style.transform = "scale(1)";
+      e.currentTarget.style.boxShadow = "0 4px 6px rgba(0, 0, 0, 0.1)";
+    }}
+  >
     <div
       style={{
-        marginBottom: "20px",
-        borderBottom: "2px solid #eaeaea",
-        paddingBottom: "12px",
+        fontSize: "24px",
+        color: "#ff6f61",
       }}
     >
-      <h5 style={{ color: "#007bff", marginBottom: "8px", fontWeight: "600" }}>
-        Domain:
-      </h5>
-      <p style={{ margin: 0, fontSize: "14px", color: "#555" }}>
-        {roadmap.domain}
-      </p>
+      🌐
     </div>
-
-    {/* Difficulty */}
-    <div
-      style={{
-        marginBottom: "20px",
-        borderBottom: "2px solid #eaeaea",
-        paddingBottom: "12px",
-      }}
-    >
-      <h5 style={{ color: "#007bff", marginBottom: "8px", fontWeight: "600" }}>
-        Difficulty:
-      </h5>
-      <p style={{ margin: 0, fontSize: "14px", color: "#555" }}>
-        {roadmap.difficulty}
-      </p>
-    </div>
-
-    {/* Estimated Duration */}
-    <div
-      style={{
-        marginBottom: "20px",
-        borderBottom: "2px solid #eaeaea",
-        paddingBottom: "12px",
-      }}
-    >
-      <h5 style={{ color: "#007bff", marginBottom: "8px", fontWeight: "600" }}>
-        Estimated Duration:
-      </h5>
-      <p style={{ margin: 0, fontSize: "14px", color: "#555" }}>
-        {roadmap.estimatedDurationWeeks} weeks
-      </p>
-    </div>
-
-    {/* Prerequisites */}
-    <div
-      style={{
-        marginBottom: "20px",
-        borderBottom: "2px solid #eaeaea",
-        paddingBottom: "12px",
-      }}
-    >
-      <h5 style={{ color: "#007bff", marginBottom: "8px", fontWeight: "600" }}>
-        Prerequisites:
-      </h5>
-      <ul style={{ listStyleType: "none", paddingLeft: "0", margin: 0 }}>
-        {roadmap.prerequisites.map((pre, idx) => (
-          <li
-            key={idx}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              marginBottom: "8px",
-              fontSize: "14px",
-              color: "#555",
-            }}
-          >
-            <span
-              style={{
-                width: "8px",
-                height: "8px",
-                borderRadius: "50%",
-                backgroundColor: "#007bff",
-              }}
-            ></span>
-            {pre}
-          </li>
-        ))}
-      </ul>
-    </div>
-
-    {/* Resources */}
     <div>
-      <h5 style={{ color: "#007bff", marginBottom: "8px", fontWeight: "600" }}>
-        Resources:
+      <h5
+        style={{
+          margin: "0",
+          color: "#444",
+          fontWeight: "bold",
+        }}
+      >
+         {roadmap.domain}
+
       </h5>
-      <ul style={{ listStyleType: "none", paddingLeft: "0", margin: 0 }}>
-        {roadmap.tags.map((resource, idx) => (
-          <li
-            key={idx}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              marginBottom: "8px",
-              fontSize: "14px",
-              color: "#555",
-            }}
-          >
-            <span
-              style={{
-                width: "8px",
-                height: "8px",
-                borderRadius: "50%",
-                backgroundColor: "#28a745",
-              }}
-            ></span>
-            {resource}
-          </li>
-        ))}
-      </ul>
+      <p
+        style={{
+          margin: "0",
+          color: "#666",
+          fontSize: "14px",
+        }}
+      >
+        Domain
+      </p>
     </div>
   </div>
 
+  {/* Contact Us */}
+  <div
+    style={{
+      display: "flex",
+      alignItems: "center",
+      gap: "12px",
+      backgroundColor: "#f8f8f8",
+      borderRadius: "12px",
+      padding: "16px",
+      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+      transition: "transform 0.2s ease, box-shadow 0.2s ease",
+    }}
+    onMouseEnter={(e) => {
+      e.currentTarget.style.transform = "scale(1.02)";
+      e.currentTarget.style.boxShadow = "0 6px 12px rgba(0, 0, 0, 0.2)";
+    }}
+    onMouseLeave={(e) => {
+      e.currentTarget.style.transform = "scale(1)";
+      e.currentTarget.style.boxShadow = "0 4px 6px rgba(0, 0, 0, 0.1)";
+    }}
+  >
+    <div
+      style={{
+        fontSize: "24px",
+        color: "#ff6f61",
+      }}
+    >
+      🎓
+    </div>
+    <div>
+      <h5
+        style={{
+          margin: "0",
+          color: "#444",
+          fontWeight: "bold",
+        }}
+      >
+          {roadmap.difficulty}
+      </h5>
+      <p
+        style={{
+          margin: "0",
+          color: "#666",
+          fontSize: "14px",
+        }}
+      >
+        Difficulty Level
+      </p>
+    </div>
+  </div>
+
+  {/* Email Us */}
+  <div
+    style={{
+      display: "flex",
+      alignItems: "center",
+      gap: "12px",
+      backgroundColor: "#f8f8f8",
+      borderRadius: "12px",
+      padding: "16px",
+      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+      transition: "transform 0.2s ease, box-shadow 0.2s ease",
+    }}
+    onMouseEnter={(e) => {
+      e.currentTarget.style.transform = "scale(1.02)";
+      e.currentTarget.style.boxShadow = "0 6px 12px rgba(0, 0, 0, 0.2)";
+    }}
+    onMouseLeave={(e) => {
+      e.currentTarget.style.transform = "scale(1)";
+      e.currentTarget.style.boxShadow = "0 4px 6px rgba(0, 0, 0, 0.1)";
+    }}
+  >
+    <div
+      style={{
+        fontSize: "24px",
+        color: "#ff6f61",
+      }}
+    >
+      🕒
+    </div>
+    <div>
+      <h5
+        style={{
+          margin: "0",
+          color: "#444",
+          fontWeight: "bold",
+        }}
+      >
+          {roadmap.estimatedDurationWeeks} weeks
+
+      </h5>
+      <p
+        style={{
+          margin: "0",
+          color: "#666",
+          fontSize: "14px",
+        }}
+      >
+       Estimated Duration
+      </p>
+    </div>
+  </div>
+
+  {/* Active Hours */}
+  <div
+  style={{
+    display: "flex",
+    alignItems: "center",
+    gap: "12px",
+    backgroundColor: "#f8f8f8",
+    borderRadius: "12px",
+    padding: "16px",
+    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+    transition: "transform 0.2s ease, box-shadow 0.2s ease",
+  }}
+  onMouseEnter={(e) => {
+    e.currentTarget.style.transform = "scale(1.02)";
+    e.currentTarget.style.boxShadow = "0 6px 12px rgba(0, 0, 0, 0.2)";
+  }}
+  onMouseLeave={(e) => {
+    e.currentTarget.style.transform = "scale(1)";
+    e.currentTarget.style.boxShadow = "0 4px 6px rgba(0, 0, 0, 0.1)";
+  }}
+>
+  <div
+    style={{
+      fontSize: "24px",
+      color: "#ff6f61",
+    }}
+  >
+    🧠
+  </div>
+  <div>
+    <ul style={{ listStyleType: "none", paddingLeft: "0", margin: "8px 0 0" }}>
+      {roadmap.prerequisites.map((pre, idx) => (
+        <li
+          key={idx}
+          style={{
+            margin: "0",
+        color: "#444",
+        fontWeight: "bold",
+          }}
+        >
+          <span></span>
+          {pre}
+        </li>
+      ))}
+    </ul>
+    <p
+      style={{
+        margin: "0",
+          color: "#666",
+          fontSize: "14px",
+      }}
+    >
+      Prerequisites
+    </p>
+  </div>
+  
+</div>
+{/* Company Address */}
+  <div
+    style={{
+      display: "flex",
+      alignItems: "center",
+      gap: "12px",
+      backgroundColor: "#f8f8f8",
+      borderRadius: "12px",
+      padding: "16px",
+      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+      transition: "transform 0.2s ease, box-shadow 0.2s ease",
+    }}
+    onMouseEnter={(e) => {
+      e.currentTarget.style.transform = "scale(1.02)";
+      e.currentTarget.style.boxShadow = "0 6px 12px rgba(0, 0, 0, 0.2)";
+    }}
+    onMouseLeave={(e) => {
+      e.currentTarget.style.transform = "scale(1)";
+      e.currentTarget.style.boxShadow = "0 4px 6px rgba(0, 0, 0, 0.1)";
+    }}
+  >
+    <div
+      style={{
+        fontSize: "24px",
+        color: "#ff6f61",
+      }}
+    >
+      📚
+    </div>
+    
+    <div>
+       <p
+        style={{
+          margin: "0",
+        color: "#444",
+        fontWeight: "bold",
+        }}
+      >
+        Rescourses
+      </p>
+     {roadmap.steps.map((step, i) => (
+  <div key={i}>
+    <p>
+      Step {i + 1}:{" "}
+      {step.resources.map((res, j) => (
+        <a
+          key={j}
+          href={res.link}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ marginRight: "10px" }}
+        >
+          {res.link}
+        </a>
+      ))}
+    </p>
+  </div>
+))}
+
+
+     
+    </div>
+  </div>
+
+  
+
+</div>
+
+    {/* Domain */}
+    </div>
 
           {/* Right Column - Steps Animation (Visual Roadmap Steps Component) */}
-          <div style={{ flex: 2, display: "flex", flexDirection: "column", alignItems: "center", background:"#F3F9FF"}}>
+          <div style={{ flex: 2, display: "flex", flexDirection: "column", alignItems: "center", background:"#F3F9FF",
+            padding: "20px",
+             background: "#F3F9FF", 
+        borderRadius: "12px",
+        boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
+          }}>
             <h4 style={{ textAlign: "center", marginBottom: "1rem", color: "#333" }}>Pathway</h4> {/* */}
             <VisualRoadmapSteps steps={roadmap.steps} />
           </div>
