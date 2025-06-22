@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import {  FaBookmark } from "react-icons/fa";
-
+import { useAuth } from "../authContext";
 
 // This component handles the visual roadmap steps and their precise alignment with the roadline.
 const VisualRoadmapSteps = ({ steps }) => {
@@ -283,14 +283,23 @@ const VisualRoadmapSteps = ({ steps }) => {
 // ... (RoadmapDetails component remains the same as it uses VisualRoadmapSteps)
 const RoadmapDetails = () => {
     const { id } = useParams();
+    const { user } = useAuth();
     const [roadmap, setRoadmap] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [isFollowing, setIsFollowing] = useState(false);
+    const [followLoading, setFollowLoading] = useState(false);
 
     useEffect(() => {
       const fetchRoadmap = async () => {
         try {
+          console.log('Current user:', user); 
           const res = await axios.get(`http://localhost:5000/api/roadmaps/${id}`);
           setRoadmap(res.data);
+          if (user && res.data.followers && res.data.followers.includes(user._id)) {
+            setIsFollowing(true);
+          } else {
+            setIsFollowing(false);
+          }
         } catch (error) {
           console.error("Failed to fetch roadmap", error);
         } finally {
@@ -299,7 +308,29 @@ const RoadmapDetails = () => {
       };
 
       fetchRoadmap();
-    }, [id]);
+    }, [id, user]);
+
+    const handleFollow = async () => {
+      if (!user) {
+        alert("You must be logged in to follow a roadmap.");
+        return;
+      }
+      setFollowLoading(true);
+      try {
+        console.log('Sending token:', user.token); 
+        if (isFollowing) {
+          await axios.post(`http://localhost:5000/api/roadmaps/${id}/unfollow`, {}, { headers: { Authorization: `Bearer ${user.token}` } });
+        } else {
+          await axios.post(`http://localhost:5000/api/roadmaps/${id}/follow`, {}, { headers: { Authorization: `Bearer ${user.token}` } });
+        }
+        setIsFollowing(!isFollowing);
+      } catch (err) {
+        alert("Failed to update follow status");
+        console.error('Follow/unfollow error:', err);
+      } finally {
+        setFollowLoading(false);
+      }
+    };
 
     if (loading) return <p className="text-center mt-5">Loading roadmap...</p>;
     if (!roadmap)
@@ -333,21 +364,23 @@ const RoadmapDetails = () => {
           {/* Bookmark Icon */}
           <div style={{ fontSize: "30px", color: "#007bff", display: "flex", flexDirection: "column", alignItems: "center" }}>
   <FaBookmark className="text-primary" size={35} />
-  
   {/* Follow button */}
   <button
     style={{
       marginTop: "10px",
-      backgroundColor: "#007bff",
+      backgroundColor: isFollowing ? "#6c757d" : "#007bff",
       color: "#fff",
       border: "none",
       borderRadius: "5px",
       padding: "8px 16px",
       fontSize: "14px",
-      cursor: "pointer",
+      cursor: followLoading ? "not-allowed" : "pointer",
       boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
       transition: "transform 0.2s, box-shadow 0.2s",
+      opacity: followLoading ? 0.7 : 1,
     }}
+    disabled={followLoading || !user}
+    onClick={handleFollow}
     onMouseEnter={(e) => {
       e.currentTarget.style.transform = "scale(1.05)";
       e.currentTarget.style.boxShadow = "0 6px 10px rgba(0, 0, 0, 0.2)";
@@ -357,7 +390,7 @@ const RoadmapDetails = () => {
       e.currentTarget.style.boxShadow = "0 4px 6px rgba(0, 0, 0, 0.1)";
     }}
   >
-    Follow
+    {isFollowing ? "Unfollow" : "Follow"}
   </button>
 </div>
 

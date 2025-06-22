@@ -32,6 +32,7 @@ const RoadmapSchema = new mongoose.Schema(
     prerequisites: { type: [String], default: [] },
     tags: { type: [String], default: [] },
     steps: { type: [StepSchema], default: [] },
+    followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User", default: [] }],
   },
   {
     timestamps: true,
