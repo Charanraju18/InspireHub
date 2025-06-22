@@ -72,9 +72,51 @@ const SignUpInner = () => {
     }
   };
 
+  const validateEmail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
+  const validatePhoneNumber = (phone) => {
+    return /^\d{10}$/.test(phone.replace(/\D/g, "")); 
+  };
+
+  const validatePassword = (password) => {
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/.test(password);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
+    if (!form.name.trim()) {
+      setError("Name is required.");
+      return;
+    }
+    if (!form.gender) {
+      setError("Gender is required.");
+      return;
+    }
+    if (!validateEmail(form.email)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+    if (!validatePassword(form.password)) {
+      setError("Password must be at least 8 characters and include uppercase, lowercase, number, and special character.");
+      return;
+    }
+    if (!validatePhoneNumber(form.phoneNumber)) {
+      setError("Please enter a valid phone number (10 digits).");
+      return;
+    }
+    if (!form.location.trim()) {
+      setError("Location is required.");
+      return;
+    }
+    if (!form.role) {
+      setError("Role is required.");
+      return;
+    }
+
     // Prepare payload
     const payload = {
       name: form.name,
