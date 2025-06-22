@@ -109,28 +109,37 @@ const InstructorDetails = ({
   const handleFollow = async () => {
     const instructorId = instructor?._id || id;
     if (!instructorId) return;
+
     setFollowLoading(true);
     const token = localStorage.getItem("token");
+
     try {
       const res = await fetch(
         `http://localhost:5000/api/follow-instructors/follow/${instructorId}`,
         {
           method: "POST",
-          headers: token ? { Authorization: `Bearer ${token}` } : {},
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
           credentials: "include",
+          body: JSON.stringify({}), // Required even if empty
         }
       );
-      if (res.ok) {
-        setIsFollowing(true);
-        setFollowersCount((prev) => prev + 1);
-        fetchFollowers();
-      }
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Follow failed");
+
+      setIsFollowing(true);
+      setFollowersCount((prev) => prev + 1);
+      fetchFollowers();
     } catch (err) {
       console.error("Error in follow:", err);
     } finally {
       setFollowLoading(false);
     }
   };
+
 
   const handleUnfollow = async () => {
     const instructorId = instructor?._id || id;

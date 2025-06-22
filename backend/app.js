@@ -68,8 +68,15 @@ const PORT = process.env.PORT || 3000;
 // Connect to MongoDB
 connectDB();
 
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
+
 // Middleware
-app.use(cors());
+// app.use(cors());
 app.use(bodyParser.json({ limit: "10mb" }));
 app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
@@ -79,11 +86,13 @@ app.use("/api/events", require("./routes/eventRoutes"));
 app.use("/api/auth", require("./routes/authRoutes"));
 // <<<<<<< HEAD
 app.use("/api/posts", require("./routes/postRoutes"));
+app.use("/api/follow-instructors", require("./routes/followRoutes"));
 
 // Root Route
 // =======
 app.use("/api/roadmaps", require("./routes/roadmapRoutes"));
 app.use("/api/mail", require("./routes/nodeMailerRoute"));
+
 
 // >>>>>>> main
 app.get("/", (req, res) => {
