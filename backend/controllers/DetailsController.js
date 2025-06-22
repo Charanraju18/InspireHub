@@ -76,6 +76,10 @@ exports.learnerContent = async (req, res) => {
       .populate({
         path: "learnerProfile.completedContent.liveEvents",
         model: "Event"
+      })
+      .populate({
+        path: "learnerProfile.followingContent.registeredEvents",
+        model: "Event"
       });
     if (!user) return res.status(404).json({ msg: "User not found" });
 
