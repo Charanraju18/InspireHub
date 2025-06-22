@@ -60,23 +60,37 @@ const ProfilePage = () => {
   }, [authUser]);
   return (
     <>
+      <HeaderOne />
+      <Breadcrumb title={"Profile"} />
       {loading ? (
-        <Preloader />
+        <>
+          <div className="text-center py-5">
+            <Preloader />
+            <div>Loading profile...</div>
+          </div>
+          <FooterOne />
+        </>
       ) : error ? (
-        <div className="text-center py-5 text-danger">{error}</div>
+        <>
+          <div className="text-center py-5 text-danger">{error}</div>
+          <FooterOne />
+        </>
       ) : !user ? (
-        <div className="text-center py-5">No profile data found.</div>
+        <>
+          <div className="text-center py-5">No profile data found.</div>
+          <FooterOne />
+        </>
       ) : user.role === "Instructor" ? (
         <>
-          <HeaderOne />
-          <Breadcrumb title={"Profile"} />
+          {/* <HeaderOne />
+          <Breadcrumb title={"Profile"} /> */}
           <InstructorDetails instructor={user} hideGetInTouch={true} />
           <FooterOne />
         </>
       ) : user.role === "Learner" && learnerProfile ? (
         <>
-          <HeaderOne />
-          <Breadcrumb title={"Profile"} />
+          {/* <HeaderOne />
+          <Breadcrumb title={"Profile"} /> */}
           <section className="instructor-details py-120 position-relative z-1">
             <div className="container">
               <div className="row gy-4">
@@ -430,7 +444,10 @@ const ProfilePage = () => {
           <FooterOne />
         </>
       ) : (
-        <div className="text-center py-5">No profile data found.</div>
+        <>
+          <div className="text-center py-5">No profile data found.</div>
+          <FooterOne />
+        </>
       )}
     </>
   );
