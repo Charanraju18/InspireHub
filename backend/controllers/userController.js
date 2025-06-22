@@ -1,5 +1,24 @@
 const { User } = require("../models/user");
 
+const isRegisteredForEvent = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const eventId = req.params.eventId;
+
+    const user = await User.findById(userId);
+    const registeredEvents =
+      user?.learnerProfile?.followingContent?.registeredEvents || [];
+
+    const isRegistered = registeredEvents.some(
+      (event) => event.toString() === eventId
+    );
+    res.json({ isRegistered });
+  } catch (error) {
+    console.error("Error checking registration:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 const registerForEvent = async (req, res) => {
   const userId = req.user.id;
   const { eventId } = req.body;
@@ -43,4 +62,4 @@ const registerForEvent = async (req, res) => {
   }
 };
 
-module.exports = { registerForEvent };
+module.exports = { registerForEvent, isRegisteredForEvent };

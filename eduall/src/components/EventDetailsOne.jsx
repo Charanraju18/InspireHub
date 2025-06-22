@@ -17,6 +17,33 @@ const EventDetailsOne = () => {
   }, [id]);
 
   useEffect(() => {
+    const checkRegistrationStatus = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      try {
+        const res = await fetch(
+          `http://localhost:5000/api/users/is-registered/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const data = await res.json();
+        if (res.ok && data.isRegistered) {
+          setIsRegistered(true);
+        }
+      } catch (err) {
+        console.error("Failed to check registration:", err.message);
+      }
+    };
+
+    checkRegistrationStatus();
+  }, [id]);
+
+  useEffect(() => {
     const interval = setInterval(() => setNow(new Date()), 60000);
     return () => clearInterval(interval);
   }, []);
@@ -190,13 +217,16 @@ const EventDetailsOne = () => {
                     Join Now
                   </a>
                 ) : upcoming() ? (
-                  <button
-                    onClick={handleRegisterNow}
+                  <div
+                    onClick={!isRegistered ? handleRegisterNow : undefined}
                     className="btn btn-primary w-100"
-                    disabled={isRegistered}
+                    style={{
+                      cursor: isRegistered ? "not-allowed" : "pointer",
+                      opacity: isRegistered ? 0.6 : 1,
+                    }}
                   >
                     {isRegistered ? "Registered" : "Register Now"}
-                  </button>
+                  </div>
                 ) : (
                   <div
                     className="btn btn-secondary w-100"
