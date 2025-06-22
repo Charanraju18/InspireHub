@@ -7,6 +7,7 @@ const EventDetailsOne = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [now, setNow] = useState(new Date());
   const [isOpen, setIsOpen] = useState(false);
+  const [isRegistered, setIsRegistered] = useState(false);
 
   useEffect(() => {
     axios
@@ -46,6 +47,36 @@ const EventDetailsOne = () => {
 
   const live = () => now >= start && now <= end;
   const upcoming = () => now < start;
+
+  const handleRegisterNow = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        return alert("You must be logged in to register.");
+      }
+
+      const res = await fetch(
+        "http://localhost:5000/api/users/register-event",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ eventId: id }),
+        }
+      );
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message);
+
+      alert("✅ Registered successfully!");
+      setIsRegistered(true);
+    } catch (err) {
+      alert("❌ Error: " + err.message);
+    }
+  };
+
   return (
     <section className="course-list-view py-75 bg-white">
       <div className="container container--lg">
@@ -159,16 +190,13 @@ const EventDetailsOne = () => {
                     Join Now
                   </a>
                 ) : upcoming() ? (
-                  <div
-                    className="btn btn-secondary w-100"
-                    style={{
-                      pointerEvents: "auto",
-                      cursor: "not-allowed",
-                      opacity: 0.6,
-                    }}
+                  <button
+                    onClick={handleRegisterNow}
+                    className="btn btn-primary w-100"
+                    disabled={isRegistered}
                   >
-                    Upcoming Event
-                  </div>
+                    {isRegistered ? "Registered" : "Register Now"}
+                  </button>
                 ) : (
                   <div
                     className="btn btn-secondary w-100"

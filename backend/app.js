@@ -99,7 +99,7 @@ app.use("/api/follow-instructors", require("./routes/followRoutes"));
 // =======
 app.use("/api/roadmaps", require("./routes/roadmapRoutes"));
 app.use("/api/mail", require("./routes/nodeMailerRoute"));
-app.use("/api/follow-instructors", require("./routes/followRoutes"));
+app.use("/api/users", require("./routes/userRoutes"));
 // >>>>>>> main
 app.get("/", (req, res) => {
   res.send("Hello from Express and MongoDB!");
