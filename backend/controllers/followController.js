@@ -1,50 +1,53 @@
-const { User } = require("../models/user"); 
+const { User } = require("../models/user");
 const mongoose = require("mongoose");
 
 const followInstructor = async (req, res) => {
   try {
     const { instructorId } = req.params;
-    const followerId = req.user.id; 
+    const followerId = req.user.id;
     if (!mongoose.Types.ObjectId.isValid(instructorId)) {
-      return res.status(400).json({ 
-        success: false, 
-        message: "Invalid instructor ID" 
+      return res.status(400).json({
+        success: false,
+        message: "Invalid instructor ID",
       });
     }
     if (instructorId === followerId) {
-      return res.status(400).json({ 
-        success: false, 
-        message: "You cannot follow yourself" 
+      return res.status(400).json({
+        success: false,
+        message: "You cannot follow yourself",
       });
     }
     const instructorToFollow = await User.findById(instructorId);
     if (!instructorToFollow) {
-      return res.status(404).json({ 
-        success: false, 
-        message: "Instructor not found" 
+      return res.status(404).json({
+        success: false,
+        message: "Instructor not found",
       });
     }
     if (instructorToFollow.role !== "Instructor") {
-      return res.status(400).json({ 
-        success: false, 
-        message: "You can only follow instructors" 
+      return res.status(400).json({
+        success: false,
+        message: "You can only follow instructors",
       });
     }
     const follower = await User.findById(followerId);
     if (!follower) {
-      return res.status(404).json({ 
-        success: false, 
-        message: "User not found" 
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
       });
     }
-    const isAlreadyFollowing = follower.role === "Learner" 
-      ? follower.learnerProfile?.followingInstructors?.includes(instructorId)
-      : follower.instructorProfile?.followingInstructors?.includes(instructorId);
+    const isAlreadyFollowing =
+      follower.role === "Learner"
+        ? follower.learnerProfile?.followingInstructors?.includes(instructorId)
+        : follower.instructorProfile?.followingInstructors?.includes(
+            instructorId
+          );
 
     if (isAlreadyFollowing) {
-      return res.status(400).json({ 
-        success: false, 
-        message: "You are already following this instructor" 
+      return res.status(400).json({
+        success: false,
+        message: "You are already following this instructor",
       });
     }
     if (follower.role === "Learner") {
@@ -71,16 +74,15 @@ const followInstructor = async (req, res) => {
         followedInstructor: {
           id: instructorToFollow._id,
           name: instructorToFollow.name,
-          email: instructorToFollow.email
-        }
-      }
+          email: instructorToFollow.email,
+        },
+      },
     });
-
   } catch (error) {
     console.error("Error in followInstructor:", error);
-    res.status(500).json({ 
-      success: false, 
-      message: "Internal server error" 
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
     });
   }
 };
@@ -90,47 +92,53 @@ const unfollowInstructor = async (req, res) => {
     const { instructorId } = req.params;
     const followerId = req.user.id;
     if (!mongoose.Types.ObjectId.isValid(instructorId)) {
-      return res.status(400).json({ 
-        success: false, 
-        message: "Invalid instructor ID" 
+      return res.status(400).json({
+        success: false,
+        message: "Invalid instructor ID",
       });
     }
     const instructorToUnfollow = await User.findById(instructorId);
     if (!instructorToUnfollow) {
-      return res.status(404).json({ 
-        success: false, 
-        message: "Instructor not found" 
+      return res.status(404).json({
+        success: false,
+        message: "Instructor not found",
       });
     }
     const follower = await User.findById(followerId);
     if (!follower) {
-      return res.status(404).json({ 
-        success: false, 
-        message: "User not found" 
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
       });
     }
-    const isCurrentlyFollowing = follower.role === "Learner" 
-      ? follower.learnerProfile?.followingInstructors?.includes(instructorId)
-      : follower.instructorProfile?.followingInstructors?.includes(instructorId);
+    const isCurrentlyFollowing =
+      follower.role === "Learner"
+        ? follower.learnerProfile?.followingInstructors?.includes(instructorId)
+        : follower.instructorProfile?.followingInstructors?.includes(
+            instructorId
+          );
 
     if (!isCurrentlyFollowing) {
-      return res.status(400).json({ 
-        success: false, 
-        message: "You are not following this instructor" 
+      return res.status(400).json({
+        success: false,
+        message: "You are not following this instructor",
       });
     }
     if (follower.role === "Learner") {
-      follower.learnerProfile.followingInstructors = follower.learnerProfile.followingInstructors.filter(
-        id => id.toString() !== instructorId
-      );
+      follower.learnerProfile.followingInstructors =
+        follower.learnerProfile.followingInstructors.filter(
+          (id) => id.toString() !== instructorId
+        );
     } else if (follower.role === "Instructor") {
-      follower.instructorProfile.followingInstructors = follower.instructorProfile.followingInstructors.filter(
-        id => id.toString() !== instructorId
-      );
+      follower.instructorProfile.followingInstructors =
+        follower.instructorProfile.followingInstructors.filter(
+          (id) => id.toString() !== instructorId
+        );
     }
-    instructorToUnfollow.instructorProfile.followers = instructorToUnfollow.instructorProfile.followers.filter(
-      id => id.toString() !== followerId
-    );
+    instructorToUnfollow.instructorProfile.followers =
+      instructorToUnfollow.instructorProfile.followers.filter(
+        (id) => id.toString() !== followerId
+      );
 
     await Promise.all([follower.save(), instructorToUnfollow.save()]);
 
@@ -141,16 +149,15 @@ const unfollowInstructor = async (req, res) => {
         unfollowedInstructor: {
           id: instructorToUnfollow._id,
           name: instructorToUnfollow.name,
-          email: instructorToUnfollow.email
-        }
-      }
+          email: instructorToUnfollow.email,
+        },
+      },
     });
-
   } catch (error) {
     console.error("Error in unfollowInstructor:", error);
-    res.status(500).json({ 
-      success: false, 
-      message: "Internal server error" 
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
     });
   }
 };
@@ -159,62 +166,65 @@ const getFollowingInstructors = async (req, res) => {
   try {
     const userId = req.user.id;
 
-    const user = await User.findById(userId)
-      .populate({
-        path: user.role === "Learner" ? "learnerProfile.followingInstructors" : "instructorProfile.followingInstructors",
-        select: "name email profilePicture instructorProfile.experienceYears instructorProfile.currentRole"
-      });
-
+    const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).json({ 
-        success: false, 
-        message: "User not found" 
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
       });
     }
 
-    const followingInstructors = user.role === "Learner" 
-      ? user.learnerProfile?.followingInstructors || []
-      : user.instructorProfile?.followingInstructors || [];
+    const populatedUser = await User.findById(userId).populate({
+      path:
+        user.role === "Learner"
+          ? "learnerProfile.followingInstructors"
+          : "instructorProfile.followingInstructors",
+      select:
+        "name email profilePicture instructorProfile.experienceYears instructorProfile.currentRole",
+    });
+
+    const followingInstructors =
+      user.role === "Learner"
+        ? populatedUser.learnerProfile?.followingInstructors || []
+        : populatedUser.instructorProfile?.followingInstructors || [];
 
     res.status(200).json({
       success: true,
       message: "Following instructors retrieved successfully",
       data: {
         followingCount: followingInstructors.length,
-        followingInstructors
-      }
+        followingInstructors,
+      },
     });
-
   } catch (error) {
     console.error("Error in getFollowingInstructors:", error);
-    res.status(500).json({ 
-      success: false, 
-      message: "Internal server error" 
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
     });
   }
 };
 
 const getFollowers = async (req, res) => {
   try {
-    const instructorId = req.user.id;
-
-    const instructor = await User.findById(instructorId)
-      .populate({
-        path: "instructorProfile.followers",
-        select: "name email profilePicture role"
-      });
-
-    if (!instructor) {
-      return res.status(404).json({ 
-        success: false, 
-        message: "Instructor not found" 
+    if (!req.user || req.user.role !== "Instructor") {
+      return res.status(403).json({
+        success: false,
+        message: "Only instructors can view their followers",
       });
     }
 
-    if (instructor.role !== "Instructor") {
-      return res.status(403).json({ 
-        success: false, 
-        message: "Only instructors can view their followers" 
+    const instructorId = req.user._id.toString();
+
+    const instructor = await User.findById(instructorId).populate({
+      path: "instructorProfile.followers",
+      select: "name email profilePicture role",
+    });
+
+    if (!instructor) {
+      return res.status(404).json({
+        success: false,
+        message: "Instructor not found",
       });
     }
 
@@ -225,15 +235,14 @@ const getFollowers = async (req, res) => {
       message: "Followers retrieved successfully",
       data: {
         followersCount: followers.length,
-        followers
-      }
+        followers,
+      },
     });
-
   } catch (error) {
     console.error("Error in getFollowers:", error);
-    res.status(500).json({ 
-      success: false, 
-      message: "Internal server error" 
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
     });
   }
 };
@@ -244,36 +253,36 @@ const checkFollowStatus = async (req, res) => {
     const userId = req.user.id;
 
     if (!mongoose.Types.ObjectId.isValid(instructorId)) {
-      return res.status(400).json({ 
-        success: false, 
-        message: "Invalid instructor ID" 
+      return res.status(400).json({
+        success: false,
+        message: "Invalid instructor ID",
       });
     }
 
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).json({ 
-        success: false, 
-        message: "User not found" 
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
       });
     }
 
-    const isFollowing = user.role === "Learner" 
-      ? user.learnerProfile?.followingInstructors?.includes(instructorId)
-      : user.instructorProfile?.followingInstructors?.includes(instructorId);
+    const isFollowing =
+      user.role === "Learner"
+        ? user.learnerProfile?.followingInstructors?.includes(instructorId)
+        : user.instructorProfile?.followingInstructors?.includes(instructorId);
 
     res.status(200).json({
       success: true,
       data: {
-        isFollowing: !!isFollowing
-      }
+        isFollowing: !!isFollowing,
+      },
     });
-
   } catch (error) {
     console.error("Error in checkFollowStatus:", error);
-    res.status(500).json({ 
-      success: false, 
-      message: "Internal server error" 
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
     });
   }
 };
@@ -283,5 +292,5 @@ module.exports = {
   unfollowInstructor,
   getFollowingInstructors,
   getFollowers,
-  checkFollowStatus
+  checkFollowStatus,
 };
