@@ -52,19 +52,16 @@ const followInstructor = async (req, res) => {
         follower.learnerProfile.followingInstructors = [];
       }
       follower.learnerProfile.followingInstructors.push(instructorId);
-      follower.markModified("learnerProfile"); 
     } else if (follower.role === "Instructor") {
       if (!follower.instructorProfile.followingInstructors) {
         follower.instructorProfile.followingInstructors = [];
       }
       follower.instructorProfile.followingInstructors.push(instructorId);
-      follower.markModified("instructorProfile"); 
     }
     if (!instructorToFollow.instructorProfile.followers) {
       instructorToFollow.instructorProfile.followers = [];
     }
     instructorToFollow.instructorProfile.followers.push(followerId);
-    instructorToFollow.markModified("instructorProfile"); 
     await Promise.all([follower.save(), instructorToFollow.save()]);
 
     res.status(200).json({
@@ -126,17 +123,15 @@ const unfollowInstructor = async (req, res) => {
       follower.learnerProfile.followingInstructors = follower.learnerProfile.followingInstructors.filter(
         id => id.toString() !== instructorId
       );
-      follower.markModified("learnerProfile"); 
     } else if (follower.role === "Instructor") {
       follower.instructorProfile.followingInstructors = follower.instructorProfile.followingInstructors.filter(
         id => id.toString() !== instructorId
       );
-      follower.markModified("instructorProfile"); 
     }
     instructorToUnfollow.instructorProfile.followers = instructorToUnfollow.instructorProfile.followers.filter(
       id => id.toString() !== followerId
     );
-    instructorToUnfollow.markModified("instructorProfile"); 
+
     await Promise.all([follower.save(), instructorToUnfollow.save()]);
 
     res.status(200).json({
@@ -163,26 +158,21 @@ const unfollowInstructor = async (req, res) => {
 const getFollowingInstructors = async (req, res) => {
   try {
     const userId = req.user.id;
-    const userRole = await User.findById(userId).select('role');
-    
-    if (!userRole) {
+
+    const user = await User.findById(userId)
+      .populate({
+        path: user.role === "Learner" ? "learnerProfile.followingInstructors" : "instructorProfile.followingInstructors",
+        select: "name email profilePicture instructorProfile.experienceYears instructorProfile.currentRole"
+      });
+
+    if (!user) {
       return res.status(404).json({ 
         success: false, 
         message: "User not found" 
       });
     }
 
-    const populatePath = userRole.role === "Learner" 
-      ? "learnerProfile.followingInstructors" 
-      : "instructorProfile.followingInstructors";
-
-    const user = await User.findById(userId)
-      .populate({
-        path: populatePath,
-        select: "name email role"
-      });
-
-    const followingInstructors = userRole.role === "Learner" 
+    const followingInstructors = user.role === "Learner" 
       ? user.learnerProfile?.followingInstructors || []
       : user.instructorProfile?.followingInstructors || [];
 
@@ -206,27 +196,30 @@ const getFollowingInstructors = async (req, res) => {
 
 const getFollowers = async (req, res) => {
   try {
-    const instructorId = req.params.instructorId || req.user?.id;
-    if (!instructorId) {
-      return res.status(400).json({
-        success: false,
-        message: "Instructor ID is required"
+    const instructorId = req.user.id;
+
+    const instructor = await User.findById(instructorId)
+      .populate({
+        path: "instructorProfile.followers",
+        select: "name email profilePicture role"
+      });
+
+    if (!instructor) {
+      return res.status(404).json({ 
+        success: false, 
+        message: "Instructor not found" 
       });
     }
-    const user = await User.findById(instructorId).select('role instructorProfile');
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found"
+
+    if (instructor.role !== "Instructor") {
+      return res.status(403).json({ 
+        success: false, 
+        message: "Only instructors can view their followers" 
       });
     }
-    if (user.role !== "Instructor") {
-      return res.status(403).json({
-        success: false,
-        message: "Only instructors can have followers"
-      });
-    }
-    const followers = user.instructorProfile?.followers || [];
+
+    const followers = instructor.instructorProfile?.followers || [];
+
     res.status(200).json({
       success: true,
       message: "Followers retrieved successfully",
@@ -235,11 +228,12 @@ const getFollowers = async (req, res) => {
         followers
       }
     });
+
   } catch (error) {
     console.error("Error in getFollowers:", error);
-    res.status(500).json({
-      success: false,
-      message: "Internal server error"
+    res.status(500).json({ 
+      success: false, 
+      message: "Internal server error" 
     });
   }
 };

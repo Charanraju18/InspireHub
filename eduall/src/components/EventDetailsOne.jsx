@@ -7,12 +7,40 @@ const EventDetailsOne = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [now, setNow] = useState(new Date());
   const [isOpen, setIsOpen] = useState(false);
+  const [isRegistered, setIsRegistered] = useState(false);
 
   useEffect(() => {
     axios
       .get(`http://localhost:5000/api/events/${id}`)
       .then((res) => setSelectedEvent(res.data))
       .catch((err) => console.error("Error loading event", err));
+  }, [id]);
+
+  useEffect(() => {
+    const checkRegistrationStatus = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      try {
+        const res = await fetch(
+          `http://localhost:5000/api/users/is-registered/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const data = await res.json();
+        if (res.ok && data.isRegistered) {
+          setIsRegistered(true);
+        }
+      } catch (err) {
+        console.error("Failed to check registration:", err.message);
+      }
+    };
+
+    checkRegistrationStatus();
   }, [id]);
 
   useEffect(() => {
@@ -46,6 +74,36 @@ const EventDetailsOne = () => {
 
   const live = () => now >= start && now <= end;
   const upcoming = () => now < start;
+
+  const handleRegisterNow = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        return alert("You must be logged in to register.");
+      }
+
+      const res = await fetch(
+        "http://localhost:5000/api/users/register-event",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ eventId: id }),
+        }
+      );
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message);
+
+      alert("✅ Registered successfully!");
+      setIsRegistered(true);
+    } catch (err) {
+      alert("❌ Error: " + err.message);
+    }
+  };
+
   return (
     <section className="course-list-view py-75 bg-white">
       <div className="container container--lg">
@@ -160,14 +218,14 @@ const EventDetailsOne = () => {
                   </a>
                 ) : upcoming() ? (
                   <div
-                    className="btn btn-secondary w-100"
+                    onClick={!isRegistered ? handleRegisterNow : undefined}
+                    className="btn btn-primary w-100"
                     style={{
-                      pointerEvents: "auto",
-                      cursor: "not-allowed",
-                      opacity: 0.6,
+                      cursor: isRegistered ? "not-allowed" : "pointer",
+                      opacity: isRegistered ? 0.6 : 1,
                     }}
                   >
-                    Upcoming Event
+                    {isRegistered ? "Registered" : "Register Now"}
                   </div>
                 ) : (
                   <div
