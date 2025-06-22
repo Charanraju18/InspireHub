@@ -19,7 +19,15 @@ const InstructorDetails = ({
   const [showUnfollowModal, setShowUnfollowModal] = useState(false);
 
   useEffect(() => {
-    if (propInstructor) return;
+    if (propInstructor) {
+      setInstructor(propInstructor);
+      setLoading(false);
+      // Fetch followers if instructor is available from props
+      if (propInstructor?._id && isAuthenticated) {
+        fetchFollowers();
+      }
+      return;
+    }
     const fetchInstructor = async () => {
       try {
         const res = await fetch(
@@ -28,6 +36,10 @@ const InstructorDetails = ({
         const data = await res.json();
         if (!res.ok) throw new Error(data.msg || "Failed to fetch instructor");
         setInstructor(data);
+        // Fetch followers after instructor is set
+        if (data?._id && isAuthenticated) {
+          fetchFollowers();
+        }
       } catch (err) {
         setError(err.message);
       } finally {
@@ -35,7 +47,7 @@ const InstructorDetails = ({
       }
     };
     if (id) fetchInstructor();
-  }, [id, propInstructor]);
+  }, [id, propInstructor, isAuthenticated]);
 
   useEffect(() => {
     const fetchFollowStatus = async () => {
@@ -74,6 +86,7 @@ const InstructorDetails = ({
         }
       );
       const data = await res.json();
+      console.log("Followers API response:", data); 
       if (res.ok && data.data) setFollowersCount(data.data.followersCount);
     } catch (err) {
       console.error("Error fetching followers:", err);

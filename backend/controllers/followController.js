@@ -207,14 +207,7 @@ const getFollowingInstructors = async (req, res) => {
 
 const getFollowers = async (req, res) => {
   try {
-    if (!req.user || req.user.role !== "Instructor") {
-      return res.status(403).json({
-        success: false,
-        message: "Only instructors can view their followers",
-      });
-    }
-
-    const instructorId = req.user._id.toString();
+    const instructorId = req.params.instructorId || req.user._id.toString();
 
     const instructor = await User.findById(instructorId).populate({
       path: "instructorProfile.followers",
