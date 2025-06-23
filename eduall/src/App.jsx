@@ -59,7 +59,7 @@ function App() {
       <RouteScrollToTop />
       <Routes>
         {/* <Route exact path='/' element={<HomePage />} /> */}
-        <Route exact path='/' element={<HomePageTwo />} />
+        <Route exact path="/" element={<HomePageTwo />} />
         {/* <Route exact path='/index-2' element={<HomePageTwo />} /> */}
         {/* <Route exact path='/index-3' element={<HomePageThree />} />
         <Route exact path='/index-4' element={<HomePageFour />} />

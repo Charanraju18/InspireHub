@@ -1,6 +1,7 @@
 import Breadcrumb from "../components/Breadcrumb";
 import CertificateOne from "../components/CertificateOne";
 import FooterOne from "../components/FooterOne";
+import FooterTwo from "../components/FooterTwo";
 import HeaderOne from "../components/HeaderOne";
 import InstructorAll from "../components/InstructorAll";
 import Animation from "../helper/Animation";
@@ -25,10 +26,10 @@ const InstructorPage = () => {
       <InstructorAll />
 
       {/* CertificateOne */}
-      <CertificateOne />
+      {/* <CertificateOne /> */}
 
       {/* FooterOne */}
-      <FooterOne />
+      <FooterTwo />
     </>
   );
 };

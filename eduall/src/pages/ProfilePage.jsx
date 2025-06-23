@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Breadcrumb from "../components/Breadcrumb";
-import FooterOne from "../components/FooterOne";
 import HeaderOne from "../components/HeaderOne";
 import Preloader from "../helper/Preloader";
 import axios from "axios";
 import { useAuth } from "../authContext";
 import InstructorDetails from "../components/InstructorDetails";
+import FooterTwo from "../components/FooterTwo";
 
 const ProfilePage = () => {
   const { user: authUser } = useAuth();
@@ -68,24 +68,24 @@ const ProfilePage = () => {
             <Preloader />
             <div>Loading profile...</div>
           </div>
-          <FooterOne />
+          <FooterTwo />
         </>
       ) : error ? (
         <>
           <div className="text-center py-5 text-danger">{error}</div>
-          <FooterOne />
+          <FooterTwo />
         </>
       ) : !user ? (
         <>
           <div className="text-center py-5">No profile data found.</div>
-          <FooterOne />
+          <FooterTwo />
         </>
       ) : user.role === "Instructor" ? (
         <>
           {/* <HeaderOne />
           <Breadcrumb title={"Profile"} /> */}
           <InstructorDetails instructor={user} hideGetInTouch={true} />
-          <FooterOne />
+          <FooterTwo />
         </>
       ) : user.role === "Learner" && learnerProfile ? (
         <>
@@ -212,7 +212,11 @@ const ProfilePage = () => {
                       </div>
                       <span
                         className="vr bg-neutral-200 mx-2"
-                        style={{ width: 2, height: 24, display: "inline-block" }}
+                        style={{
+                          width: 2,
+                          height: 24,
+                          display: "inline-block",
+                        }}
                       ></span>
                       <div className="d-flex align-items-center gap-8">
                         <span className="text-neutral-700 text-2xl d-flex">
@@ -224,14 +228,19 @@ const ProfilePage = () => {
                       </div>
                       <span
                         className="vr bg-neutral-200 mx-2"
-                        style={{ width: 2, height: 24, display: "inline-block" }}
+                        style={{
+                          width: 2,
+                          height: 24,
+                          display: "inline-block",
+                        }}
                       ></span>
                       <div className="d-flex align-items-center gap-8">
                         <span className="text-neutral-700 text-2xl d-flex">
                           <i className="ph-bold ph-users" />
                         </span>
                         <span className="text-neutral-700 text-md fw-medium">
-                          {learnerProfile.followingInstructors?.length || 0} Following
+                          {learnerProfile.followingInstructors?.length || 0}{" "}
+                          Following
                         </span>
                       </div>
                     </div>
@@ -285,18 +294,20 @@ const ProfilePage = () => {
                   <div className="row gy-4 mb-32">
                     {/* Roadmaps */}
                     {learnerProfile.followingContent?.roadmaps?.length > 0 ? (
-                      learnerProfile.followingContent.roadmaps.map((roadmap, idx) => (
-                        <div className="col-md-4 col-12" key={idx}>
-                          <div className="course-item bg-info-100 rounded-16 p-24 h-100 box-shadow-md d-flex align-items-center gap-16">
-                            <span className="text-info-700 text-2xl d-flex">
-                              <i className="ph-bold ph-map-trifold" />
-                            </span>
-                            <span className="fw-semibold text-info-700 fs-5">
-                              {roadmap.title || roadmap._id || roadmap}
-                            </span>
+                      learnerProfile.followingContent.roadmaps.map(
+                        (roadmap, idx) => (
+                          <div className="col-md-4 col-12" key={idx}>
+                            <div className="course-item bg-info-100 rounded-16 p-24 h-100 box-shadow-md d-flex align-items-center gap-16">
+                              <span className="text-info-700 text-2xl d-flex">
+                                <i className="ph-bold ph-map-trifold" />
+                              </span>
+                              <span className="fw-semibold text-info-700 fs-5">
+                                {roadmap.title || roadmap._id || roadmap}
+                              </span>
+                            </div>
                           </div>
-                        </div>
-                      ))
+                        )
+                      )
                     ) : (
                       <div className="col-12">
                         <div className="course-item bg-light rounded-16 p-24 h-100 box-shadow-md d-flex align-items-center justify-content-center">
@@ -310,46 +321,54 @@ const ProfilePage = () => {
                   <h5 className="mb-16 mt-4">Registered Live Events</h5>
                   <div className="row gy-4 mb-32">
                     {/* Registered Events */}
-                    {learnerProfile.followingContent?.registeredEvents?.length > 0 ? (
-                      learnerProfile.followingContent.registeredEvents.map((event, idx) => (
-                        <div className="col-md-6 col-12" key={"reg-event-" + idx}>
-                          <div className="course-item bg-primary-100 rounded-16 p-24 h-100 box-shadow-md d-flex flex-column flex-md-row align-items-md-center gap-24">
-                            <div
-                              className="course-item__thumb rounded-12 overflow-hidden position-relative mb-3 mb-md-0"
-                              style={{ minWidth: 120, maxWidth: 180 }}
-                            >
-                              {event.image ? (
-                                <img
-                                  src={event.image}
-                                  alt={event.title}
-                                  className="course-item__img rounded-12 cover-img transition-2 w-100"
-                                  style={{ height: 100, objectFit: "cover" }}
-                                />
-                              ) : (
-                                <div
-                                  className="bg-main-25 rounded-12 d-flex align-items-center justify-content-center"
-                                  style={{ height: 100 }}
-                                >
-                                  <i className="ph-bold ph-calendar text-2xl text-main-600" />
-                                </div>
-                              )}
-                            </div>
-                            <div className="course-item__content flex-grow-1">
-                              <h5 className="mb-2">{event.title || "Untitled Event"}</h5>
-                              {event.date && (
-                                <div className="mb-2 text-neutral-700 fw-medium text-md">
-                                  {event.date}
-                                </div>
-                              )}
-                              {event.description && (
-                                <div className="mb-2 text-neutral-500">
-                                  {event.description}
-                                </div>
-                              )}
+                    {learnerProfile.followingContent?.registeredEvents?.length >
+                    0 ? (
+                      learnerProfile.followingContent.registeredEvents.map(
+                        (event, idx) => (
+                          <div
+                            className="col-md-6 col-12"
+                            key={"reg-event-" + idx}
+                          >
+                            <div className="course-item bg-primary-100 rounded-16 p-24 h-100 box-shadow-md d-flex flex-column flex-md-row align-items-md-center gap-24">
+                              <div
+                                className="course-item__thumb rounded-12 overflow-hidden position-relative mb-3 mb-md-0"
+                                style={{ minWidth: 120, maxWidth: 180 }}
+                              >
+                                {event.image ? (
+                                  <img
+                                    src={event.image}
+                                    alt={event.title}
+                                    className="course-item__img rounded-12 cover-img transition-2 w-100"
+                                    style={{ height: 100, objectFit: "cover" }}
+                                  />
+                                ) : (
+                                  <div
+                                    className="bg-main-25 rounded-12 d-flex align-items-center justify-content-center"
+                                    style={{ height: 100 }}
+                                  >
+                                    <i className="ph-bold ph-calendar text-2xl text-main-600" />
+                                  </div>
+                                )}
+                              </div>
+                              <div className="course-item__content flex-grow-1">
+                                <h5 className="mb-2">
+                                  {event.title || "Untitled Event"}
+                                </h5>
+                                {event.date && (
+                                  <div className="mb-2 text-neutral-700 fw-medium text-md">
+                                    {event.date}
+                                  </div>
+                                )}
+                                {event.description && (
+                                  <div className="mb-2 text-neutral-500">
+                                    {event.description}
+                                  </div>
+                                )}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      ))
+                        )
+                      )
                     ) : (
                       <div className="col-12">
                         <div className="course-item bg-light rounded-16 p-24 h-100 box-shadow-md d-flex align-items-center justify-content-center">
@@ -365,18 +384,20 @@ const ProfilePage = () => {
                   <div className="row gy-4 mb-32">
                     {/* Roadmaps */}
                     {learnerProfile.completedContent?.roadmaps?.length > 0 ? (
-                      learnerProfile.completedContent.roadmaps.map((roadmap, idx) => (
-                        <div className="col-md-4 col-12" key={idx}>
-                          <div className="course-item bg-info-100 rounded-16 p-24 h-100 box-shadow-md d-flex align-items-center gap-16">
-                            <span className="text-info-700 text-2xl d-flex">
-                              <i className="ph-bold ph-map-trifold" />
-                            </span>
-                            <span className="fw-semibold text-info-700 fs-5">
-                              {roadmap.title || roadmap._id || roadmap}
-                            </span>
+                      learnerProfile.completedContent.roadmaps.map(
+                        (roadmap, idx) => (
+                          <div className="col-md-4 col-12" key={idx}>
+                            <div className="course-item bg-info-100 rounded-16 p-24 h-100 box-shadow-md d-flex align-items-center gap-16">
+                              <span className="text-info-700 text-2xl d-flex">
+                                <i className="ph-bold ph-map-trifold" />
+                              </span>
+                              <span className="fw-semibold text-info-700 fs-5">
+                                {roadmap.title || roadmap._id || roadmap}
+                              </span>
+                            </div>
                           </div>
-                        </div>
-                      ))
+                        )
+                      )
                     ) : (
                       <div className="col-12">
                         <div className="course-item bg-light rounded-16 p-24 h-100 box-shadow-md d-flex align-items-center justify-content-center">
@@ -388,45 +409,49 @@ const ProfilePage = () => {
                     )}
                     {/* Completed Live Events */}
                     {learnerProfile.completedContent?.liveEvents?.length > 0 ? (
-                      learnerProfile.completedContent.liveEvents.map((event, idx) => (
-                        <div className="col-md-6 col-12" key={"event-" + idx}>
-                          <div className="course-item bg-warning-100 rounded-16 p-24 h-100 box-shadow-md d-flex flex-column flex-md-row align-items-md-center gap-24">
-                            <div
-                              className="course-item__thumb rounded-12 overflow-hidden position-relative mb-3 mb-md-0"
-                              style={{ minWidth: 120, maxWidth: 180 }}
-                            >
-                              {event.image ? (
-                                <img
-                                  src={event.image}
-                                  alt={event.title}
-                                  className="course-item__img rounded-12 cover-img transition-2 w-100"
-                                  style={{ height: 100, objectFit: "cover" }}
-                                />
-                              ) : (
-                                <div
-                                  className="bg-main-25 rounded-12 d-flex align-items-center justify-content-center"
-                                  style={{ height: 100 }}
-                                >
-                                  <i className="ph-bold ph-calendar text-2xl text-main-600" />
-                                </div>
-                              )}
-                            </div>
-                            <div className="course-item__content flex-grow-1">
-                              <h5 className="mb-2">{event.title || "Untitled Event"}</h5>
-                              {event.date && (
-                                <div className="mb-2 text-neutral-700 fw-medium text-md">
-                                  {event.date}
-                                </div>
-                              )}
-                              {event.description && (
-                                <div className="mb-2 text-neutral-500">
-                                  {event.description}
-                                </div>
-                              )}
+                      learnerProfile.completedContent.liveEvents.map(
+                        (event, idx) => (
+                          <div className="col-md-6 col-12" key={"event-" + idx}>
+                            <div className="course-item bg-warning-100 rounded-16 p-24 h-100 box-shadow-md d-flex flex-column flex-md-row align-items-md-center gap-24">
+                              <div
+                                className="course-item__thumb rounded-12 overflow-hidden position-relative mb-3 mb-md-0"
+                                style={{ minWidth: 120, maxWidth: 180 }}
+                              >
+                                {event.image ? (
+                                  <img
+                                    src={event.image}
+                                    alt={event.title}
+                                    className="course-item__img rounded-12 cover-img transition-2 w-100"
+                                    style={{ height: 100, objectFit: "cover" }}
+                                  />
+                                ) : (
+                                  <div
+                                    className="bg-main-25 rounded-12 d-flex align-items-center justify-content-center"
+                                    style={{ height: 100 }}
+                                  >
+                                    <i className="ph-bold ph-calendar text-2xl text-main-600" />
+                                  </div>
+                                )}
+                              </div>
+                              <div className="course-item__content flex-grow-1">
+                                <h5 className="mb-2">
+                                  {event.title || "Untitled Event"}
+                                </h5>
+                                {event.date && (
+                                  <div className="mb-2 text-neutral-700 fw-medium text-md">
+                                    {event.date}
+                                  </div>
+                                )}
+                                {event.description && (
+                                  <div className="mb-2 text-neutral-500">
+                                    {event.description}
+                                  </div>
+                                )}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      ))
+                        )
+                      )
                     ) : (
                       <div className="col-12">
                         <div className="course-item bg-light rounded-16 p-24 h-100 box-shadow-md d-flex align-items-center justify-content-center">
@@ -441,12 +466,12 @@ const ProfilePage = () => {
               </div>
             </div>
           </section>
-          <FooterOne />
+          <FooterTwo />
         </>
       ) : (
         <>
           <div className="text-center py-5">No profile data found.</div>
-          <FooterOne />
+          <FooterTwo />
         </>
       )}
     </>

@@ -113,7 +113,7 @@ const HeaderOne = () => {
               {/* Logo Start */}
               <div className="logo">
                 <Link to="/" className="link">
-                  <img src="assets/images/logo/logo.png" alt="Logo" />
+                  <img src="assets/images/logo/logoo.png" alt="Logo" />
                 </Link>
               </div>
               {/* Menu Start  */}

@@ -3,6 +3,7 @@ import CertificateOne from "../components/CertificateOne";
 import ContactInner from "../components/ContactInner";
 import FAQInnerOne from "../components/FAQInnerOne";
 import FooterOne from "../components/FooterOne";
+import FooterTwo from "../components/FooterTwo";
 import HeaderOne from "../components/HeaderOne";
 import Animation from "../helper/Animation";
 import Preloader from "../helper/Preloader";
@@ -29,10 +30,10 @@ const ContactPage = () => {
       <ContactInner />
 
       {/* CertificateOne */}
-      <CertificateOne />
+      {/* <CertificateOne /> */}
 
       {/* FooterOne */}
-      <FooterOne />
+      <FooterTwo />
     </>
   );
 };

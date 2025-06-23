@@ -10,7 +10,7 @@ import InstructorOne from "../components/InstructorOne";
 import TestimonialsOne from "../components/TestimonialsOne";
 import Animation from "../helper/Animation";
 import Preloader from "../helper/Preloader";
-
+import FooterTwo from "../components/FooterTwo";
 const AboutPage = () => {
   return (
     <>
@@ -45,10 +45,10 @@ const AboutPage = () => {
       <BrandTwo />
 
       {/* CertificateOne */}
-      <CertificateOne />
+      {/* <CertificateOne /> */}
 
       {/* FooterOne */}
-      <FooterOne />
+      <FooterTwo />
     </>
   );
 };
