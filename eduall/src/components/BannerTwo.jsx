@@ -1,6 +1,28 @@
 import { Link } from "react-router-dom";
 
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../authContext";
+
+
 const BannerTwo = () => {
+  const navigate = useNavigate();
+const { isAuthenticated } = useAuth();
+
+const handleBrowseCoursesClick = () => {
+  if (isAuthenticated) {
+    navigate("/roadmaps");
+  } else {
+    navigate("/sign-in");
+  }
+};
+
+// const handleAboutUsClick = () => {
+//   if (isAuthenticated) {
+//     navigate("/about");
+//   } else {
+//     navigate("/sign-in");
+//   }
+// };
   return (
     <section className='banner-two pt-80 position-relative overflow-hidden'>
       <img
@@ -59,14 +81,32 @@ const BannerTwo = () => {
                 Learn from Experience. Grow with InspireHub...
               </p>
               <div className='buttons-wrapper flex-align flex-wrap gap-24 mt-40'>
-                <Link
+                {/* <Link
                   to='/roadmaps'
                   className='btn btn-main rounded-pill flex-align gap-8'
                   data-aos='fade-right'
                 >
                   Browse Courses
                   <i className='ph-bold ph-arrow-up-right d-flex text-lg' />
-                </Link>
+                </Link> */}
+
+                <button
+                onClick={handleBrowseCoursesClick}
+                className="btn btn-main rounded-pill flex-align gap-8"
+                data-aos="fade-right"
+              >
+                Browse Roadmaps
+                <i className="ph-bold ph-arrow-up-right d-flex text-lg" />
+              </button>
+              {/* <button
+                onClick={handleAboutUsClick}
+                className="btn btn-outline-main rounded-pill flex-align gap-8"
+                data-aos="fade-left"
+              >
+                About Us
+                <i className="ph-bold ph-arrow-up-right d-flex text-lg" />
+              </button> */}
+
                 <Link
                   to='/about'
                   className='btn btn-outline-main rounded-pill flex-align gap-8'

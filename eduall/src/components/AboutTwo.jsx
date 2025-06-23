@@ -36,8 +36,8 @@ const AboutTwo = () => {
                     </span>
                     <div>
                       <span className='text-lg text-neutral-700 d-block'>
-                        4.6
-                        <span className='text-neutral-100'>(2.4k)</span>
+                        4.6 / 5
+                        {/* <span className='text-neutral-100'>(2.4k)</span> */}
                       </span>
                       <span className='text-neutral-500'>AVG Reviews</span>
                     </div>

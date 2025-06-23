@@ -82,7 +82,7 @@ const CategoryOne = () => {
               Code your future with guidance from experts."
             </p>
             <Link
-              to='/courses'
+              to='/roadmaps'
               className='py-12 px-24 bg-white rounded-8 border border-neutral-30 mt-28 fw-semibold text-main-600 hover-bg-main-600 hover-text-white hover-border-main-600'
             >
               100+ Posts
@@ -108,7 +108,7 @@ const CategoryOne = () => {
               Modern farming guided by those who work the soil .
             </p>
             <Link
-              to='/courses'
+              to='/roadmaps'
               className='py-12 px-24 bg-white rounded-8 border border-neutral-30 mt-28 fw-semibold text-main-two-600 hover-bg-main-two-600 hover-text-white hover-border-main-two-600'
             >
              50+ Posts
@@ -135,7 +135,7 @@ const CategoryOne = () => {
               Unleash creativity, shaped by artists who live the craft.
             </p>
             <Link
-              to='/courses'
+              to='/roadmaps'
               className='py-12 px-24 bg-white rounded-8 border border-neutral-30 mt-28 fw-semibold text-main-three-600 hover-bg-main-three-600 hover-text-white hover-border-main-three-600'
             >
               30+ Posts
@@ -162,7 +162,7 @@ const CategoryOne = () => {
               Master your money with guidance from financial pros who’ve been there.
             </p>
             <Link
-              to='/courses'
+              to='/roadmaps'
               className='py-12 px-24 bg-white rounded-8 border border-neutral-30 mt-28 fw-semibold text-main-two-600 hover-bg-main-two-600 hover-text-white hover-border-main-two-600'
             >
               20+ Posts
@@ -189,7 +189,7 @@ const CategoryOne = () => {
                 Craft your message with the voices that move audiences.
             </p>
             <Link
-              to='/courses'
+              to='/roadmaps'
               className='py-12 px-24 bg-white rounded-8 border border-neutral-30 mt-28 fw-semibold text-main-three-600 hover-bg-main-three-600 hover-text-white hover-border-main-three-600'
             >
               40+ Posts
@@ -214,7 +214,7 @@ const CategoryOne = () => {
               Style your path with insights from trendsetters and creators.
             </p>
             <Link
-              to='/courses'
+              to='/roadmaps'
               className='py-12 px-24 bg-white rounded-8 border border-neutral-30 mt-28 fw-semibold text-main-two-600 hover-bg-main-two-600 hover-text-white hover-border-main-two-600'
             >
               10+ posts
