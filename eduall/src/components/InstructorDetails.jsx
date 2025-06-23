@@ -33,10 +33,10 @@ const InstructorDetails = ({
 
   const dropdownRef = useRef(null);
 
-  const fetchInstructorDetails = async () => {
+  const fetchInstructorDetails = async (instructorId) => {
     try {
       const res = await fetch(
-        `http://localhost:5000/api/auth/instructors/${id}`
+        `http://localhost:5000/api/auth/instructors/${instructorId}`
       );
       const data = await res.json();
       if (!res.ok) throw new Error(data.msg || "Failed to fetch instructor");
@@ -69,7 +69,9 @@ const InstructorDetails = ({
   }, []);
 
   useEffect(() => {
-    if (id) fetchInstructorDetails();
+    if (!propInstructor && id) {
+      fetchInstructorDetails(id);
+    }
   }, [id, propInstructor, isAuthenticated]);
 
   useEffect(() => {
@@ -211,12 +213,13 @@ const InstructorDetails = ({
           method: "DELETE",
         }
       );
+
       if (response.ok) {
-        // Remove the event from the UI using _id
-        setLiveEvents((prevEvents) =>
-          prevEvents.filter((event) => event._id !== eventId)
-        );
         alert("Event deleted successfully!");
+
+        // ✅ Re-fetch updated instructor data from backend
+        const instructorId = propInstructor?._id || id;
+        fetchInstructorDetails(instructorId);
       } else {
         alert("Failed to delete the event.");
       }
@@ -673,7 +676,8 @@ const InstructorDetails = ({
                       if (res.ok) {
                         alert("Event updated successfully.");
                         setShowForm(false);
-                        fetchInstructorDetails(); // 💡 re-fetch the updated events
+                        const instructorId = propInstructor?._id || id;
+                        fetchInstructorDetails(instructorId);
                       } else {
                         alert(data.message || "Update failed.");
                       }
@@ -830,7 +834,14 @@ const InstructorDetails = ({
                                 cursor: "pointer",
                                 transition: "background-color 0.2s ease",
                               }}
-                              onClick={() => handleDelete(event._id)} // Pass event ID to delete handler
+                              onClick={() => {
+                                const confirmDelete = window.confirm(
+                                  "Are you sure you want to delete this event?"
+                                );
+                                if (confirmDelete) {
+                                  handleDelete(event._id);
+                                }
+                              }} // Pass event ID to delete handler
                               onMouseEnter={(e) =>
                                 (e.target.style.backgroundColor = "#F3F9FF")
                               }
