@@ -142,16 +142,16 @@ const ProfilePage = () => {
                                       key === "linkedin"
                                         ? "ph-bold ph-linkedin-logo"
                                         : key === "github"
-                                        ? "ph-bold ph-github-logo"
-                                        : key === "twitter"
-                                        ? "ph-bold ph-twitter-logo"
-                                        : key === "portfolio"
-                                        ? "ph-bold ph-globe"
-                                        : key === "youtube"
-                                        ? "ph-bold ph-youtube-logo"
-                                        : key === "instagram"
-                                        ? "ph-bold ph-instagram-logo"
-                                        : "ph-bold ph-globe"
+                                          ? "ph-bold ph-github-logo"
+                                          : key === "twitter"
+                                            ? "ph-bold ph-twitter-logo"
+                                            : key === "portfolio"
+                                              ? "ph-bold ph-globe"
+                                              : key === "youtube"
+                                                ? "ph-bold ph-youtube-logo"
+                                                : key === "instagram"
+                                                  ? "ph-bold ph-instagram-logo"
+                                                  : "ph-bold ph-globe"
                                     }
                                   />
                                 </a>
@@ -268,19 +268,6 @@ const ProfilePage = () => {
                         <span className="text-neutral-400">N/A</span>
                       )}
                     </div>
-                    {/* <span className="d-block border border-neutral-30 my-40 border-dashed" /> */}
-                    {/* Badges Section */}
-                    {/* <h4 className="mb-24">Badges</h4>
-                  <div className="d-flex flex-wrap gap-8 mb-32">
-                    {user.learnerProfile.badges?.length > 0 ? (
-                      user.learnerProfile.badges.map((badge, idx) => (
-                        <span key={idx} className="badge bg-success-100 text-success-700 border border-success-200 fw-normal mb-4">{badge}</span>
-                      ))
-                    ) : (
-                      <span className="text-neutral-400">N/A</span>
-                    )}
-                  </div>
-                  <span className="d-block border border-neutral-30 my-40 border-dashed" /> */}
                   </div>
                 </div>
               </div>{" "}
@@ -322,48 +309,51 @@ const ProfilePage = () => {
                   <div className="row gy-4 mb-32">
                     {/* Registered Events */}
                     {learnerProfile.followingContent?.registeredEvents?.length >
-                    0 ? (
+                      0 ? (
                       learnerProfile.followingContent.registeredEvents.map(
                         (event, idx) => (
-                          <div
-                            className="col-md-6 col-12"
-                            key={"reg-event-" + idx}
-                          >
-                            <div className="course-item bg-primary-100 rounded-16 p-24 h-100 box-shadow-md d-flex flex-column flex-md-row align-items-md-center gap-24">
+                          <div className="col-lg-6 col-md-12 col-12" key={idx}>
+                            <div className="course-item bg-white rounded-16 p-12 h-100 box-shadow-md d-flex flex-column flex-md-row align-items-md-center gap-24">
                               <div
                                 className="course-item__thumb rounded-12 overflow-hidden position-relative mb-3 mb-md-0"
-                                style={{ minWidth: 120, maxWidth: 180 }}
+                                style={{ minWidth: 220, maxWidth: 320 }}
                               >
-                                {event.image ? (
+                                {event.schedule.image ? (
                                   <img
-                                    src={event.image}
-                                    alt={event.title}
-                                    className="course-item__img rounded-12 cover-img transition-2 w-100"
-                                    style={{ height: 100, objectFit: "cover" }}
+                                    src={event.schedule.image}
+                                    alt={event.title || "Event"}
+                                    className="course-item__img rounded-12 cover-img transition-2 w-70"
+                                    style={{ height: 120, objectFit: "cover" }}
                                   />
                                 ) : (
                                   <div
                                     className="bg-main-25 rounded-12 d-flex align-items-center justify-content-center"
-                                    style={{ height: 100 }}
+                                    style={{ height: 180 }}
                                   >
-                                    <i className="ph-bold ph-calendar text-2xl text-main-600" />
+                                    <i className="ph-bold ph-calendar text-4xl text-main-600" />
                                   </div>
                                 )}
                               </div>
                               <div className="course-item__content flex-grow-1">
-                                <h5 className="mb-2">
+                                <h5 className="mb-5">
                                   {event.title || "Untitled Event"}
                                 </h5>
-                                {event.date && (
-                                  <div className="mb-2 text-neutral-700 fw-medium text-md">
-                                    {event.date}
+                                <div className="mb-2 text-neutral-700">
+                                  <div className="mb-5">
+                                    <strong>🕒 Start:</strong>{" "}
+                                    {new Date(event.schedule.startTime).toLocaleString("en-IN", {
+                                      dateStyle: "short",
+                                      timeStyle: "short",
+                                    }) || "No start time available."}
                                   </div>
-                                )}
-                                {event.description && (
-                                  <div className="mb-2 text-neutral-500">
-                                    {event.description}
+                                  <div>
+                                    <strong>🕓 End:</strong>{" "}
+                                    {new Date(event.schedule.endTime).toLocaleString("en-IN", {
+                                      dateStyle: "short",
+                                      timeStyle: "short",
+                                    }) || "No end time available."}
                                   </div>
-                                )}
+                                </div>
                               </div>
                             </div>
                           </div>
