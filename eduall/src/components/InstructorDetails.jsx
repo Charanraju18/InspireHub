@@ -1,6 +1,14 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useAuth } from "../authContext";
+import { useRef } from "react";
+
+function toLocalDateTimeInputValue(isoString) {
+  if (!isoString) return "";
+  const date = new Date(isoString);
+  const tzOffset = date.getTimezoneOffset() * 60000; // Convert offset to milliseconds
+  return new Date(date - tzOffset).toISOString().slice(0, 16);
+}
 
 const InstructorDetails = ({
   instructor: propInstructor,
@@ -19,37 +27,51 @@ const InstructorDetails = ({
   const [showUnfollowModal, setShowUnfollowModal] = useState(false);
 
   const [showOptions, setShowOptions] = useState(false);
+  const [liveEvents, setLiveEvents] = useState([]);
+  const [editableEvent, setEditableEvent] = useState(null);
+  const [showForm, setShowForm] = useState(false);
+
+  const dropdownRef = useRef(null);
+
+  const fetchInstructorDetails = async (instructorId) => {
+    try {
+      const res = await fetch(
+        `http://localhost:5000/api/auth/instructors/${instructorId}`
+      );
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.msg || "Failed to fetch instructor");
+
+      setInstructor(data);
+
+      // Fetch followers only if authenticated and instructor is loaded
+      if (data?._id && isAuthenticated) {
+        fetchFollowers(data._id); // 👈 pass id directly
+      }
+    } catch (err) {
+      setError(err.message);
+      console.error("Error fetching instructor:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    if (propInstructor) {
-      setInstructor(propInstructor);
-      console.log("Using propInstructor:", propInstructor);
-      setLoading(false);
-      // Fetch followers if instructor is available from props
-      if (propInstructor?._id && isAuthenticated) {
-        fetchFollowers();
-      }
-      return;
-    }
-    const fetchInstructor = async () => {
-      try {
-        const res = await fetch(
-          `http://localhost:5000/api/auth/instructors/${id}`
-        );
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.msg || "Failed to fetch instructor");
-        setInstructor(data);
-        // Fetch followers after instructor is set
-        if (data?._id && isAuthenticated) {
-          fetchFollowers();
-        }
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowOptions(null);
       }
     };
-    if (id) fetchInstructor();
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!propInstructor && id) {
+      fetchInstructorDetails(id);
+    }
   }, [id, propInstructor, isAuthenticated]);
 
   useEffect(() => {
@@ -182,9 +204,49 @@ const InstructorDetails = ({
     }
   };
 
-  const handleUpdate = () => {};
+  // Function to delete a live event
+  const handleDelete = async (eventId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/events/${eventId}`,
+        {
+          method: "DELETE",
+        }
+      );
 
-  const handleDelete = () => {};
+      if (response.ok) {
+        alert("Event deleted successfully!");
+
+        // ✅ Re-fetch updated instructor data from backend
+        const instructorId = propInstructor?._id || id;
+        fetchInstructorDetails(instructorId);
+      } else {
+        alert("Failed to delete the event.");
+      }
+    } catch (error) {
+      console.error("Error deleting event:", error);
+      alert("An error occurred while deleting the event.");
+    }
+  };
+
+  // Function to fetch event data and load it into an editable form
+  const handleUpdate = async (eventId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/events/${eventId}`
+      );
+      if (response.ok) {
+        const eventData = await response.json();
+        setEditableEvent(eventData); // Pre-fill form with fetched data
+        setShowForm(true);
+      } else {
+        alert("Failed to fetch event data.");
+      }
+    } catch (error) {
+      console.error("Error fetching event data:", error);
+      alert("An error occurred while fetching event data.");
+    }
+  };
 
   if (loading) return <div className="text-center my-5">Loading...</div>;
   if (error) return <div className="text-center my-5 text-danger">{error}</div>;
@@ -593,6 +655,114 @@ const InstructorDetails = ({
             </div>
             <span className="d-block border border-neutral-30 my-40 border-dashed" />
             <h4 className="mb-24">Live Events Hosted</h4>
+            {showForm && editableEvent && (
+              <div className="mt-5 p-4 border rounded bg-light">
+                <h5>Edit Event: {editableEvent.title}</h5>
+                <form
+                  onSubmit={async (e) => {
+                    e.preventDefault();
+                    try {
+                      const res = await fetch(
+                        `http://localhost:5000/api/events/${editableEvent._id}`,
+                        {
+                          method: "PUT",
+                          headers: {
+                            "Content-Type": "application/json",
+                          },
+                          body: JSON.stringify(editableEvent),
+                        }
+                      );
+                      const data = await res.json();
+                      if (res.ok) {
+                        alert("Event updated successfully.");
+                        setShowForm(false);
+                        const instructorId = propInstructor?._id || id;
+                        fetchInstructorDetails(instructorId);
+                      } else {
+                        alert(data.message || "Update failed.");
+                      }
+                    } catch (err) {
+                      console.error("Update error:", err);
+                      alert("An error occurred during update.");
+                    }
+                  }}
+                >
+                  <div className="mb-3">
+                    <label>Title</label>
+                    <input
+                      className="form-control"
+                      value={editableEvent.title || ""}
+                      onChange={(e) =>
+                        setEditableEvent({
+                          ...editableEvent,
+                          title: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <label>Start Time</label>
+                    <input
+                      type="datetime-local"
+                      className="form-control"
+                      value={
+                        editableEvent.schedule?.startTime
+                          ? toLocalDateTimeInputValue(
+                              editableEvent.schedule.startTime
+                            )
+                          : ""
+                      }
+                      onChange={(e) =>
+                        setEditableEvent({
+                          ...editableEvent,
+                          schedule: {
+                            ...editableEvent.schedule,
+                            startTime: new Date(e.target.value).toISOString(),
+                          },
+                        })
+                      }
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <label>End Time</label>
+                    <input
+                      type="datetime-local"
+                      className="form-control"
+                      value={
+                        editableEvent.schedule?.endTime
+                          ? toLocalDateTimeInputValue(
+                              editableEvent.schedule.endTime
+                            )
+                          : ""
+                      }
+                      onChange={(e) =>
+                        setEditableEvent({
+                          ...editableEvent,
+                          schedule: {
+                            ...editableEvent.schedule,
+                            endTime: new Date(e.target.value).toISOString(),
+                          },
+                        })
+                      }
+                    />
+                  </div>
+
+                  <button type="submit" className="btn btn-primary">
+                    Save Changes
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-secondary ms-3"
+                    onClick={() => setShowForm(false)}
+                  >
+                    Cancel
+                  </button>
+                </form>
+              </div>
+            )}
+
             <div className="row gy-4">
               {instructor.instructorProfile?.content?.liveEventsHosted?.length >
               0 ? (
@@ -623,14 +793,15 @@ const InstructorDetails = ({
                         </button>
                         {showOptions === idx && (
                           <div
+                            ref={dropdownRef}
                             className="position-absolute bg-white border rounded-12 shadow-sm"
                             style={{
-                              top: "40px", // Position dropdown below the dots
+                              top: "40px",
                               right: 0,
                               zIndex: 1000,
                               minWidth: 150,
-                              padding: "8px 0",
-                              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)", // Improve shadow
+                              padding: "8px 8px",
+                              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
                             }}
                           >
                             <button
@@ -643,9 +814,9 @@ const InstructorDetails = ({
                                 cursor: "pointer",
                                 transition: "background-color 0.2s ease",
                               }}
-                              onClick={handleUpdate}
+                              onClick={() => handleUpdate(event._id)} // Pass event ID to update handler
                               onMouseEnter={(e) =>
-                                (e.target.style.backgroundColor = "#f8f9fa")
+                                (e.target.style.backgroundColor = "#F3F9FF")
                               }
                               onMouseLeave={(e) =>
                                 (e.target.style.backgroundColor = "transparent")
@@ -663,9 +834,16 @@ const InstructorDetails = ({
                                 cursor: "pointer",
                                 transition: "background-color 0.2s ease",
                               }}
-                              onClick={handleDelete}
+                              onClick={() => {
+                                const confirmDelete = window.confirm(
+                                  "Are you sure you want to delete this event?"
+                                );
+                                if (confirmDelete) {
+                                  handleDelete(event._id);
+                                }
+                              }} // Pass event ID to delete handler
                               onMouseEnter={(e) =>
-                                (e.target.style.backgroundColor = "#f8f9fa")
+                                (e.target.style.backgroundColor = "#F3F9FF")
                               }
                               onMouseLeave={(e) =>
                                 (e.target.style.backgroundColor = "transparent")
