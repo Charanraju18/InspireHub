@@ -18,6 +18,8 @@ const InstructorDetails = ({
   const [followLoading, setFollowLoading] = useState(false);
   const [showUnfollowModal, setShowUnfollowModal] = useState(false);
 
+  const [showOptions, setShowOptions] = useState(false);
+
   useEffect(() => {
     if (propInstructor) {
       setInstructor(propInstructor);
@@ -86,7 +88,7 @@ const InstructorDetails = ({
         }
       );
       const data = await res.json();
-      console.log("Followers API response:", data); 
+      console.log("Followers API response:", data);
       if (res.ok && data.data) setFollowersCount(data.data.followersCount);
     } catch (err) {
       console.error("Error fetching followers:", err);
@@ -153,7 +155,6 @@ const InstructorDetails = ({
     }
   };
 
-
   const handleUnfollow = async () => {
     const instructorId = instructor?._id || id;
     if (!instructorId) return;
@@ -179,6 +180,10 @@ const InstructorDetails = ({
       setFollowLoading(false);
     }
   };
+
+  const handleUpdate = () => {};
+
+  const handleDelete = () => {};
 
   if (loading) return <div className="text-center my-5">Loading...</div>;
   if (error) return <div className="text-center my-5 text-danger">{error}</div>;
@@ -283,7 +288,7 @@ const InstructorDetails = ({
                         <li className="social-list__item" key={key}>
                           <a
                             href={val}
-                            className="text-main-600 text-xl hover-text-white w-40 h-40 rounded-circle border border-main-600 hover-bg-main-600 flex-center"
+                            className="text-black text-xl hover-text-white w-40 h-40 rounded-circle border border-black hover-bg-black flex-center"
                             target="_blank"
                             rel="noopener noreferrer"
                           >
@@ -292,16 +297,16 @@ const InstructorDetails = ({
                                 key === "linkedin"
                                   ? "ph-bold ph-linkedin-logo"
                                   : key === "github"
-                                    ? "ph-bold ph-github-logo"
-                                    : key === "twitter"
-                                      ? "ph-bold ph-twitter-logo"
-                                      : key === "portfolio"
-                                        ? "ph-bold ph-globe"
-                                        : key === "youtube"
-                                          ? "ph-bold ph-youtube-logo"
-                                          : key === "instagram"
-                                            ? "ph-bold ph-instagram-logo"
-                                            : "ph-bold ph-globe"
+                                  ? "ph-bold ph-github-logo"
+                                  : key === "twitter"
+                                  ? "ph-bold ph-twitter-logo"
+                                  : key === "portfolio"
+                                  ? "ph-bold ph-globe"
+                                  : key === "youtube"
+                                  ? "ph-bold ph-youtube-logo"
+                                  : key === "instagram"
+                                  ? "ph-bold ph-instagram-logo"
+                                  : "ph-bold ph-globe"
                               }
                             />
                           </a>
@@ -312,22 +317,22 @@ const InstructorDetails = ({
                 <span className="d-block border border-neutral-30 my-20 border-dashed" />
                 <div className="d-flex flex-column gap-16 align-items-center">
                   <div className="flex-align gap-8">
-                    <i className="ph ph-phone text-primary" />
+                    <i className="ph ph-phone text-black" />
                     <span className="text-neutral-700">
                       {instructor.phoneNumber || "N/A"}
                     </span>
                   </div>
                   <div className="flex-align gap-8">
-                    <i className="ph ph-envelope text-success-600" />
+                    <i className="ph ph-envelope text-black" />
                     <a
                       href={`mailto:${instructor.email}`}
-                      className="text-neutral-700 hover-text-main-600"
+                      className="text-neutral-700 hover-text-black"
                     >
                       {instructor.email}
                     </a>
                   </div>
                   <div className="flex-align gap-8">
-                    <i className="ph ph-map-pin text-warning" />
+                    <i className="ph ph-map-pin text-black" />
                     <span className="text-neutral-700">
                       {instructor.location || "N/A"}
                     </span>
@@ -368,7 +373,7 @@ const InstructorDetails = ({
                         required
                       ></textarea>
                     </div>
-                    <button type="submit" className="btn btn-main w-100">
+                    <button type="submit" className="btn btn-black w-100">
                       Send Message
                     </button>
                   </form>
@@ -378,7 +383,7 @@ const InstructorDetails = ({
           </div>
           <div className="col-lg-8">
             <div className="ps-lg-5">
-              <h5 className="text-main-600 mb-0">Instructor</h5>
+              <h5 className="text-black mb-0">Instructor</h5>
               <div className="d-flex justify-content-between align-items-center my-16 flex-wrap">
                 <h2
                   className="mb-0"
@@ -387,13 +392,15 @@ const InstructorDetails = ({
                   {instructor.name}
                 </h2>
                 <span>
-                  {!hideGetInTouch && !isOwnProfile && isAuthenticated && (
-                    isFollowing ? (
+                  {!hideGetInTouch &&
+                    !isOwnProfile &&
+                    isAuthenticated &&
+                    (isFollowing ? (
                       <button
                         type="button"
                         onClick={() => setShowUnfollowModal(true)}
                         className="btn w-125 text-white"
-                        style={{ backgroundColor: "green" }}
+                        style={{ backgroundColor: "black" }}
                         disabled={followLoading}
                       >
                         ✔ Following
@@ -403,13 +410,12 @@ const InstructorDetails = ({
                         type="button"
                         onClick={handleFollow}
                         className="btn w-125 text-white"
-                        style={{ backgroundColor: "#066CCB" }}
+                        style={{ backgroundColor: "black" }}
                         disabled={followLoading}
                       >
                         + Follow
                       </button>
-                    )
-                  )}
+                    ))}
                 </span>
               </div>
               <div className="mb-16 text-neutral-700 fw-medium text-md">
@@ -477,15 +483,15 @@ const InstructorDetails = ({
                   </span>
                   <span className="text-md text-neutral-700 fw-semibold">
                     {instructor.instructorProfile?.reviews &&
-                      instructor.instructorProfile.reviews.length > 0
+                    instructor.instructorProfile.reviews.length > 0
                       ? (
-                        instructor.instructorProfile.reviews.reduce(
-                          (acc, r) =>
-                            acc +
-                            (typeof r.rating === "number" ? r.rating : 0),
-                          0
-                        ) / instructor.instructorProfile.reviews.length
-                      ).toFixed(1)
+                          instructor.instructorProfile.reviews.reduce(
+                            (acc, r) =>
+                              acc +
+                              (typeof r.rating === "number" ? r.rating : 0),
+                            0
+                          ) / instructor.instructorProfile.reviews.length
+                        ).toFixed(1)
                       : 0}
                     <span className="text-neutral-100 fw-normal">
                       ({instructor.instructorProfile?.reviews?.length || "0"})
@@ -559,7 +565,7 @@ const InstructorDetails = ({
             <h4 className="mb-24">Roadmaps Shared</h4>
             <div className="row gy-4 mb-32">
               {instructor.instructorProfile?.content?.roadmapsShared?.length >
-                0 ? (
+              0 ? (
                 instructor.instructorProfile.content.roadmapsShared.map(
                   (roadmap, idx) => (
                     <div className="col-lg-4 col-md-6 col-12" key={idx}>
@@ -588,10 +594,87 @@ const InstructorDetails = ({
             <h4 className="mb-24">Live Events Hosted</h4>
             <div className="row gy-4">
               {instructor.instructorProfile?.content?.liveEventsHosted?.length >
-                0 ? (
+              0 ? (
                 instructor.instructorProfile.content.liveEventsHosted.map(
                   (event, idx) => (
                     <div className="col-lg-6 col-md-12 col-12" key={idx}>
+                      <div className="position-relative">
+                        <button
+                          className="btn btn-light p-2 rounded-circle"
+                          style={{
+                            border: "none",
+                            cursor: "pointer",
+                            position: "absolute",
+                            top: 8,
+                            right: 8,
+                            zIndex: 1050, // Ensure the button stays above other elements
+                          }}
+                          onClick={() =>
+                            setShowOptions((prev) =>
+                              prev === idx ? null : idx
+                            )
+                          }
+                        >
+                          <i
+                            className="ph-bold ph-dots-three-vertical"
+                            style={{ color: "black", fontSize: "24px" }} // Adjust the font size as needed
+                          />
+                        </button>
+                        {showOptions === idx && (
+                          <div
+                            className="position-absolute bg-white border rounded-12 shadow-sm"
+                            style={{
+                              top: "40px", // Position dropdown below the dots
+                              right: 0,
+                              zIndex: 1000,
+                              minWidth: 120,
+                              padding: "8px 0",
+                              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)", // Improve shadow
+                            }}
+                          >
+                            <button
+                              className="dropdown-item text-start px-3 py-2"
+                              style={{
+                                fontSize: "14px",
+                                color: "#333",
+                                backgroundColor: "transparent",
+                                border: "none",
+                                cursor: "pointer",
+                                transition: "background-color 0.2s ease",
+                              }}
+                              onClick={handleUpdate}
+                              onMouseEnter={(e) =>
+                                (e.target.style.backgroundColor = "#f8f9fa")
+                              }
+                              onMouseLeave={(e) =>
+                                (e.target.style.backgroundColor = "transparent")
+                              }
+                            >
+                              Update
+                            </button>
+                            <button
+                              className="dropdown-item text-start px-3 py-2 text-danger"
+                              style={{
+                                fontSize: "14px",
+                                color: "#dc3545",
+                                backgroundColor: "transparent",
+                                border: "none",
+                                cursor: "pointer",
+                                transition: "background-color 0.2s ease",
+                              }}
+                              onClick={handleDelete}
+                              onMouseEnter={(e) =>
+                                (e.target.style.backgroundColor = "#f8f9fa")
+                              }
+                              onMouseLeave={(e) =>
+                                (e.target.style.backgroundColor = "transparent")
+                              }
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        )}
+                      </div>
                       <div className="course-item bg-white rounded-16 p-12 h-100 box-shadow-md d-flex flex-column flex-md-row align-items-md-center gap-24">
                         <div
                           className="course-item__thumb rounded-12 overflow-hidden position-relative mb-3 mb-md-0"
