@@ -23,6 +23,7 @@ const InstructorDetails = ({
   useEffect(() => {
     if (propInstructor) {
       setInstructor(propInstructor);
+      console.log("Using propInstructor:", propInstructor);
       setLoading(false);
       // Fetch followers if instructor is available from props
       if (propInstructor?._id && isAuthenticated) {
@@ -680,9 +681,9 @@ const InstructorDetails = ({
                           className="course-item__thumb rounded-12 overflow-hidden position-relative mb-3 mb-md-0"
                           style={{ minWidth: 220, maxWidth: 320 }}
                         >
-                          {event.image ? (
+                          {event.schedule.image ? (
                             <img
-                              src={event.image}
+                              src={event.schedule.image}
                               alt={event.title || "Event"}
                               className="course-item__img rounded-12 cover-img transition-2 w-100"
                               style={{ height: 180, objectFit: "cover" }}
@@ -697,28 +698,25 @@ const InstructorDetails = ({
                           )}
                         </div>
                         <div className="course-item__content flex-grow-1">
-                          <h5 className="mb-2">
+                          <h5 className="mb-5">
                             {event.title || "Untitled Event"}
                           </h5>
-                          <div className="mb-2 text-neutral-700 fw-medium text-md">
-                            {event.date ||
-                              (event.startDate
-                                ? new Date(event.startDate).toLocaleDateString()
-                                : "")}
+                          <div className="mb-2 text-neutral-700">
+                            <div className="mb-5">
+                              <strong>🕒 Start:</strong>{" "}
+                              {new Date(event.schedule.startTime).toLocaleString("en-IN", {
+                                dateStyle: "short",
+                                timeStyle: "short",
+                              }) || "No start time available."}
+                            </div>
+                            <div>
+                              <strong>🕓 End:</strong>{" "}
+                              {new Date(event.schedule.endTime).toLocaleString("en-IN", {
+                                dateStyle: "short",
+                                timeStyle: "short",
+                              }) || "No end time available."}
+                            </div>
                           </div>
-                          <div className="mb-2 text-neutral-500">
-                            {event.description || "No description available."}
-                          </div>
-                          {event.link && (
-                            <a
-                              href={event.link}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-main-600 fw-semibold"
-                            >
-                              View Details <i className="ph ph-arrow-right" />
-                            </a>
-                          )}
                         </div>
                       </div>
                     </div>
