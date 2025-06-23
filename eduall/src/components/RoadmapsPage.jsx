@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FaHeart, FaBookmark, FaShare, FaEye, FaClock, FaCompass, FaFire } from "react-icons/fa";
+import axios from "axios";
 
 const RoadmapsPage = () => {
   const [roadmaps, setRoadmaps] = useState([]);
@@ -38,6 +39,8 @@ const RoadmapsPage = () => {
       setError("");
       
       console.log("🔍 Fetching roadmaps with filters:", filters);
+
+      
       
       // ✅ Check if any filters are applied
       const hasFilters = filters.search.trim() || filters.domain.trim() || 
@@ -129,9 +132,55 @@ const RoadmapsPage = () => {
     console.log("❤️ Liked roadmap:", roadmapId);
   };
 
-  const handleBookmark = (roadmapId) => {
-    console.log("🔖 Bookmarked roadmap:", roadmapId);
+  // const handleBookmark = (roadmapId) => {
+  //   console.log("🔖 Bookmarked roadmap:", roadmapId);
+  // };
+
+const handleBookmark = async (roadmapId) => {
+  const token = localStorage.getItem("token");
+  const email = localStorage.getItem("userEmail"); // ✅ needed for userId
+  if (!token || !email) return alert("Please login first.");
+
+  const roadmap = roadmaps.find((r) => r._id === roadmapId);
+  if (!roadmap) {
+    console.error("Roadmap not found:", roadmapId);
+    return alert("Roadmap not found.");
+  }
+
+  // ✅ Build a minimal roadmap object to send
+  const roadmapToSend = {
+    _id: roadmap._id,
+    title: roadmap.title,
+    description: roadmap.description,
+    thumbnail: roadmap.thumbnail,
   };
+
+  try {
+    const res = await axios.post(
+      "http://localhost:5000/api/wishlist/add",
+      {
+        userId: email,
+        roadmap: roadmapToSend,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (res.status === 200) {
+      alert("Bookmarked successfully!");
+    } else {
+      alert(res.data.message || "Bookmark failed.");
+    }
+  } catch (err) {
+    console.error("Bookmark error:", err);
+    alert(err?.response?.data?.message || "Failed to bookmark.");
+  }
+};
+
+
 
   const handleShare = (roadmap) => {
     const shareUrl = `${window.location.origin}/roadmap/${roadmap._id}`;
