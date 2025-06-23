@@ -628,7 +628,7 @@ const InstructorDetails = ({
                               top: "40px", // Position dropdown below the dots
                               right: 0,
                               zIndex: 1000,
-                              minWidth: 120,
+                              minWidth: 150,
                               padding: "8px 0",
                               boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)", // Improve shadow
                             }}
@@ -636,7 +636,7 @@ const InstructorDetails = ({
                             <button
                               className="dropdown-item text-start px-3 py-2"
                               style={{
-                                fontSize: "14px",
+                                fontSize: "18px",
                                 color: "#333",
                                 backgroundColor: "transparent",
                                 border: "none",
@@ -656,7 +656,7 @@ const InstructorDetails = ({
                             <button
                               className="dropdown-item text-start px-3 py-2 text-danger"
                               style={{
-                                fontSize: "14px",
+                                fontSize: "18px",
                                 color: "#dc3545",
                                 backgroundColor: "transparent",
                                 border: "none",
@@ -704,17 +704,22 @@ const InstructorDetails = ({
                           <div className="mb-2 text-neutral-700">
                             <div className="mb-5">
                               <strong>🕒 Start:</strong>{" "}
-                              {new Date(event.schedule.startTime).toLocaleString("en-IN", {
+                              {new Date(
+                                event.schedule.startTime
+                              ).toLocaleString("en-IN", {
                                 dateStyle: "short",
                                 timeStyle: "short",
                               }) || "No start time available."}
                             </div>
                             <div>
                               <strong>🕓 End:</strong>{" "}
-                              {new Date(event.schedule.endTime).toLocaleString("en-IN", {
-                                dateStyle: "short",
-                                timeStyle: "short",
-                              }) || "No end time available."}
+                              {new Date(event.schedule.endTime).toLocaleString(
+                                "en-IN",
+                                {
+                                  dateStyle: "short",
+                                  timeStyle: "short",
+                                }
+                              ) || "No end time available."}
                             </div>
                           </div>
                         </div>
