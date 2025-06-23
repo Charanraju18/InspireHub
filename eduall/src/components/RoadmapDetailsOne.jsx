@@ -283,22 +283,34 @@ const VisualRoadmapSteps = ({ steps }) => {
 // ... (RoadmapDetails component remains the same as it uses VisualRoadmapSteps)
 const RoadmapDetails = () => {
     const { id } = useParams();
-    const { user } = useAuth();
+    const { user, isAuthenticated } = useAuth();
     const [roadmap, setRoadmap] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [isFollowing, setIsFollowing] = useState(false);
+    // Instructor follow state
+    const [isFollowingInstructor, setIsFollowingInstructor] = useState(false);
     const [followLoading, setFollowLoading] = useState(false);
+    const [showUnfollowModal, setShowUnfollowModal] = useState(false);
 
+    // Fetch roadmap and instructor follow status
     useEffect(() => {
       const fetchRoadmap = async () => {
         try {
-          console.log('Current user:', user); 
           const res = await axios.get(`http://localhost:5000/api/roadmaps/${id}`);
           setRoadmap(res.data);
-          if (user && res.data.followers && res.data.followers.includes(user._id)) {
-            setIsFollowing(true);
+          // Check instructor follow status if user and instructor exist
+          if (user && res.data.createdBy?._id) {
+            const token = user.token || localStorage.getItem("token");
+            const followRes = await fetch(
+              `http://localhost:5000/api/follow-instructors/check-follow/${res.data.createdBy._id}`,
+              {
+                headers: token ? { Authorization: `Bearer ${token}` } : {},
+                credentials: "include",
+              }
+            );
+            const followData = await followRes.json();
+            setIsFollowingInstructor(!!followData.data?.isFollowing);
           } else {
-            setIsFollowing(false);
+            setIsFollowingInstructor(false);
           }
         } catch (error) {
           console.error("Failed to fetch roadmap", error);
@@ -306,29 +318,63 @@ const RoadmapDetails = () => {
           setLoading(false);
         }
       };
-
       fetchRoadmap();
     }, [id, user]);
 
-    const handleFollow = async () => {
-      if (!user) {
-        alert("You must be logged in to follow a roadmap.");
+    // Follow/unfollow instructor
+    const handleFollowInstructor = async () => {
+      if (!user || !roadmap?.createdBy?._id) {
+        alert("You must be logged in to follow this instructor.");
         return;
       }
       setFollowLoading(true);
+      const instructorId = roadmap.createdBy._id;
+      const token = user.token || localStorage.getItem("token");
       try {
-        console.log('Sending token:', user.token); 
-        if (isFollowing) {
-          await axios.post(`http://localhost:5000/api/roadmaps/${id}/unfollow`, {}, { headers: { Authorization: `Bearer ${user.token}` } });
-        } else {
-          await axios.post(`http://localhost:5000/api/roadmaps/${id}/follow`, {}, { headers: { Authorization: `Bearer ${user.token}` } });
-        }
-        setIsFollowing(!isFollowing);
+        const res = await fetch(
+          `http://localhost:5000/api/follow-instructors/follow/${instructorId}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            credentials: "include",
+            body: JSON.stringify({}),
+          }
+        );
+        if (!res.ok) throw new Error("Follow failed");
+        setIsFollowingInstructor(true);
       } catch (err) {
-        alert("Failed to update follow status");
-        console.error('Follow/unfollow error:', err);
+        alert("Failed to follow instructor");
+        console.error("Follow instructor error:", err);
       } finally {
         setFollowLoading(false);
+      }
+    };
+
+    const handleUnfollowInstructor = async () => {
+      if (!user || !roadmap?.createdBy?._id) return;
+      setFollowLoading(true);
+      const instructorId = roadmap.createdBy._id;
+      const token = user.token || localStorage.getItem("token");
+      try {
+        const res = await fetch(
+          `http://localhost:5000/api/follow-instructors/unfollow/${instructorId}`,
+          {
+            method: "DELETE",
+            headers: token ? { Authorization: `Bearer ${token}` } : {},
+            credentials: "include",
+          }
+        );
+        if (!res.ok) throw new Error("Unfollow failed");
+        setIsFollowingInstructor(false);
+      } catch (err) {
+        alert("Failed to unfollow instructor");
+        console.error("Unfollow instructor error:", err);
+      } finally {
+        setFollowLoading(false);
+        setShowUnfollowModal(false);
       }
     };
 
@@ -336,64 +382,118 @@ const RoadmapDetails = () => {
     if (!roadmap)
       return <p className="text-center mt-5 text-danger">Roadmap not found</p>;
 
+    const isOwnProfile = user && roadmap.createdBy?._id === user._id;
+
     return (
       <div className="container py-5">
+        {/* Unfollow Confirmation Modal */}
+        {showUnfollowModal && (
+          <div
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "100vw",
+              height: "100vh",
+              background: "rgba(0,0,0,0.4)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 9999,
+            }}
+          >
+            <div
+              style={{
+                background: "#fff",
+                borderRadius: 12,
+                padding: 32,
+                minWidth: 320,
+                boxShadow: "0 4px 32px rgba(0,0,0,0.15)",
+                textAlign: "center",
+              }}
+            >
+              <h5 style={{ marginBottom: 16 }}>Unfollow Instructor?</h5>
+              <p style={{ marginBottom: 24 }}>
+                Are you sure you want to unfollow this instructor?
+              </p>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  gap: 16,
+                }}
+              >
+                <button
+                  className="btn btn-danger"
+                  onClick={handleUnfollowInstructor}
+                  style={{ minWidth: 80 }}
+                  disabled={followLoading}
+                >
+                  Unfollow
+                </button>
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => setShowUnfollowModal(false)}
+                  style={{ minWidth: 80 }}
+                  disabled={followLoading}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
         {/* Top Section - User Profile, Bookmark Icon */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", margintop: "10rem"}}>
           {/* User Profile */}
           <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
-                       <img
-                                  src={roadmap.createdBy?.profilePicture || "/assets/images/users/user-img1.png"}
-                                  alt={roadmap.createdBy?.name || "Instructor"}
-                                  className="rounded-circle"
-                                  style={{ width: "75px", height: "75px", objectFit: "cover" }}
-                                  onError={(e) => {
-                                    e.target.src = "/assets/images/users/user-img1.png";
-                                  }}
-                                />
+            <img
+              src={roadmap.createdBy?.profilePicture || "/assets/images/users/user-img1.png"}
+              alt={roadmap.createdBy?.name || "Instructor"}
+              className="rounded-circle"
+              style={{ width: "75px", height: "75px", objectFit: "cover" }}
+              onError={(e) => {
+                e.target.src = "/assets/images/users/user-img1.png";
+              }}
+            />
             <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
-<p className="mb-0 text-sm fw-medium text-neutral-700" style={{ fontSize: "25px", color: "#666" , fontWeight: "400"}}>
-                                    {roadmap.createdBy?.name || "Anonymous"}
-                                  </p>
+              <p className="mb-0 text-sm fw-medium text-neutral-700" style={{ fontSize: "25px", color: "#666" , fontWeight: "400"}}>
+                {roadmap.createdBy?.name || "Anonymous"}
+              </p>
               <p className="mb-0" style={{ fontSize: "18px", color: "#666" }}>
-                                    {roadmap.createdBy.instructorProfile.experienceYears} years exp.
-                                  </p>
+                {roadmap.createdBy.instructorProfile?.experienceYears} years exp.
+              </p>
             </div>
           </div>
 
-          {/* Bookmark Icon */}
+          {/* Bookmark Icon and Instructor Follow Button */}
           <div style={{ fontSize: "30px", color: "#007bff", display: "flex", flexDirection: "column", alignItems: "center" }}>
-  <FaBookmark className="text-primary" size={35} />
-  {/* Follow button */}
-  <button
-    style={{
-      marginTop: "10px",
-      backgroundColor: isFollowing ? "#6c757d" : "#007bff",
-      color: "#fff",
-      border: "none",
-      borderRadius: "5px",
-      padding: "8px 16px",
-      fontSize: "14px",
-      cursor: followLoading ? "not-allowed" : "pointer",
-      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-      transition: "transform 0.2s, box-shadow 0.2s",
-      opacity: followLoading ? 0.7 : 1,
-    }}
-    disabled={followLoading || !user}
-    onClick={handleFollow}
-    onMouseEnter={(e) => {
-      e.currentTarget.style.transform = "scale(1.05)";
-      e.currentTarget.style.boxShadow = "0 6px 10px rgba(0, 0, 0, 0.2)";
-    }}
-    onMouseLeave={(e) => {
-      e.currentTarget.style.transform = "scale(1)";
-      e.currentTarget.style.boxShadow = "0 4px 6px rgba(0, 0, 0, 0.1)";
-    }}
-  >
-    {isFollowing ? "Unfollow" : "Follow"}
-  </button>
-</div>
-
+            <FaBookmark className="text-primary" size={35} />
+            {/* Follow Instructor button */}
+            {!isOwnProfile && isAuthenticated && (
+              isFollowingInstructor ? (
+                <button
+                  type="button"
+                  onClick={() => setShowUnfollowModal(true)}
+                  className="btn w-125 text-white"
+                  style={{ backgroundColor: "#0D6EFD", marginTop: "10px" }}
+                  disabled={followLoading}
+                >
+                  ✔ Following
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleFollowInstructor}
+                  className="btn w-125 text-white"
+                  style={{ backgroundColor: "#0D6EFD", marginTop: "10px" }}
+                  disabled={followLoading}
+                >
+                  + Follow
+                </button>
+              )
+            )}
+          </div>
         </div>
 
         {/* Title */}

@@ -97,10 +97,10 @@ const EventDetailsOne = () => {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message);
 
-      alert("✅ Registered successfully!");
+      alert("Registered successfully!");
       setIsRegistered(true);
     } catch (err) {
-      alert("❌ Error: " + err.message);
+      alert("Error: " + err.message);
     }
   };
 
@@ -207,7 +207,7 @@ const EventDetailsOne = () => {
                   </div>
                 </div>
 
-                {live() ? (
+                {isRegistered && live() ? (
                   <a
                     href={selectedEvent.joinLink}
                     className="btn btn-primary w-100"
@@ -216,16 +216,27 @@ const EventDetailsOne = () => {
                   >
                     Join Now
                   </a>
-                ) : upcoming() ? (
+                ) : !isRegistered && now >= start ? (
                   <div
-                    onClick={!isRegistered ? handleRegisterNow : undefined}
-                    className="btn btn-primary w-100"
+                    className="btn btn-secondary w-100"
                     style={{
-                      cursor: isRegistered ? "not-allowed" : "pointer",
-                      opacity: isRegistered ? 0.6 : 1,
+                      pointerEvents: "auto",
+                      cursor: "not-allowed",
+                      opacity: 0.6,
                     }}
                   >
-                    {isRegistered ? "Registered" : "Register Now"}
+                    Registrations Closed
+                  </div>
+                ) : !isRegistered && upcoming() ? (
+                  <div
+                    onClick={handleRegisterNow}
+                    className="btn btn-primary w-100"
+                    style={{
+                      cursor: "pointer",
+                      opacity: 1,
+                    }}
+                  >
+                    Register Now
                   </div>
                 ) : (
                   <div
@@ -236,7 +247,7 @@ const EventDetailsOne = () => {
                       opacity: 0.6,
                     }}
                   >
-                    Event Ended
+                    Registered
                   </div>
                 )}
               </div>
