@@ -15,7 +15,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = useCallback((userData, token) => {
     setIsAuthenticated(true);
-    setUser(userData || null);
+    setUser({ ...userData, token } || null);
     if (token) {
       localStorage.setItem("token", token);
     }
@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }) => {
           headers: { Authorization: `Bearer ${token}`},
         })
         .then((res) => {
-          setUser(res.data);
+          setUser({ ...res.data, token });
           setIsAuthenticated(true);
         })
         .catch(() => {

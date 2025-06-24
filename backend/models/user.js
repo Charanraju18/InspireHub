@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema(
     profilePicture: { type: String },
     bio: { type: String, default: "", trim: true },
     phoneNumber: { type: String, default: "", trim: true },
-    location: { type: String, default: "", trim: true },  
+    location: { type: String, default: "", trim: true },
     socialLinks: {
       linkedin: { type: String, default: "", trim: true },
       github: { type: String, default: "", trim: true },
@@ -38,7 +38,9 @@ const userSchema = new mongoose.Schema(
             ],
           },
           followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-          followingInstructors: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+          followingInstructors: [
+            { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+          ],
           awards: [String],
           reviews: [
             {
@@ -67,6 +69,9 @@ const userSchema = new mongoose.Schema(
           followingContent: {
             roadmaps: [
               { type: mongoose.Schema.Types.ObjectId, ref: "Roadmap" },
+            ],
+            registeredEvents: [
+              { type: mongoose.Schema.Types.ObjectId, ref: "event" },
             ],
           },
           completedContent: {

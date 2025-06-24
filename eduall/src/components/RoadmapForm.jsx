@@ -328,10 +328,10 @@ const RoadmapForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // ✅ Prevent multiple submissions
     if (isSubmitting) return;
-    
+
     const userId = user?._id || user?.id;
     if (!userId) {
       alert("Please login to create a roadmap");
@@ -362,8 +362,9 @@ const RoadmapForm = () => {
       };
 
       // ✅ Get authentication token with fallback
-      const token = localStorage.getItem("token") || user?.token || user?.accessToken;
-      
+      const token =
+        localStorage.getItem("token") || user?.token || user?.accessToken;
+
       const headers = {
         "Content-Type": "application/json",
       };
@@ -372,7 +373,7 @@ const RoadmapForm = () => {
       if (token && token !== "undefined" && token !== "null") {
         headers["Authorization"] = `Bearer ${token}`;
       }
-      
+
       const res = await fetch("http://localhost:5000/api/roadmaps/create", {
         method: "POST",
         headers: headers,
@@ -380,7 +381,7 @@ const RoadmapForm = () => {
       });
 
       const data = await res.json();
-      
+
       // ✅ Better error handling
       if (!res.ok) {
         if (res.status === 401) {
@@ -390,9 +391,9 @@ const RoadmapForm = () => {
         }
         throw new Error(data.message || `Server error: ${res.status}`);
       }
-      
+
       alert("🎉 Roadmap created successfully!");
-      
+
       // ✅ Reset form
       setForm({
         title: "",
@@ -414,10 +415,9 @@ const RoadmapForm = () => {
       });
 
       navigate("/profile#roadmaps-shared");
-      
     } catch (error) {
       console.error("Error creating roadmap:", error);
-      
+
       let errorMessage = "Failed to create roadmap. ";
       if (error.message.includes("token")) {
         errorMessage += "Please login again.";
@@ -427,19 +427,15 @@ const RoadmapForm = () => {
       } else {
         errorMessage += error.message;
       }
-      
+
       alert(errorMessage);
     } finally {
-      setIsSubmitting(false); 
+      setIsSubmitting(false);
     }
   };
 
   return (
     <div style={{ maxWidth: "900px", margin: "auto", padding: "20px" }}>
-      <h2 style={{ textAlign: "center", marginBottom: "20px" }}>
-        Create a New Roadmap
-      </h2>
-
       <div style={gridStyle}>
         <div>
           <label>Title</label>
@@ -480,7 +476,10 @@ const RoadmapForm = () => {
                 label: item,
                 value: item,
               }))}
-              value={form.techstack.map((item) => ({ label: item, value: item }))}
+              value={form.techstack.map((item) => ({
+                label: item,
+                value: item,
+              }))}
               onChange={(selected) =>
                 setForm({
                   ...form,
@@ -736,11 +735,11 @@ const RoadmapForm = () => {
         </button>
       </div>
 
-      <button 
-        type="button" 
-        onClick={handleSubmit} 
+      <button
+        type="button"
+        onClick={handleSubmit}
         style={submitStyle}
-        disabled={isSubmitting} 
+        disabled={isSubmitting}
       >
         {isSubmitting ? "🔄 Creating..." : "✅ Submit Roadmap"}
       </button>

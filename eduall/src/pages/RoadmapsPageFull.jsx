@@ -5,7 +5,7 @@ import HeaderOne from "../components/HeaderOne";
 import RoadmapsPage from "../components/RoadmapsPage";
 import Animation from "../helper/Animation";
 import Preloader from "../helper/Preloader";
-
+import FooterTwo from "../components/FooterTwo";
 const RoadmapsPageFull = () => {
   return (
     <>
@@ -25,7 +25,7 @@ const RoadmapsPageFull = () => {
       <RoadmapsPage />
 
       {/* Footer */}
-      <FooterOne />
+      <FooterTwo />
     </>
   );
 };

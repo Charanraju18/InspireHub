@@ -281,6 +281,64 @@ const getRoadmapsByUser = async (req, res) => {
   }
 };
 
+const followRoadmap = async (req, res) => {
+  try {
+    const { id } = req.params; 
+    const userId = req.user.id;
+    const roadmap = await Roadmap.findById(id);
+    if (!roadmap) {
+      return res.status(404).json({ success: false, message: "Roadmap not found" });
+    }
+    if (roadmap.followers.includes(userId)) {
+      return res.status(400).json({ success: false, message: "Already following this roadmap" });
+    }
+    roadmap.followers.push(userId);
+    await roadmap.save();
+    const user = await User.findById(userId);
+    if (user && user.role === "Learner") {
+      if (!user.learnerProfile.followingContent) {
+        user.learnerProfile.followingContent = { roadmaps: [] };
+      }
+      if (!user.learnerProfile.followingContent.roadmaps) {
+        user.learnerProfile.followingContent.roadmaps = [];
+      }
+      if (!user.learnerProfile.followingContent.roadmaps.map(r=>r.toString()).includes(id)) {
+        user.learnerProfile.followingContent.roadmaps.push(id);
+        await user.save();
+      }
+    }
+    res.status(200).json({ success: true, message: "Followed roadmap successfully" });
+  } catch (error) {
+    console.error("Error following roadmap:", error);
+    res.status(500).json({ success: false, message: "Failed to follow roadmap" });
+  }
+};
+
+const unfollowRoadmap = async (req, res) => {
+  try {
+    const { id } = req.params; 
+    const userId = req.user.id;
+    const roadmap = await Roadmap.findById(id);
+    if (!roadmap) {
+      return res.status(404).json({ success: false, message: "Roadmap not found" });
+    }
+    if (!roadmap.followers.includes(userId)) {
+      return res.status(400).json({ success: false, message: "You are not following this roadmap" });
+    }
+    roadmap.followers = roadmap.followers.filter(f => f.toString() !== userId);
+    await roadmap.save();
+    const user = await User.findById(userId);
+    if (user && user.role === "Learner" && user.learnerProfile.followingContent && user.learnerProfile.followingContent.roadmaps) {
+      user.learnerProfile.followingContent.roadmaps = user.learnerProfile.followingContent.roadmaps.filter(rid => rid.toString() !== id);
+      await user.save();
+    }
+    res.status(200).json({ success: true, message: "Unfollowed roadmap successfully" });
+  } catch (error) {
+    console.error("Error unfollowing roadmap:", error);
+    res.status(500).json({ success: false, message: "Failed to unfollow roadmap" });
+  }
+};
+
 module.exports = {
   getAllRoadmaps,
   createRoadmap,
@@ -291,4 +349,6 @@ module.exports = {
   addStepToRoadmap,     
   updateRoadmap,        
   getRoadmapsByUser,    
+  followRoadmap,
+  unfollowRoadmap,
 };

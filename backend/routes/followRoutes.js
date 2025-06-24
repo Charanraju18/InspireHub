@@ -19,6 +19,6 @@ router.get("/followers", auth, getFollowers);
 
 router.get("/check-follow/:instructorId", auth, checkFollowStatus);
 
-router.get("/followers/:instructorId", getFollowers);
+router.get("/followers/:instructorId", auth, getFollowers);
 
 module.exports = router;

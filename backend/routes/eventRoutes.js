@@ -5,6 +5,8 @@ const {
   createEvent,
   getAllEvents,
   getEventById,
+  updateEvent,
+  deleteEvent,
 } = require("../controllers/eventController");
 
 // Multer config (memory storage for base64)
@@ -15,5 +17,7 @@ const upload = multer({ storage });
 router.post("/createEvent", upload.single("image"), createEvent);
 router.get("/", getAllEvents);
 router.get("/:id", getEventById);
+router.put("/:id", updateEvent);
+router.delete("/:id", deleteEvent);
 
 module.exports = router;

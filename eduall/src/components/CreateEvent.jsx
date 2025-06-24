@@ -129,10 +129,6 @@ const EventForm = () => {
         boxShadow: "0 0 10px rgba(0,0,0,0.1)",
       }}
     >
-      <h2 style={{ textAlign: "center", marginBottom: "20px" }}>
-        Create New Event
-      </h2>
-
       <div style={{ marginBottom: "15px" }}>
         <label>Title</label>
         <input

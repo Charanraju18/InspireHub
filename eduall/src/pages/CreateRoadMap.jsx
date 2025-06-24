@@ -5,6 +5,7 @@ import FooterOne from "../components/FooterOne";
 import HeaderOne from "../components/HeaderOne";
 import Animation from "../helper/Animation";
 import Preloader from "../helper/Preloader";
+import FooterTwo from "../components/FooterTwo";
 
 const CreateRoadMap = () => {
   return (
@@ -25,10 +26,10 @@ const CreateRoadMap = () => {
       <RoadmapForm />
 
       {/* CertificateOne */}
-      <CertificateOne />
+      {/* <CertificateOne /> */}
 
       {/* FooterOne */}
-      <FooterOne />
+      <FooterTwo />
     </>
   );
 };

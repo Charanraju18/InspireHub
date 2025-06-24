@@ -60,7 +60,7 @@ function App() {
       <RouteScrollToTop />
       <Routes>
         {/* <Route exact path='/' element={<HomePage />} /> */}
-        <Route exact path='/' element={<HomePageTwo />} />
+        <Route exact path="/" element={<HomePageTwo />} />
         {/* <Route exact path='/index-2' element={<HomePageTwo />} /> */}
         {/* <Route exact path='/index-3' element={<HomePageThree />} />
         <Route exact path='/index-4' element={<HomePageFour />} />
@@ -98,6 +98,7 @@ function App() {
 
         <Route exact path="/event-details/:id" element={<EventDetailsPage />} />
         <Route exact path="/events" element={<EventsPage />} />
+        {/* <Route exact path="/roadmaps" element={<RoadmapsPage />} /> */}
         {/* <Route exact path="/roadmaps" element={<RoadmapsPage />} /> */}
         <Route exact path="/roadmap/:id" element={<RoadmapDetailsPage />} />
         {/* <Route path="/roadmap/:id" element={<RoadmapDetails />} /> */}
