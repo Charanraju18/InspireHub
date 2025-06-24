@@ -89,3 +89,34 @@ exports.learnerContent = async (req, res) => {
   }
 };
 
+exports.updateUserProfile = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const updates = { ...req.body };
+
+    delete updates._id;
+    delete updates.email;
+    delete updates.phoneNumber;
+    delete updates.role;
+
+    if (updates.profilePicture && updates.profilePicture.startsWith("data:image")) {
+      updates.profilePicture = updates.profilePicture;
+    }
+
+    if (updates.password) {
+      const bcrypt = require("bcryptjs");
+      updates.password = await bcrypt.hash(updates.password, 10);
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(userId, updates, {
+      new: true,
+      runValidators: true
+    }).select("-password");
+
+    if (!updatedUser) return res.status(404).json({ msg: "User not found" });
+
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    res.status(500).json({ msg: "Server error", error: err.message });
+  }
+};

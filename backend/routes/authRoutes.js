@@ -10,7 +10,8 @@ const {
   getUserProfile,
   getAllInstructors,
   getSelectedInstructor,
-  learnerContent
+  learnerContent,
+  updateUserProfile
 } = require("../controllers/DetailsController");
 const authMiddleware = require("../middleware/authMiddleware");
 
@@ -22,6 +23,7 @@ router.post("/reset-password/:token", resetPassword);
 router.get("/instructors", authMiddleware, getAllInstructors);
 router.get("/instructors/:id", getSelectedInstructor);
 router.get("/learner-content", authMiddleware, learnerContent);
+router.put("/update-profile", authMiddleware, updateUserProfile);
 
 
 module.exports = router;
