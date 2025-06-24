@@ -230,28 +230,44 @@ const handleRoutes = () => {
               data-aos='fade-up'
               data-aos-duration={1200}
             >
+              
+
+
+              {/* ---- */}
               <div className='footer-item'>
                 <h4 className='footer-item__title fw-medium text-white mb-32'>
-                  Subscribe Here
+                  Our Team
                 </h4>
-                <p className='text-white'>
-                  Enter your email address to register to our newsletter
-                  subscription
-                </p>
-                <form action='#' className='mt-24 position-relative'>
-                  <input
-                    type='email'
-                    className='form-control bg-neutral-700 placeholder-white shadow-none border border-neutral-700 text-white rounded-pill h-52 ps-24 pe-48 focus-border-main-600'
-                    placeholder='Email...'
-                  />
-                  <button
-                    type='submit'
-                    className='w-36 h-36 flex-center rounded-circle bg-main-600 text-white hover-bg-main-800 position-absolute top-50 translate-middle-y inset-inline-end-0 me-8'
-                  >
-                    <i className='ph ph-paper-plane-tilt' />
-                  </button>
-                </form>
+                <div className='flex-align gap-20 mb-24'>
+                  <div >
+                    
+                    <ul 
+                    // className='footer-menu'
+                    className='text-white d-block hover-text-main-600 mb-0'
+                    >
+                 <li className='mb-16'>
+                   Alekhya Nam
+                  </li>
+                  <li className='mb-16'>
+                   Rohitha Kanta
+                  </li>
+                  <li className='mb-16'>
+                   Sri charan Illandula
+                  </li>
+                  <li className='mb-16'>
+                   Charan Raju Pakalapati
+                  </li>
+                  <li className='mb-16'>
+                   Sravanthi Kanuri
+                  </li>
+                  <li className='mb-16'>
+                   Ganga Maheshwari Bathulax
+                  </li>
+                </ul>
+                  </div>
+                </div>              
               </div>
+
             </div>
           </div>
         </div>

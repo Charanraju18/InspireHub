@@ -586,8 +586,6 @@ const InstructorDetails = ({ instructor, hideGetInTouch = false }) => {
 export default InstructorDetails;
 
 
-
-
 // import { useParams } from "react-router-dom";
 // import { useEffect, useState } from "react";
 // import { useAuth } from "../authContext";
