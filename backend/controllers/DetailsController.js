@@ -99,23 +99,22 @@ exports.updateUserProfile = async (req, res) => {
     delete updates.phoneNumber;
     delete updates.role;
 
-    if (updates.profilePicture && updates.profilePicture.startsWith("data:image")) {
-      updates.profilePicture = updates.profilePicture;
-    }
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ msg: "User not found" });
 
     if (updates.password) {
       const bcrypt = require("bcryptjs");
       updates.password = await bcrypt.hash(updates.password, 10);
     }
 
-    const updatedUser = await User.findByIdAndUpdate(userId, updates, {
-      new: true,
-      runValidators: true
-    }).select("-password");
+    Object.assign(user, updates);
 
-    if (!updatedUser) return res.status(404).json({ msg: "User not found" });
+    const updatedUser = await user.save();
 
-    res.status(200).json(updatedUser);
+    const userObj = updatedUser.toObject();
+    delete userObj.password;
+
+    res.status(200).json(userObj);
   } catch (err) {
     res.status(500).json({ msg: "Server error", error: err.message });
   }

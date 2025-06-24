@@ -6,6 +6,177 @@ import axios from "axios";
 import { useAuth } from "../authContext";
 import InstructorDetails from "../components/InstructorDetails";
 import FooterTwo from "../components/FooterTwo";
+import { FaEdit } from "react-icons/fa";
+
+const ProfileEditForm = ({ user, learnerProfile, onClose, onUpdate }) => {
+  const [formData, setFormData] = useState({ ...user });
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+
+  // Only allow editing of certain fields
+  const editableFields = [
+    "name",
+    "gender",
+    "location",
+    "bio",
+    "profilePicture",
+  ];
+
+  // For learners, allow editing interestedDomains, skillLevel, currentEducation, yearOfStudy
+  const learnerFields = learnerProfile
+    ? [
+      "skillLevel",
+      "currentEducation",
+      "yearOfStudy",
+      "interestedDomains",
+    ]
+    : [];
+
+  // Handle input changes
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // Handle array fields (like interestedDomains)
+  const handleArrayChange = (name, value) => {
+    setFormData((prev) => ({ ...prev, [name]: value.split(",").map((v) => v.trim()) }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setError("");
+    try {
+      let token = localStorage.getItem("token");
+      const updateData = { ...formData };
+      // Remove non-editable fields
+      delete updateData._id;
+      delete updateData.email;
+      delete updateData.phoneNumber;
+      delete updateData.role;
+      // For learners, merge learnerProfile fields
+      if (learnerProfile) {
+        updateData.learnerProfile = {
+          ...learnerProfile,
+          skillLevel: formData.skillLevel,
+          currentEducation: formData.currentEducation,
+          yearOfStudy: formData.yearOfStudy,
+          interestedDomains: formData.interestedDomains,
+        };
+      }
+      const res = await axios.put(
+        "http://localhost:5000/api/auth/update-profile",
+        updateData,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      onUpdate(res.data);
+      onClose();
+    } catch (err) {
+      setError(
+        err.response?.data?.msg || err.response?.data?.error || "Update failed."
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100vw",
+        height: "100vh",
+        background: "rgba(0,0,0,0.4)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 9999,
+      }}
+    >
+      <form
+        onSubmit={handleSubmit}
+        style={{
+          background: "#fff",
+          borderRadius: 12,
+          padding: 32,
+          minWidth: 350,
+          boxShadow: "0 4px 32px rgba(0,0,0,0.15)",
+          textAlign: "left",
+        }}
+      >
+        <h4 className="mb-3">Edit Profile</h4>
+        {editableFields.map((field) => (
+          <div className="mb-3" key={field}>
+            <label className="form-label" style={{ fontWeight: 500 }}>
+              {field.charAt(0).toUpperCase() + field.slice(1)}
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              name={field}
+              value={formData[field] || ""}
+              onChange={handleChange}
+              disabled={submitting}
+            />
+          </div>
+        ))}
+        {learnerFields.map((field) => (
+          <div className="mb-3" key={field}>
+            <label className="form-label" style={{ fontWeight: 500 }}>
+              {field === "interestedDomains"
+                ? "Interested Domains (comma separated)"
+                : field.charAt(0).toUpperCase() + field.slice(1)}
+            </label>
+            {field === "interestedDomains" ? (
+              <input
+                type="text"
+                className="form-control"
+                name={field}
+                value={
+                  Array.isArray(formData[field])
+                    ? formData[field].join(", ")
+                    : formData[field] || ""
+                }
+                onChange={(e) => handleArrayChange(field, e.target.value)}
+                disabled={submitting}
+              />
+            ) : (
+              <input
+                type="text"
+                className="form-control"
+                name={field}
+                value={formData[field] || ""}
+                onChange={handleChange}
+                disabled={submitting}
+              />
+            )}
+          </div>
+        ))}
+        {error && <div className="text-danger mb-2">{error}</div>}
+        <div className="d-flex justify-content-end gap-2 mt-4">
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={onClose}
+            disabled={submitting}
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            className="btn btn-success"
+            disabled={submitting}
+          >
+            {submitting ? "Updating..." : "Update Profile"}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+};
 
 const ProfilePage = () => {
   const { user: authUser } = useAuth();
@@ -13,6 +184,7 @@ const ProfilePage = () => {
   const [learnerProfile, setLearnerProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [showEdit, setShowEdit] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -62,6 +234,14 @@ const ProfilePage = () => {
     <>
       <HeaderOne />
       <Breadcrumb title={"Profile"} />
+      {showEdit && (
+        <ProfileEditForm
+          user={user}
+          learnerProfile={user.role === "Learner" ? learnerProfile : null}
+          onClose={() => setShowEdit(false)}
+          onUpdate={handleUpdate}
+        />
+      )}
       {loading ? (
         <>
           <div className="text-center py-5">
@@ -190,13 +370,21 @@ const ProfilePage = () => {
                 <div className="col-lg-8">
                   <div className="ps-lg-5">
                     <h5 className="text-main-600 mb-0">Learner</h5>
-                    <div className="d-flex align-items-center gap-12 my-16 flex-wrap">
+                    <div className="d-flex align-items-center gap-12 my-16 flex-wrap" style={{ position: "relative" }}>
                       <h2
                         className="mb-0"
                         style={{ fontWeight: 600, fontSize: "2rem" }}
                       >
                         {user.name}
                       </h2>
+                      <button
+                        className="btn btn-outline-primary btn-sm"
+                        style={{ position: "absolute", right: 0, top: 0 }}
+                        onClick={() => setShowEdit(true)}
+                        title="Edit Profile"
+                      >
+                        <FaEdit /> Edit
+                      </button>
                     </div>
                     <div className="mb-16 text-neutral-700 fw-medium text-md">
                       {learnerProfile.skillLevel || "N/A"}
