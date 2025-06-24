@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../authContext";
 
 const ExploreCourseTwo = () => {
   const [domains, setDomains] = useState(["All Categories"]);
@@ -8,6 +10,17 @@ const ExploreCourseTwo = () => {
   const [selectedDomain, setSelectedDomain] = useState("All Categories");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const navigate = useNavigate();
+const { isAuthenticated } = useAuth();
+
+const handleRoadmapsClick = () => {
+  if (isAuthenticated) {
+    navigate("/roadmaps");
+  } else {
+    navigate("/sign-in");
+  }
+};
 
   // ✅ Domain icons mapping
   const domainIcons = {
@@ -330,13 +343,20 @@ const ExploreCourseTwo = () => {
 
             {/* ✅ See All Roadmaps Button */}
             <div className='text-center mt-64'>
-              <Link
+              {/* <Link
                 to='/roadmaps'
                 className='btn btn-main rounded-pill flex-center gap-8 d-inline-flex'
               >
                 See All Roadmaps
                 <i className='ph-bold ph-arrow-right text-xl' />
-              </Link>
+              </Link> */}
+              <button
+                onClick={handleRoadmapsClick}
+                className='btn btn-main rounded-pill flex-center gap-8 d-inline-flex'
+              >
+                See All Roadmaps
+                <i className='ph-bold ph-arrow-right text-xl' />
+              </button>
             </div>
           </div>
         </div>

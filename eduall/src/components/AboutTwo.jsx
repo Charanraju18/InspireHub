@@ -1,6 +1,19 @@
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../authContext";
+
 
 const AboutTwo = () => {
+  const navigate = useNavigate();
+const { isAuthenticated } = useAuth();
+
+  const handleReadMoreClick = () => {
+  if (isAuthenticated) {
+    navigate("/about");
+  } else {
+    navigate("/sign-in");
+  }
+};
   return (
     <section className='about-two py-120 position-relative z-1 bg-main-25'>
       <div className='position-relative'>
@@ -186,13 +199,20 @@ const AboutTwo = () => {
                   </div>
                 </div>
                 <div className='pt-40 border-top border-neutral-50 mt-40 border-dashed border-0'>
-                  <Link
+                  {/* <Link
                     to='/about'
                     className='btn btn-main rounded-pill flex-align d-inline-flex gap-8'
                   >
                     Read More
                     <i className='ph-bold ph-arrow-up-right d-flex text-lg' />
-                  </Link>
+                  </Link> */}
+                  <button
+                onClick={handleReadMoreClick}
+                className='btn btn-main rounded-pill flex-align d-inline-flex gap-8'
+              >
+                Read More
+                <i className="ph-bold ph-arrow-up-right d-flex text-lg" />
+              </button>
                 </div>
               </div>
             </div>

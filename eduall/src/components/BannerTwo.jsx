@@ -5,7 +5,7 @@ import { useAuth } from "../authContext";
 
 
 const BannerTwo = () => {
-  const navigate = useNavigate();
+const navigate = useNavigate();
 const { isAuthenticated } = useAuth();
 
 const handleBrowseCoursesClick = () => {
@@ -16,13 +16,13 @@ const handleBrowseCoursesClick = () => {
   }
 };
 
-// const handleAboutUsClick = () => {
-//   if (isAuthenticated) {
-//     navigate("/about");
-//   } else {
-//     navigate("/sign-in");
-//   }
-// };
+const handleAboutUsClick = () => {
+  if (isAuthenticated) {
+    navigate("/about");
+  } else {
+    navigate("/sign-in");
+  }
+};
   return (
     <section className='banner-two pt-80 position-relative overflow-hidden'>
       <img
@@ -98,23 +98,23 @@ const handleBrowseCoursesClick = () => {
                 Browse Roadmaps
                 <i className="ph-bold ph-arrow-up-right d-flex text-lg" />
               </button>
-              {/* <button
+              <button
                 onClick={handleAboutUsClick}
                 className="btn btn-outline-main rounded-pill flex-align gap-8"
                 data-aos="fade-left"
               >
                 About Us
                 <i className="ph-bold ph-arrow-up-right d-flex text-lg" />
-              </button> */}
+              </button>
 
-                <Link
+                {/* <Link
                   to='/about'
                   className='btn btn-outline-main rounded-pill flex-align gap-8'
                   data-aos='fade-left'
                 >
                   About Us
                   <i className='ph-bold ph-arrow-up-right d-flex text-lg' />
-                </Link>
+                </Link> */}
               </div>
             </div>
           </div>

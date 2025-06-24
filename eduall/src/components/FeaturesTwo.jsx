@@ -1,7 +1,20 @@
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../authContext";
 
 const FeaturesTwo = () => {
+  const navigate = useNavigate();
+const { isAuthenticated } = useAuth();
+
+const handleReadmoreClick = () => {
+  if (isAuthenticated) {
+    navigate("/roadmaps");
+  } else {
+    navigate("/sign-in");
+  }
+};
   return (
+    
     <section className="features-two half-bg py-120 position-relative overflow-hidden">
       <img
         src="assets/images/shapes/shape2.png"
@@ -25,13 +38,20 @@ const FeaturesTwo = () => {
               Explore new skills, deepen existing passions, and get lost in
               creativity. What you find just might...
             </p>
-            <Link
-              to='/course'
+            {/* <Link
+              to='/roadmaps'
               className='item-hover__text flex-align d-inline-flex gap-8 text-main-600 mt-24 hover-text-decoration-underline transition-1 fw-semibold'
             >
               Read More
               <i className="ph ph-arrow-right" />
-            </Link>
+            </Link> */}
+            <button
+                onClick={handleReadmoreClick}
+                className='item-hover__text flex-align d-inline-flex gap-8 text-main-600 mt-24 hover-text-decoration-underline transition-1 fw-semibold'
+              >
+                Read More
+                <i className="ph ph-arrow-right" />
+              </button>
           </div>
         </div>
         <div className="row gy-4">

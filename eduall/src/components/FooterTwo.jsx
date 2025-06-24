@@ -1,6 +1,20 @@
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../authContext";
 
 const FooterTwo = () => {
+
+  const navigate = useNavigate();
+const { isAuthenticated } = useAuth();
+
+const handleRoutes = () => {
+  if (isAuthenticated) {
+    navigate("/roadmaps");
+  } else {
+    navigate("/sign-in");
+  }
+};
+
   return (
     <footer className='footer bg-neutral-900 position-relative z-1'>
       <img
@@ -36,10 +50,18 @@ const FooterTwo = () => {
                   </li>
                   <li className='mb-16'>
                     <Link
-                      to='/courses'
+                      to='/roadmaps'
                       className='text-white hover-text-main-600 hover-text-decoration-underline'
                     >
-                      Courses
+                      Roadmaps
+                    </Link>
+                  </li>
+                  <li className='mb-16'>
+                    <Link
+                      to='/events'
+                      className='text-white hover-text-main-600 hover-text-decoration-underline'
+                    >
+                      Live Events 
                     </Link>
                   </li>
                   <li className='mb-16'>
@@ -50,20 +72,12 @@ const FooterTwo = () => {
                       Instructor
                     </Link>
                   </li>
-                  <li className='mb-16'>
-                    <Link
-                      to='/faq'
-                      className='text-white hover-text-main-600 hover-text-decoration-underline'
-                    >
-                      FAQs
-                    </Link>
-                  </li>
                   <li className='mb-0'>
                     <Link
-                      to='/blog'
+                      to='/contact'
                       className='text-white hover-text-main-600 hover-text-decoration-underline'
                     >
-                      Blogs
+                      Contact & FAQs
                     </Link>
                   </li>
                 </ul>
@@ -80,44 +94,71 @@ const FooterTwo = () => {
                 </h4>
                 <ul className='footer-menu'>
                   <li className='mb-16'>
-                    <Link
-                      to='/courses'
+                    {/* <Link
+                      to='/roadmaps'
                       className='text-white hover-text-main-600 hover-text-decoration-underline'
                     >
                       UI/UX Design
-                    </Link>
+                    </Link> */}
+                    
+                    <button
+                onClick={handleRoutes}
+                className='text-white hover-text-main-600 hover-text-decoration-underline'>
+                Programming
+              </button>
+                
                   </li>
                   <li className='mb-16'>
-                    <Link
-                      to='/courses'
+                    {/* <Link
+                      to='/roadmaps'
                       className='text-white hover-text-main-600 hover-text-decoration-underline'
                     >
                       Web Development
-                    </Link>
+                    </Link> */}
+                    <button
+                onClick={handleRoutes}
+                className='text-white hover-text-main-600 hover-text-decoration-underline'>
+                Web Development
+              </button>
                   </li>
                   <li className='mb-16'>
-                    <Link
-                      to='/courses'
+                    {/* <Link
+                      to='/roadmaps'
                       className='text-white hover-text-main-600 hover-text-decoration-underline'
                     >
                       Python Development
-                    </Link>
+                    </Link> */}
+                    <button
+                onClick={handleRoutes}
+                className='text-white hover-text-main-600 hover-text-decoration-underline'>
+                Academic Skills
+              </button>
                   </li>
                   <li className='mb-16'>
-                    <Link
-                      to='/courses'
+                    {/* <Link
+                      to='/roadmaps'
                       className='text-white hover-text-main-600 hover-text-decoration-underline'
                     >
                       Digital Marketing
-                    </Link>
+                    </Link> */}
+                    <button
+                onClick={handleRoutes}
+                className='text-white hover-text-main-600 hover-text-decoration-underline'>
+                Marketing
+              </button>
                   </li>
                   <li className='mb-16'>
-                    <Link
-                      to='/courses'
+                    {/* <Link
+                      to='/roadmaps'
                       className='text-white hover-text-main-600 hover-text-decoration-underline'
                     >
                       Graphic Design
-                    </Link>
+                    </Link> */}
+                    <button
+                onClick={handleRoutes}
+                className='text-white hover-text-main-600 hover-text-decoration-underline'>
+                  Design
+              </button>
                   </li>
                 </ul>
               </div>
@@ -136,17 +177,17 @@ const FooterTwo = () => {
                     <i className='ph ph-phone' />
                   </span>
                   <div className=''>
-                    <Link
+                    {/* <Link
                       to='/tel:(207)555-0119'
                       className='text-white d-block hover-text-main-600 mb-4'
                     >
                       (207) 555-0119
-                    </Link>
+                    </Link> */}
                     <Link
                       to='/tel:(704)555-0127'
                       className='text-white d-block hover-text-main-600 mb-0'
                     >
-                      (704) 555-0127
+                      +91 9987634987  
                     </Link>
                   </div>
                 </div>
@@ -155,17 +196,17 @@ const FooterTwo = () => {
                     <i className='ph ph-envelope-open' />
                   </span>
                   <div className=''>
-                    <Link
+                    {/* <Link
                       to='/mailto:dwallo@gmail.com'
                       className='text-white d-block hover-text-main-600 mb-4'
                     >
                       dwallo@gmail.com
-                    </Link>
+                    </Link> */}
                     <Link
                       to='/mailto:eduAll@gmail.com'
                       className='text-white d-block hover-text-main-600 mb-0'
                     >
-                      eduAll@gmail.com
+                      inspirehub.project@gmail.com
                     </Link>
                   </div>
                 </div>
@@ -174,11 +215,11 @@ const FooterTwo = () => {
                     <i className='ph ph-map-trifold' />
                   </span>
                   <div className=''>
-                    <span className='text-white d-block mb-4'>
+                    {/* <span className='text-white d-block mb-4'>
                       5488 srker Rd .
-                    </span>
+                    </span> */}
                     <span className='text-white d-block mb-0'>
-                      8745 doer Dr.
+                      Surampalem
                     </span>
                   </div>
                 </div>
@@ -224,7 +265,9 @@ const FooterTwo = () => {
                 <Link to='/'>
                   {" "}
                   {/* <img src='assets/images/logo/logo-white.png' alt='' /> */}
-                  <img src='assets/images/logo/logooRemovebg.png' alt='' />
+                  {/* <img src='assets/images/logo/logooRemovebg.png' alt='' /> */}
+                  <img src="assets/images/logo/logo(new).png" alt="Logo" />
+
                 </Link>
               </div>
               <p

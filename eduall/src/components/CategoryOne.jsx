@@ -2,7 +2,23 @@ import { useRef } from "react";
 import { Link } from "react-router-dom";
 import Slider from "react-slick";
 
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../authContext";
+
 const CategoryOne = () => {
+
+
+
+    const navigate = useNavigate();
+const { isAuthenticated } = useAuth();
+
+const handleClick = () => {
+  if (isAuthenticated) {
+    navigate("/roadmaps");
+  } else {
+    navigate("/sign-in");
+  }
+};
   const sliderRef = useRef(null);
   const settings = {
     slidesToShow: 4,
@@ -81,12 +97,19 @@ const CategoryOne = () => {
               {/* Courses on nutrition, fitness training, yoga... */}
               Code your future with guidance from experts."
             </p>
-            <Link
+            {/* <Link
               to='/roadmaps'
               className='py-12 px-24 bg-white rounded-8 border border-neutral-30 mt-28 fw-semibold text-main-600 hover-bg-main-600 hover-text-white hover-border-main-600'
             >
               100+ Posts
-            </Link>
+            </Link> */}
+
+            <button
+                onClick={handleClick}
+                className='py-12 px-24 bg-white rounded-8 border border-neutral-30 mt-28 fw-semibold text-main-600 hover-bg-main-600 hover-text-white hover-border-main-600' 
+              >
+               100+ Posts 
+              </button>
           </div>
           <div
             className='category-item animation-item h-100 text-center px-16 py-32 rounded-12 bg-main-two-25 border border-neutral-30 hover-border-main-two-600 transition-2'
@@ -107,12 +130,17 @@ const CategoryOne = () => {
               {/* Courses on nutrition, fitness training, yoga... */}
               Modern farming guided by those who work the soil .
             </p>
-            <Link
+            {/* <Link
               to='/roadmaps'
               className='py-12 px-24 bg-white rounded-8 border border-neutral-30 mt-28 fw-semibold text-main-two-600 hover-bg-main-two-600 hover-text-white hover-border-main-two-600'
             >
              50+ Posts
-            </Link>
+            </Link> */}
+            <button
+                onClick={handleClick}
+                className='py-12 px-24 bg-white rounded-8 border border-neutral-30 mt-28 fw-semibold text-main-two-600 hover-bg-main-two-600 hover-text-white hover-border-main-two-600'              >
+               50+ Posts 
+              </button>
           </div>
           <div
             className='category-item animation-item h-100 text-center px-16 py-32 rounded-12 bg-main-three-25 border border-neutral-30 hover-border-main-three-600 transition-2'
@@ -134,12 +162,17 @@ const CategoryOne = () => {
             <p className='text-neutral-500 text-lg text-line-2'>
               Unleash creativity, shaped by artists who live the craft.
             </p>
-            <Link
+            {/* <Link
               to='/roadmaps'
               className='py-12 px-24 bg-white rounded-8 border border-neutral-30 mt-28 fw-semibold text-main-three-600 hover-bg-main-three-600 hover-text-white hover-border-main-three-600'
             >
               30+ Posts
-            </Link>
+            </Link> */}
+            <button
+                onClick={handleClick}
+                className='py-12 px-24 bg-white rounded-8 border border-neutral-30 mt-28 fw-semibold text-main-three-600 hover-bg-main-three-600 hover-text-white hover-border-main-three-600'            >
+               30+ Posts 
+              </button>
           </div>
           <div
             className='category-item animation-item h-100 text-center px-16 py-32 rounded-12 bg-main-two-25 border border-neutral-30 hover-border-main-two-600 transition-2'
@@ -161,12 +194,17 @@ const CategoryOne = () => {
             <p className='text-neutral-500 text-lg text-line-2'>
               Master your money with guidance from financial pros who’ve been there.
             </p>
-            <Link
+            {/* <Link
               to='/roadmaps'
               className='py-12 px-24 bg-white rounded-8 border border-neutral-30 mt-28 fw-semibold text-main-two-600 hover-bg-main-two-600 hover-text-white hover-border-main-two-600'
             >
               20+ Posts
-            </Link>
+            </Link> */}
+            <button
+                onClick={handleClick}
+                className='py-12 px-24 bg-white rounded-8 border border-neutral-30 mt-28 fw-semibold text-main-two-600 hover-bg-main-two-600 hover-text-white hover-border-main-two-600'    >
+               20+ Posts 
+              </button>
           </div>
           <div
             className='category-item animation-item h-100 text-center px-16 py-32 rounded-12 bg-main-three-25 border border-neutral-30 hover-border-main-three-600 transition-2'
@@ -188,12 +226,17 @@ const CategoryOne = () => {
             <p className='text-neutral-500 text-lg text-line-2'>
                 Craft your message with the voices that move audiences.
             </p>
-            <Link
+            {/* <Link
               to='/roadmaps'
               className='py-12 px-24 bg-white rounded-8 border border-neutral-30 mt-28 fw-semibold text-main-three-600 hover-bg-main-three-600 hover-text-white hover-border-main-three-600'
             >
               40+ Posts
-            </Link>
+            </Link> */}
+            <button
+                onClick={handleClick}
+                className='py-12 px-24 bg-white rounded-8 border border-neutral-30 mt-28 fw-semibold text-main-three-600 hover-bg-main-three-600 hover-text-white hover-border-main-three-600'  >
+               40+ Posts 
+              </button>
           </div>
           <div
             className='category-item animation-item h-100 text-center px-16 py-32 rounded-12 bg-main-two-25 border border-neutral-30 hover-border-main-two-600 transition-2'
@@ -213,12 +256,17 @@ const CategoryOne = () => {
             <p className='text-neutral-500 text-lg text-line-2'>
               Style your path with insights from trendsetters and creators.
             </p>
-            <Link
+            {/* <Link
               to='/roadmaps'
               className='py-12 px-24 bg-white rounded-8 border border-neutral-30 mt-28 fw-semibold text-main-two-600 hover-bg-main-two-600 hover-text-white hover-border-main-two-600'
             >
               10+ posts
-            </Link>
+            </Link> */}
+            <button
+                onClick={handleClick}
+                className='py-12 px-24 bg-white rounded-8 border border-neutral-30 mt-28 fw-semibold text-main-two-600 hover-bg-main-two-600 hover-text-white hover-border-main-two-600'  >
+               10+ Posts 
+              </button>
           </div>
         </Slider>
         <div className='flex-align gap-16 mt-40 justify-content-center'>
