@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { FaHeart, FaBookmark, FaShare, FaEye, FaClock, FaCompass, FaFire } from "react-icons/fa";
+import {
+  FaHeart,
+  FaBookmark,
+  FaShare,
+  FaEye,
+  FaClock,
+  FaCompass,
+  FaFire,
+} from "react-icons/fa";
+import axios from "axios";
 
 const RoadmapsPage = () => {
   const [roadmaps, setRoadmaps] = useState([]);
@@ -10,24 +19,37 @@ const RoadmapsPage = () => {
     search: "",
     domain: "",
     difficulty: "",
-    techstack: ""
+    techstack: "",
   });
   const [sortBy, setSortBy] = useState("newest");
 
   // Available filter options
   const domains = [
-    "Programming", "Web Design & Development", "Academic Skills", "Marketing",
-    "Design (General)", "Technology", "Fashion Design", "Agriculture",
-    "Biology & Life Sciences", "Data Science & Analytics", "Business & Entrepreneurship",
-    "Mobile App Development", "Artificial Intelligence", "Cybersecurity"
+    "Programming",
+    "Web Design & Development",
+    "Academic Skills",
+    "Marketing",
+    "Design (General)",
+    "Technology",
+    "Fashion Design",
+    "Agriculture",
+    "Biology & Life Sciences",
+    "Data Science & Analytics",
+    "Business & Entrepreneurship",
+    "Mobile App Development",
+    "Artificial Intelligence",
+    "Cybersecurity",
   ];
 
   const difficulties = ["Beginner", "Intermediate", "Advanced"];
 
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      fetchRoadmaps();
-    }, filters.search ? 500 : 0);
+    const timeoutId = setTimeout(
+      () => {
+        fetchRoadmaps();
+      },
+      filters.search ? 500 : 0
+    );
 
     return () => clearTimeout(timeoutId);
   }, [filters, sortBy]);
@@ -140,8 +162,44 @@ const RoadmapsPage = () => {
     console.log("❤️ Liked roadmap:", roadmapId);
   };
 
-  const handleBookmark = (roadmapId) => {
-    console.log("🔖 Bookmarked roadmap:", roadmapId);
+  // const handleBookmark = (roadmapId) => {
+  //   console.log("🔖 Bookmarked roadmap:", roadmapId);
+  // };
+
+  const handleBookmark = async (roadmap) => {
+    const userId = localStorage.getItem("userEmail");
+    console.log("🧪 Retrieved userId from localStorage:", userId);
+
+    if (!userId) {
+      alert("Please login to bookmark this roadmap.");
+      return;
+    }
+
+    const payload = {
+      userId,
+      roadmap: {
+        _id: roadmap._id,
+        title: roadmap.title,
+        description: roadmap.description,
+        thumbnail: roadmap.thumbnail,
+      },
+    };
+
+    console.log("📦 Payload being sent:", payload);
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/wishlist/add",
+        payload
+      );
+      if (response.status === 200) {
+        console.log("✅ Added to wishlist:", response.data);
+        alert("Roadmap added to wishlist!");
+      }
+    } catch (error) {
+      console.error("❌ Error adding to wishlist:", error);
+      alert("Failed to bookmark. Try again.");
+    }
   };
 
   const handleShare = (roadmap) => {
@@ -431,13 +489,15 @@ const RoadmapsPage = () => {
                       >
                         <FaHeart className="text-danger" size={20} />
                       </button>
+
                       <button
                         className="btn btn-sm btn-light rounded-circle p-2 opacity-75 hover-opacity-100"
-                        onClick={() => handleBookmark(roadmap._id)}
+                        onClick={() => handleBookmark(roadmap)}
                         title="Bookmark"
                       >
                         <FaBookmark className="text-primary" size={20} />
                       </button>
+
                       <button
                         className="btn btn-sm btn-light rounded-circle p-2 opacity-75 hover-opacity-100"
                         onClick={() => handleShare(roadmap)}

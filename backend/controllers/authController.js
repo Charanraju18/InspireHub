@@ -142,7 +142,6 @@
 //   }
 // };
 
-
 const { User } = require("../models/user");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -167,6 +166,7 @@ exports.login = async (req, res) => {
       token,
       user: {
         id: user._id,
+        email: user.email,
         name: user.name,
         role: user.role,
         profilePicture: user.profilePicture,

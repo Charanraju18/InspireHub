@@ -47,10 +47,6 @@
 //   console.log(`Server running on http://localhost:${PORT}`);
 // });
 
-
-
-
-
 // -----------------------------------
 const express = require("express");
 const cors = require("cors");
@@ -91,6 +87,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // Routes
 app.use("/api/events", require("./routes/eventRoutes"));
 app.use("/api/auth", require("./routes/authRoutes"));
+
 // <<<<<<< HEAD
 app.use("/api/posts", require("./routes/postRoutes"));
 app.use("/api/follow-instructors", require("./routes/followRoutes"));
@@ -100,6 +97,7 @@ app.use("/api/follow-instructors", require("./routes/followRoutes"));
 app.use("/api/roadmaps", require("./routes/roadmapRoutes"));
 app.use("/api/mail", require("./routes/nodeMailerRoute"));
 app.use("/api/users", require("./routes/userRoutes"));
+app.use("/api/wishlist", require("./routes/wishlistRoutes"));
 // >>>>>>> main
 app.get("/", (req, res) => {
   res.send("Hello from Express and MongoDB!");
