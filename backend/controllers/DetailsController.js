@@ -88,4 +88,38 @@ exports.learnerContent = async (req, res) => {
     res.status(500).json({ msg: "Server error", error: err.message });
   }
 };
+const bcrypt = require("bcryptjs");
+const _ = require("lodash");
 
+exports.updateUserProfile = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const updates = { ...req.body };
+    delete updates._id;
+    delete updates.email;
+    delete updates.phoneNumber;
+    delete updates.role;
+
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ msg: "User not found" });
+
+    if (updates.password) {
+      updates.password = await bcrypt.hash(updates.password, 10);
+    }
+    if (updates.instructorProfile) {
+      _.merge(user.instructorProfile, updates.instructorProfile);
+      delete updates.instructorProfile;
+    }
+    if (updates.learnerProfile) {
+      _.merge(user.learnerProfile, updates.learnerProfile);
+      delete updates.learnerProfile;
+    }
+    Object.assign(user, updates);
+    const updatedUser = await user.save();
+    const userObj = updatedUser.toObject();
+    delete userObj.password;
+    res.status(200).json(userObj);
+  } catch (err) {
+    res.status(500).json({ msg: "Server error", error: err.message });
+  }
+};
