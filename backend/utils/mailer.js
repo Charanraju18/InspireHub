@@ -1,11 +1,10 @@
 const nodemailer = require("nodemailer");
 
-// Configure your transporter with your Gmail credentials or SMTP server
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: process.env.EMAIL_USER, // your Gmail or SMTP email
-    pass: process.env.EMAIL_PASS, // your email password or app password
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
   },
 });
 
@@ -30,10 +29,9 @@ const sendRegistrationMail = async (
     to,
     subject,
     html: `
-      <h2>${
-        type === "reminder"
-          ? "Upcoming Event Reminder"
-          : "Registration Successful"
+      <h2>${type === "reminder"
+        ? "Upcoming Event Reminder"
+        : "Registration Successful"
       }</h2>
       ${message}
       <p>— InspireHub Team</p>
@@ -50,11 +48,10 @@ const sendWelcomeEmail = async (to, name, role) => {
   const message = `
     <p>Hi <strong>${name}</strong>,</p>
     <p>🎉 Welcome to <strong>InspireHub</strong>! We're thrilled to have you join as a <strong>${role}</strong>.</p>
-    <p>As a ${role.toLowerCase()}, you can ${
-    role === "Instructor"
+    <p>As a ${role.toLowerCase()}, you can ${role === "Instructor"
       ? "start sharing your knowledge through roadmaps and guide learners."
       : "explore roadmaps, attend live events, and grow your skills."
-  }</p>
+    }</p>
     <p>If you have any questions, feel free to contact us anytime.</p>
     <p>— The InspireHub Team</p>
   `;
@@ -67,4 +64,22 @@ const sendWelcomeEmail = async (to, name, role) => {
   });
 };
 
-module.exports = { sendRegistrationMail, sendWelcomeEmail };
+const getInTouchToIns = async (toName, toMail, userName, userMsg, userMail, category) => {
+
+  const message = `
+    <p>Hi ${toName},</p>
+    <p>You have received a new ${category} from <strong>${userName}</strong>.</p>
+    <p><strong>Email:</strong> ${userMail}</p>
+    <p><strong>Message:</strong> ${userMsg}</p>
+    <p>— InspireHub Team</p>
+  `;
+
+  await transporter.sendMail({
+    from: `"InspireHub" <${process.env.EMAIL_USER}>`,
+    to: toMail,
+    subject: `New message from ${userName}`,
+    html: message,
+  });
+}
+
+module.exports = { sendRegistrationMail, sendWelcomeEmail, getInTouchToIns };
