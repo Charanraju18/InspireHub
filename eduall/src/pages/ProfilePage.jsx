@@ -387,11 +387,23 @@ const ProfilePage = () => {
 
   useEffect(() => {
     console.log("ProfilePage useEffect", { authUser });
-    fetchProfile();
-    // eslint-disable-next-line
+    let isMounted = true;
+    const fetchData = async () => {
+      try {
+        await fetchProfile();
+      } catch (error) {
+        if (isMounted) {
+          setError("Failed to load profile. Please try again.");
+        }
+      }
+    };
+    if (authUser) {
+      fetchData();
+    }
+    return () => {
+      isMounted = false;
+    };
   }, [authUser]);
-
-  const canEdit = user && authUser && user._id === authUser._id;
 
   return (
     <>
@@ -431,17 +443,6 @@ const ProfilePage = () => {
                 {/* Left Card (profile summary) */}
                 <div className="col-lg-4">
                   <div className="border border-neutral-30 rounded-12 bg-white p-8 mb-24 position-relative">
-                    {/* {canEdit && (
-                      <button
-                        className="btn btn-outline-primary btn-sm position-absolute top-0 end-0 mt-3 me-3 shadow"
-                        onClick={() => setShowEdit(true)}
-                        title="Edit Profile"
-                        type="button"
-                        style={{ display: "inline-flex", alignItems: "center", height: 40, zIndex: 2 }}
-                      >
-                        <FaEdit style={{ marginRight: 4 }} /> Edit
-                      </button>
-                    )} */}
                     <div className="border border-neutral-30 rounded-12 bg-main-25 p-32 bg-main-25 text-center">
                       <div className="p-16 border border-neutral-50 rounded-circle aspect-ratio-1 max-w-150 max-h-150 mx-auto position-relative">
                         <img
@@ -536,15 +537,13 @@ const ProfilePage = () => {
                       >
                         {user?.name || "No Name"}
                       </h2>
-                      {canEdit && (
-                        <button
-                          onClick={() => setShowEdit(true)}
-                          title="Edit Profile"
-                          type="button"
-                        >
-                          <FaEdit style={{ marginRight: 4 }} /> Edit
-                        </button>
-                      )}
+                      <button
+                        onClick={() => setShowEdit(true)}
+                        title="Edit Profile"
+                        type="button"
+                      >
+                        <FaEdit style={{ marginRight: 4 }} /> Edit
+                      </button>
                     </div>
                     <div className="text-neutral-500 mb-10 mt-5">
                       <span className="text-md">
@@ -755,17 +754,6 @@ const ProfilePage = () => {
                 {/* Left Card (profile summary) */}
                 <div className="col-lg-4">
                   <div className="border border-neutral-30 rounded-12 bg-white p-8 mb-24 position-relative">
-                    {canEdit && (
-                      <button
-                        className="btn btn-outline-primary btn-sm position-absolute top-0 end-0 mt-3 me-3 shadow"
-                        onClick={() => setShowEdit(true)}
-                        title="Edit Profile"
-                        type="button"
-                        style={{ display: "inline-flex", alignItems: "center", height: 40, zIndex: 2 }}
-                      >
-                        <FaEdit style={{ marginRight: 4 }} /> Edit
-                      </button>
-                    )}
                     <div className="border border-neutral-30 rounded-12 bg-main-25 p-32 bg-main-25 text-center">
                       <div className="p-16 border border-neutral-50 rounded-circle aspect-ratio-1 max-w-150 max-h-150 mx-auto position-relative">
                         <img
@@ -861,6 +849,13 @@ const ProfilePage = () => {
                       >
                         {user?.name || "No Name"}
                       </h2>
+                      <button
+                        onClick={() => setShowEdit(true)}
+                        title="Edit Profile"
+                        type="button"
+                      >
+                        <FaEdit style={{ marginRight: 4 }} /> Edit
+                      </button>
                     </div>
                     <div className="mb-16 text-neutral-700 fw-medium text-md">
                       {learnerProfile.skillLevel || "N/A"}
@@ -1137,6 +1132,3 @@ const ProfilePage = () => {
 };
 
 export default ProfilePage;
-
-
-
