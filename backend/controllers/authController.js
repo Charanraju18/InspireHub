@@ -147,6 +147,7 @@ const { User } = require("../models/user");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
+const { sendWelcomeEmail } = require("../utils/mailer");
 
 exports.login = async (req, res) => {
   try {
@@ -224,6 +225,8 @@ exports.fullSignup = async (req, res) => {
 
     const newUser = new User(userData);
     await newUser.save();
+
+    await sendWelcomeEmail(newUser.email, newUser.name, newUser.role);
 
     const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",

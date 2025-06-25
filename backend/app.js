@@ -111,6 +111,8 @@ app.use((err, req, res, next) => {
   res.status(500).send("Something broke!");
 });
 
+require("./utils/reminderScheduler");
+
 // Start Server
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

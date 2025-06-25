@@ -118,11 +118,11 @@ function App() {
         <Route exact path="/product-details" element={<ProductDetailsPage />} />
         <Route exact path="/sign-in" element={<SignInPage />} />
         <Route exact path="/sign-up" element={<SignUpPage />} />
+        <Route exact path="/forgot" element={<ForgotPage />} />
         <Route exact path="/tuition-jobs" element={<TuitionJobsPage />} />
         <Route exact path="/tutor" element={<TutorPage />} />
         <Route exact path="/tutor-details" element={<TutorDetailsPage />} />
         <Route exact path="/profile" element={<ProfilePage />} />
-        <Route exact path="/forgot" element={<ForgotPage />} />
         <Route
           exact
           path="/reset-password/:token"
