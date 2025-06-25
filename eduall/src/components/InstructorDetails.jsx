@@ -1,6 +1,14 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useAuth } from "../authContext";
+import { useRef } from "react";
+
+function toLocalDateTimeInputValue(isoString) {
+  if (!isoString) return "";
+  const date = new Date(isoString);
+  const tzOffset = date.getTimezoneOffset() * 60000; // Convert offset to milliseconds
+  return new Date(date - tzOffset).toISOString().slice(0, 16);
+}
 
 const InstructorDetails = ({
   instructor: propInstructor,
@@ -18,35 +26,52 @@ const InstructorDetails = ({
   const [followLoading, setFollowLoading] = useState(false);
   const [showUnfollowModal, setShowUnfollowModal] = useState(false);
 
-  useEffect(() => {
-    if (propInstructor) {
-      setInstructor(propInstructor);
-      setLoading(false);
-      // Fetch followers if instructor is available from props
-      if (propInstructor?._id && isAuthenticated) {
-        fetchFollowers();
+  const [showOptions, setShowOptions] = useState(false);
+  const [liveEvents, setLiveEvents] = useState([]);
+  const [editableEvent, setEditableEvent] = useState(null);
+  const [showForm, setShowForm] = useState(false);
+
+  const dropdownRef = useRef(null);
+
+  const fetchInstructorDetails = async (instructorId) => {
+    try {
+      const res = await fetch(
+        `http://localhost:5000/api/auth/instructors/${instructorId}`
+      );
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.msg || "Failed to fetch instructor");
+
+      setInstructor(data);
+
+      // Fetch followers only if authenticated and instructor is loaded
+      if (data?._id && isAuthenticated) {
+        fetchFollowers(data._id); // 👈 pass id directly
       }
-      return;
+    } catch (err) {
+      setError(err.message);
+      console.error("Error fetching instructor:", err);
+    } finally {
+      setLoading(false);
     }
-    const fetchInstructor = async () => {
-      try {
-        const res = await fetch(
-          `http://localhost:5000/api/auth/instructors/${id}`
-        );
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.msg || "Failed to fetch instructor");
-        setInstructor(data);
-        // Fetch followers after instructor is set
-        if (data?._id && isAuthenticated) {
-          fetchFollowers();
-        }
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowOptions(null);
       }
     };
-    if (id) fetchInstructor();
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!propInstructor && id) {
+      fetchInstructorDetails(id);
+    }
   }, [id, propInstructor, isAuthenticated]);
 
   useEffect(() => {
@@ -86,7 +111,7 @@ const InstructorDetails = ({
         }
       );
       const data = await res.json();
-      console.log("Followers API response:", data); 
+      console.log("Followers API response:", data);
       if (res.ok && data.data) setFollowersCount(data.data.followersCount);
     } catch (err) {
       console.error("Error fetching followers:", err);
@@ -153,7 +178,6 @@ const InstructorDetails = ({
     }
   };
 
-
   const handleUnfollow = async () => {
     const instructorId = instructor?._id || id;
     if (!instructorId) return;
@@ -177,6 +201,50 @@ const InstructorDetails = ({
       console.error("Error in unfollow:", err);
     } finally {
       setFollowLoading(false);
+    }
+  };
+
+  // Function to delete a live event
+  const handleDelete = async (eventId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/events/${eventId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (response.ok) {
+        alert("Event deleted successfully!");
+
+        // ✅ Re-fetch updated instructor data from backend
+        const instructorId = propInstructor?._id || id;
+        fetchInstructorDetails(instructorId);
+      } else {
+        alert("Failed to delete the event.");
+      }
+    } catch (error) {
+      console.error("Error deleting event:", error);
+      alert("An error occurred while deleting the event.");
+    }
+  };
+
+  // Function to fetch event data and load it into an editable form
+  const handleUpdate = async (eventId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/events/${eventId}`
+      );
+      if (response.ok) {
+        const eventData = await response.json();
+        setEditableEvent(eventData); // Pre-fill form with fetched data
+        setShowForm(true);
+      } else {
+        alert("Failed to fetch event data.");
+      }
+    } catch (error) {
+      console.error("Error fetching event data:", error);
+      alert("An error occurred while fetching event data.");
     }
   };
 
@@ -283,7 +351,7 @@ const InstructorDetails = ({
                         <li className="social-list__item" key={key}>
                           <a
                             href={val}
-                            className="text-main-600 text-xl hover-text-white w-40 h-40 rounded-circle border border-main-600 hover-bg-main-600 flex-center"
+                            className="text-black text-xl hover-text-white w-40 h-40 rounded-circle border border-black hover-bg-black flex-center"
                             target="_blank"
                             rel="noopener noreferrer"
                           >
@@ -292,16 +360,16 @@ const InstructorDetails = ({
                                 key === "linkedin"
                                   ? "ph-bold ph-linkedin-logo"
                                   : key === "github"
-                                    ? "ph-bold ph-github-logo"
-                                    : key === "twitter"
-                                      ? "ph-bold ph-twitter-logo"
-                                      : key === "portfolio"
-                                        ? "ph-bold ph-globe"
-                                        : key === "youtube"
-                                          ? "ph-bold ph-youtube-logo"
-                                          : key === "instagram"
-                                            ? "ph-bold ph-instagram-logo"
-                                            : "ph-bold ph-globe"
+                                  ? "ph-bold ph-github-logo"
+                                  : key === "twitter"
+                                  ? "ph-bold ph-twitter-logo"
+                                  : key === "portfolio"
+                                  ? "ph-bold ph-globe"
+                                  : key === "youtube"
+                                  ? "ph-bold ph-youtube-logo"
+                                  : key === "instagram"
+                                  ? "ph-bold ph-instagram-logo"
+                                  : "ph-bold ph-globe"
                               }
                             />
                           </a>
@@ -312,22 +380,22 @@ const InstructorDetails = ({
                 <span className="d-block border border-neutral-30 my-20 border-dashed" />
                 <div className="d-flex flex-column gap-16 align-items-center">
                   <div className="flex-align gap-8">
-                    <i className="ph ph-phone text-primary" />
+                    <i className="ph ph-phone text-black" />
                     <span className="text-neutral-700">
                       {instructor.phoneNumber || "N/A"}
                     </span>
                   </div>
                   <div className="flex-align gap-8">
-                    <i className="ph ph-envelope text-success-600" />
+                    <i className="ph ph-envelope text-black" />
                     <a
                       href={`mailto:${instructor.email}`}
-                      className="text-neutral-700 hover-text-main-600"
+                      className="text-neutral-700 hover-text-black"
                     >
                       {instructor.email}
                     </a>
                   </div>
                   <div className="flex-align gap-8">
-                    <i className="ph ph-map-pin text-warning" />
+                    <i className="ph ph-map-pin text-black" />
                     <span className="text-neutral-700">
                       {instructor.location || "N/A"}
                     </span>
@@ -368,7 +436,7 @@ const InstructorDetails = ({
                         required
                       ></textarea>
                     </div>
-                    <button type="submit" className="btn btn-main w-100">
+                    <button type="submit" className="btn btn-black w-100">
                       Send Message
                     </button>
                   </form>
@@ -378,7 +446,7 @@ const InstructorDetails = ({
           </div>
           <div className="col-lg-8">
             <div className="ps-lg-5">
-              <h5 className="text-main-600 mb-0">Instructor</h5>
+              <h5 className="text-black mb-0">Instructor</h5>
               <div className="d-flex justify-content-between align-items-center my-16 flex-wrap">
                 <h2
                   className="mb-0"
@@ -387,13 +455,15 @@ const InstructorDetails = ({
                   {instructor.name}
                 </h2>
                 <span>
-                  {!hideGetInTouch && !isOwnProfile && isAuthenticated && (
-                    isFollowing ? (
+                  {!hideGetInTouch &&
+                    !isOwnProfile &&
+                    isAuthenticated &&
+                    (isFollowing ? (
                       <button
                         type="button"
                         onClick={() => setShowUnfollowModal(true)}
                         className="btn w-125 text-white"
-                        style={{ backgroundColor: "green" }}
+                        style={{ backgroundColor: "black" }}
                         disabled={followLoading}
                       >
                         ✔ Following
@@ -403,13 +473,12 @@ const InstructorDetails = ({
                         type="button"
                         onClick={handleFollow}
                         className="btn w-125 text-white"
-                        style={{ backgroundColor: "#066CCB" }}
+                        style={{ backgroundColor: "black" }}
                         disabled={followLoading}
                       >
                         + Follow
                       </button>
-                    )
-                  )}
+                    ))}
                 </span>
               </div>
               <div className="mb-16 text-neutral-700 fw-medium text-md">
@@ -477,15 +546,15 @@ const InstructorDetails = ({
                   </span>
                   <span className="text-md text-neutral-700 fw-semibold">
                     {instructor.instructorProfile?.reviews &&
-                      instructor.instructorProfile.reviews.length > 0
+                    instructor.instructorProfile.reviews.length > 0
                       ? (
-                        instructor.instructorProfile.reviews.reduce(
-                          (acc, r) =>
-                            acc +
-                            (typeof r.rating === "number" ? r.rating : 0),
-                          0
-                        ) / instructor.instructorProfile.reviews.length
-                      ).toFixed(1)
+                          instructor.instructorProfile.reviews.reduce(
+                            (acc, r) =>
+                              acc +
+                              (typeof r.rating === "number" ? r.rating : 0),
+                            0
+                          ) / instructor.instructorProfile.reviews.length
+                        ).toFixed(1)
                       : 0}
                     <span className="text-neutral-100 fw-normal">
                       ({instructor.instructorProfile?.reviews?.length || "0"})
@@ -559,7 +628,7 @@ const InstructorDetails = ({
             <h4 className="mb-24">Roadmaps Shared</h4>
             <div className="row gy-4 mb-32">
               {instructor.instructorProfile?.content?.roadmapsShared?.length >
-                0 ? (
+              0 ? (
                 instructor.instructorProfile.content.roadmapsShared.map(
                   (roadmap, idx) => (
                     <div className="col-lg-4 col-md-6 col-12" key={idx}>
@@ -586,20 +655,213 @@ const InstructorDetails = ({
             </div>
             <span className="d-block border border-neutral-30 my-40 border-dashed" />
             <h4 className="mb-24">Live Events Hosted</h4>
+            {showForm && editableEvent && (
+              <div className="mt-5 p-4 border rounded bg-light">
+                <h5>Edit Event: {editableEvent.title}</h5>
+                <form
+                  onSubmit={async (e) => {
+                    e.preventDefault();
+                    try {
+                      const res = await fetch(
+                        `http://localhost:5000/api/events/${editableEvent._id}`,
+                        {
+                          method: "PUT",
+                          headers: {
+                            "Content-Type": "application/json",
+                          },
+                          body: JSON.stringify(editableEvent),
+                        }
+                      );
+                      const data = await res.json();
+                      if (res.ok) {
+                        alert("Event updated successfully.");
+                        setShowForm(false);
+                        const instructorId = propInstructor?._id || id;
+                        fetchInstructorDetails(instructorId);
+                      } else {
+                        alert(data.message || "Update failed.");
+                      }
+                    } catch (err) {
+                      console.error("Update error:", err);
+                      alert("An error occurred during update.");
+                    }
+                  }}
+                >
+                  <div className="mb-3">
+                    <label>Title</label>
+                    <input
+                      className="form-control"
+                      value={editableEvent.title || ""}
+                      onChange={(e) =>
+                        setEditableEvent({
+                          ...editableEvent,
+                          title: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <label>Start Time</label>
+                    <input
+                      type="datetime-local"
+                      className="form-control"
+                      value={
+                        editableEvent.schedule?.startTime
+                          ? toLocalDateTimeInputValue(
+                              editableEvent.schedule.startTime
+                            )
+                          : ""
+                      }
+                      onChange={(e) =>
+                        setEditableEvent({
+                          ...editableEvent,
+                          schedule: {
+                            ...editableEvent.schedule,
+                            startTime: new Date(e.target.value).toISOString(),
+                          },
+                        })
+                      }
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <label>End Time</label>
+                    <input
+                      type="datetime-local"
+                      className="form-control"
+                      value={
+                        editableEvent.schedule?.endTime
+                          ? toLocalDateTimeInputValue(
+                              editableEvent.schedule.endTime
+                            )
+                          : ""
+                      }
+                      onChange={(e) =>
+                        setEditableEvent({
+                          ...editableEvent,
+                          schedule: {
+                            ...editableEvent.schedule,
+                            endTime: new Date(e.target.value).toISOString(),
+                          },
+                        })
+                      }
+                    />
+                  </div>
+
+                  <button type="submit" className="btn btn-primary">
+                    Save Changes
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-secondary ms-3"
+                    onClick={() => setShowForm(false)}
+                  >
+                    Cancel
+                  </button>
+                </form>
+              </div>
+            )}
+
             <div className="row gy-4">
               {instructor.instructorProfile?.content?.liveEventsHosted?.length >
-                0 ? (
+              0 ? (
                 instructor.instructorProfile.content.liveEventsHosted.map(
                   (event, idx) => (
                     <div className="col-lg-6 col-md-12 col-12" key={idx}>
+                      <div className="position-relative">
+                        <button
+                          className="btn btn-light p-2 rounded-circle"
+                          style={{
+                            border: "none",
+                            cursor: "pointer",
+                            position: "absolute",
+                            top: 8,
+                            right: 8,
+                            zIndex: 1050, // Ensure the button stays above other elements
+                          }}
+                          onClick={() =>
+                            setShowOptions((prev) =>
+                              prev === idx ? null : idx
+                            )
+                          }
+                        >
+                          <i
+                            className="ph-bold ph-dots-three-vertical"
+                            style={{ color: "black", fontSize: "24px" }} // Adjust the font size as needed
+                          />
+                        </button>
+                        {showOptions === idx && (
+                          <div
+                            ref={dropdownRef}
+                            className="position-absolute bg-white border rounded-12 shadow-sm"
+                            style={{
+                              top: "40px",
+                              right: 0,
+                              zIndex: 1000,
+                              minWidth: 150,
+                              padding: "8px 8px",
+                              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                            }}
+                          >
+                            <button
+                              className="dropdown-item text-start px-3 py-2"
+                              style={{
+                                fontSize: "18px",
+                                color: "#333",
+                                backgroundColor: "transparent",
+                                border: "none",
+                                cursor: "pointer",
+                                transition: "background-color 0.2s ease",
+                              }}
+                              onClick={() => handleUpdate(event._id)} // Pass event ID to update handler
+                              onMouseEnter={(e) =>
+                                (e.target.style.backgroundColor = "#F3F9FF")
+                              }
+                              onMouseLeave={(e) =>
+                                (e.target.style.backgroundColor = "transparent")
+                              }
+                            >
+                              Update
+                            </button>
+                            <button
+                              className="dropdown-item text-start px-3 py-2 text-danger"
+                              style={{
+                                fontSize: "18px",
+                                color: "#dc3545",
+                                backgroundColor: "transparent",
+                                border: "none",
+                                cursor: "pointer",
+                                transition: "background-color 0.2s ease",
+                              }}
+                              onClick={() => {
+                                const confirmDelete = window.confirm(
+                                  "Are you sure you want to delete this event?"
+                                );
+                                if (confirmDelete) {
+                                  handleDelete(event._id);
+                                }
+                              }} // Pass event ID to delete handler
+                              onMouseEnter={(e) =>
+                                (e.target.style.backgroundColor = "#F3F9FF")
+                              }
+                              onMouseLeave={(e) =>
+                                (e.target.style.backgroundColor = "transparent")
+                              }
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        )}
+                      </div>
                       <div className="course-item bg-white rounded-16 p-12 h-100 box-shadow-md d-flex flex-column flex-md-row align-items-md-center gap-24">
                         <div
                           className="course-item__thumb rounded-12 overflow-hidden position-relative mb-3 mb-md-0"
                           style={{ minWidth: 220, maxWidth: 320 }}
                         >
-                          {event.image ? (
+                          {event.schedule.image ? (
                             <img
-                              src={event.image}
+                              src={event.schedule.image}
                               alt={event.title || "Event"}
                               className="course-item__img rounded-12 cover-img transition-2 w-100"
                               style={{ height: 180, objectFit: "cover" }}
@@ -614,28 +876,30 @@ const InstructorDetails = ({
                           )}
                         </div>
                         <div className="course-item__content flex-grow-1">
-                          <h5 className="mb-2">
+                          <h5 className="mb-5">
                             {event.title || "Untitled Event"}
                           </h5>
-                          <div className="mb-2 text-neutral-700 fw-medium text-md">
-                            {event.date ||
-                              (event.startDate
-                                ? new Date(event.startDate).toLocaleDateString()
-                                : "")}
+                          <div className="mb-2 text-neutral-700">
+                            <div className="mb-5">
+                              <strong>🕒 Start:</strong>{" "}
+                              {new Date(
+                                event.schedule.startTime
+                              ).toLocaleString("en-IN", {
+                                dateStyle: "short",
+                                timeStyle: "short",
+                              }) || "No start time available."}
+                            </div>
+                            <div>
+                              <strong>🕓 End:</strong>{" "}
+                              {new Date(event.schedule.endTime).toLocaleString(
+                                "en-IN",
+                                {
+                                  dateStyle: "short",
+                                  timeStyle: "short",
+                                }
+                              ) || "No end time available."}
+                            </div>
                           </div>
-                          <div className="mb-2 text-neutral-500">
-                            {event.description || "No description available."}
-                          </div>
-                          {event.link && (
-                            <a
-                              href={event.link}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-main-600 fw-semibold"
-                            >
-                              View Details <i className="ph ph-arrow-right" />
-                            </a>
-                          )}
                         </div>
                       </div>
                     </div>

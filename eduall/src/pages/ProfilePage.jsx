@@ -6,6 +6,177 @@ import axios from "axios";
 import { useAuth } from "../authContext";
 import InstructorDetails from "../components/InstructorDetails";
 import FooterTwo from "../components/FooterTwo";
+import { FaEdit } from "react-icons/fa";
+
+const ProfileEditForm = ({ user, learnerProfile, onClose, onUpdate }) => {
+  const [formData, setFormData] = useState({ ...user });
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+
+  // Only allow editing of certain fields
+  const editableFields = [
+    "name",
+    "gender",
+    "location",
+    "bio",
+    "profilePicture",
+  ];
+
+  // For learners, allow editing interestedDomains, skillLevel, currentEducation, yearOfStudy
+  const learnerFields = learnerProfile
+    ? [
+      "skillLevel",
+      "currentEducation",
+      "yearOfStudy",
+      "interestedDomains",
+    ]
+    : [];
+
+  // Handle input changes
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // Handle array fields (like interestedDomains)
+  const handleArrayChange = (name, value) => {
+    setFormData((prev) => ({ ...prev, [name]: value.split(",").map((v) => v.trim()) }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setError("");
+    try {
+      let token = localStorage.getItem("token");
+      const updateData = { ...formData };
+      // Remove non-editable fields
+      delete updateData._id;
+      delete updateData.email;
+      delete updateData.phoneNumber;
+      delete updateData.role;
+      // For learners, merge learnerProfile fields
+      if (learnerProfile) {
+        updateData.learnerProfile = {
+          ...learnerProfile,
+          skillLevel: formData.skillLevel,
+          currentEducation: formData.currentEducation,
+          yearOfStudy: formData.yearOfStudy,
+          interestedDomains: formData.interestedDomains,
+        };
+      }
+      const res = await axios.put(
+        "http://localhost:5000/api/auth/update-profile",
+        updateData,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      onUpdate(res.data);
+      onClose();
+    } catch (err) {
+      setError(
+        err.response?.data?.msg || err.response?.data?.error || "Update failed."
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100vw",
+        height: "100vh",
+        background: "rgba(0,0,0,0.4)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 9999,
+      }}
+    >
+      <form
+        onSubmit={handleSubmit}
+        style={{
+          background: "#fff",
+          borderRadius: 12,
+          padding: 32,
+          minWidth: 350,
+          boxShadow: "0 4px 32px rgba(0,0,0,0.15)",
+          textAlign: "left",
+        }}
+      >
+        <h4 className="mb-3">Edit Profile</h4>
+        {editableFields.map((field) => (
+          <div className="mb-3" key={field}>
+            <label className="form-label" style={{ fontWeight: 500 }}>
+              {field.charAt(0).toUpperCase() + field.slice(1)}
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              name={field}
+              value={formData[field] || ""}
+              onChange={handleChange}
+              disabled={submitting}
+            />
+          </div>
+        ))}
+        {learnerFields.map((field) => (
+          <div className="mb-3" key={field}>
+            <label className="form-label" style={{ fontWeight: 500 }}>
+              {field === "interestedDomains"
+                ? "Interested Domains (comma separated)"
+                : field.charAt(0).toUpperCase() + field.slice(1)}
+            </label>
+            {field === "interestedDomains" ? (
+              <input
+                type="text"
+                className="form-control"
+                name={field}
+                value={
+                  Array.isArray(formData[field])
+                    ? formData[field].join(", ")
+                    : formData[field] || ""
+                }
+                onChange={(e) => handleArrayChange(field, e.target.value)}
+                disabled={submitting}
+              />
+            ) : (
+              <input
+                type="text"
+                className="form-control"
+                name={field}
+                value={formData[field] || ""}
+                onChange={handleChange}
+                disabled={submitting}
+              />
+            )}
+          </div>
+        ))}
+        {error && <div className="text-danger mb-2">{error}</div>}
+        <div className="d-flex justify-content-end gap-2 mt-4">
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={onClose}
+            disabled={submitting}
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            className="btn btn-success"
+            disabled={submitting}
+          >
+            {submitting ? "Updating..." : "Update Profile"}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+};
 
 const ProfilePage = () => {
   const { user: authUser } = useAuth();
@@ -13,6 +184,7 @@ const ProfilePage = () => {
   const [learnerProfile, setLearnerProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [showEdit, setShowEdit] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -62,6 +234,14 @@ const ProfilePage = () => {
     <>
       <HeaderOne />
       <Breadcrumb title={"Profile"} />
+      {showEdit && (
+        <ProfileEditForm
+          user={user}
+          learnerProfile={user.role === "Learner" ? learnerProfile : null}
+          onClose={() => setShowEdit(false)}
+          onUpdate={handleUpdate}
+        />
+      )}
       {loading ? (
         <>
           <div className="text-center py-5">
@@ -142,16 +322,16 @@ const ProfilePage = () => {
                                       key === "linkedin"
                                         ? "ph-bold ph-linkedin-logo"
                                         : key === "github"
-                                        ? "ph-bold ph-github-logo"
-                                        : key === "twitter"
-                                        ? "ph-bold ph-twitter-logo"
-                                        : key === "portfolio"
-                                        ? "ph-bold ph-globe"
-                                        : key === "youtube"
-                                        ? "ph-bold ph-youtube-logo"
-                                        : key === "instagram"
-                                        ? "ph-bold ph-instagram-logo"
-                                        : "ph-bold ph-globe"
+                                          ? "ph-bold ph-github-logo"
+                                          : key === "twitter"
+                                            ? "ph-bold ph-twitter-logo"
+                                            : key === "portfolio"
+                                              ? "ph-bold ph-globe"
+                                              : key === "youtube"
+                                                ? "ph-bold ph-youtube-logo"
+                                                : key === "instagram"
+                                                  ? "ph-bold ph-instagram-logo"
+                                                  : "ph-bold ph-globe"
                                     }
                                   />
                                 </a>
@@ -190,13 +370,21 @@ const ProfilePage = () => {
                 <div className="col-lg-8">
                   <div className="ps-lg-5">
                     <h5 className="text-main-600 mb-0">Learner</h5>
-                    <div className="d-flex align-items-center gap-12 my-16 flex-wrap">
+                    <div className="d-flex align-items-center gap-12 my-16 flex-wrap" style={{ position: "relative" }}>
                       <h2
                         className="mb-0"
                         style={{ fontWeight: 600, fontSize: "2rem" }}
                       >
                         {user.name}
                       </h2>
+                      <button
+                        className="btn btn-outline-primary btn-sm"
+                        style={{ position: "absolute", right: 0, top: 0 }}
+                        onClick={() => setShowEdit(true)}
+                        title="Edit Profile"
+                      >
+                        <FaEdit /> Edit
+                      </button>
                     </div>
                     <div className="mb-16 text-neutral-700 fw-medium text-md">
                       {learnerProfile.skillLevel || "N/A"}
@@ -268,19 +456,6 @@ const ProfilePage = () => {
                         <span className="text-neutral-400">N/A</span>
                       )}
                     </div>
-                    {/* <span className="d-block border border-neutral-30 my-40 border-dashed" /> */}
-                    {/* Badges Section */}
-                    {/* <h4 className="mb-24">Badges</h4>
-                  <div className="d-flex flex-wrap gap-8 mb-32">
-                    {user.learnerProfile.badges?.length > 0 ? (
-                      user.learnerProfile.badges.map((badge, idx) => (
-                        <span key={idx} className="badge bg-success-100 text-success-700 border border-success-200 fw-normal mb-4">{badge}</span>
-                      ))
-                    ) : (
-                      <span className="text-neutral-400">N/A</span>
-                    )}
-                  </div>
-                  <span className="d-block border border-neutral-30 my-40 border-dashed" /> */}
                   </div>
                 </div>
               </div>{" "}
@@ -322,48 +497,51 @@ const ProfilePage = () => {
                   <div className="row gy-4 mb-32">
                     {/* Registered Events */}
                     {learnerProfile.followingContent?.registeredEvents?.length >
-                    0 ? (
+                      0 ? (
                       learnerProfile.followingContent.registeredEvents.map(
                         (event, idx) => (
-                          <div
-                            className="col-md-6 col-12"
-                            key={"reg-event-" + idx}
-                          >
-                            <div className="course-item bg-primary-100 rounded-16 p-24 h-100 box-shadow-md d-flex flex-column flex-md-row align-items-md-center gap-24">
+                          <div className="col-lg-6 col-md-12 col-12" key={idx}>
+                            <div className="course-item bg-white rounded-16 p-12 h-100 box-shadow-md d-flex flex-column flex-md-row align-items-md-center gap-24">
                               <div
                                 className="course-item__thumb rounded-12 overflow-hidden position-relative mb-3 mb-md-0"
-                                style={{ minWidth: 120, maxWidth: 180 }}
+                                style={{ minWidth: 220, maxWidth: 320 }}
                               >
-                                {event.image ? (
+                                {event.schedule.image ? (
                                   <img
-                                    src={event.image}
-                                    alt={event.title}
-                                    className="course-item__img rounded-12 cover-img transition-2 w-100"
-                                    style={{ height: 100, objectFit: "cover" }}
+                                    src={event.schedule.image}
+                                    alt={event.title || "Event"}
+                                    className="course-item__img rounded-12 cover-img transition-2 w-70"
+                                    style={{ height: 120, objectFit: "cover" }}
                                   />
                                 ) : (
                                   <div
                                     className="bg-main-25 rounded-12 d-flex align-items-center justify-content-center"
-                                    style={{ height: 100 }}
+                                    style={{ height: 180 }}
                                   >
-                                    <i className="ph-bold ph-calendar text-2xl text-main-600" />
+                                    <i className="ph-bold ph-calendar text-4xl text-main-600" />
                                   </div>
                                 )}
                               </div>
                               <div className="course-item__content flex-grow-1">
-                                <h5 className="mb-2">
+                                <h5 className="mb-5">
                                   {event.title || "Untitled Event"}
                                 </h5>
-                                {event.date && (
-                                  <div className="mb-2 text-neutral-700 fw-medium text-md">
-                                    {event.date}
+                                <div className="mb-2 text-neutral-700">
+                                  <div className="mb-5">
+                                    <strong>🕒 Start:</strong>{" "}
+                                    {new Date(event.schedule.startTime).toLocaleString("en-IN", {
+                                      dateStyle: "short",
+                                      timeStyle: "short",
+                                    }) || "No start time available."}
                                   </div>
-                                )}
-                                {event.description && (
-                                  <div className="mb-2 text-neutral-500">
-                                    {event.description}
+                                  <div>
+                                    <strong>🕓 End:</strong>{" "}
+                                    {new Date(event.schedule.endTime).toLocaleString("en-IN", {
+                                      dateStyle: "short",
+                                      timeStyle: "short",
+                                    }) || "No end time available."}
                                   </div>
-                                )}
+                                </div>
                               </div>
                             </div>
                           </div>

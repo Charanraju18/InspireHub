@@ -113,7 +113,7 @@ const HeaderOne = () => {
               {/* Logo Start */}
               <div className="logo">
                 <Link to="/" className="link">
-                  <img src="assets/images/logo/logoo.png" alt="Logo" />
+                  <img src="/assets/images/logo/logoo.png" alt="Logo" />
                 </Link>
               </div>
               {/* Menu Start  */}
@@ -250,7 +250,7 @@ const HeaderOne = () => {
         </button>
         <div className="mobile-menu__inner">
           <Link to="/" className="mobile-menu__logo">
-            <img src="assets/images/logo/logo.png" alt="Logo" />
+            <img src="/assets/images/logo/logoo.png" alt="Logo" />
           </Link>
           <div className="mobile-menu__menu">
             <ul className="nav-menu flex-align nav-menu--mobile">

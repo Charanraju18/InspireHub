@@ -38,17 +38,17 @@ exports.createEvent = async (req, res) => {
     if (!createdBy) {
       return res.status(400).json({ error: "createdBy (User) is required" });
     }
-  
-    const newEvent = new Event({ 
+
+    const newEvent = new Event({
       title: body.title,
       intro: body.intro,
       joinLink: body.joinLink,
       sections: parsedSections,
-      schedule: { 
-        ...parsedSchedule, 
-        image: base64Image 
+      schedule: {
+        ...parsedSchedule,
+        image: base64Image,
       },
-      createdBy
+      createdBy,
     });
 
     await newEvent.save();
@@ -60,15 +60,15 @@ exports.createEvent = async (req, res) => {
       { new: true }
     );
 
-    res.status(201).json({ message: "Event created and added to instructor's profile.", event: newEvent });
-
+    res.status(201).json({
+      message: "Event created and added to instructor's profile.",
+      event: newEvent,
+    });
   } catch (err) {
     console.error("Error saving event:", err.message);
     res.status(500).json({ error: "Failed to save event" });
   }
 };
-
-
 
 // GET: All events
 exports.getAllEvents = async (req, res) => {
@@ -84,9 +84,49 @@ exports.getAllEvents = async (req, res) => {
 exports.getEventById = async (req, res) => {
   try {
     const event = await Event.findById(req.params.id);
+    console.log(event);
     if (!event) return res.status(404).json({ message: "Event not found" });
     res.json(event);
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+};
+
+// PUT: Update event by ID
+exports.updateEvent = async (req, res) => {
+  try {
+    const eventId = req.params.id;
+    const updatedData = req.body;
+
+    const updatedEvent = await Event.findByIdAndUpdate(eventId, updatedData, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!updatedEvent) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+
+    res.json({ message: "Event updated successfully", event: updatedEvent });
+  } catch (error) {
+    console.error("Update error:", error.message);
+    res.status(500).json({ message: "Failed to update event" });
+  }
+};
+
+// DELETE: Delete event by ID
+exports.deleteEvent = async (req, res) => {
+  try {
+    const eventId = req.params.id;
+    const deletedEvent = await Event.findByIdAndDelete(eventId);
+
+    if (!deletedEvent) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+
+    res.json({ message: "Event deleted successfully" });
+  } catch (error) {
+    console.error("Delete error:", error.message);
+    res.status(500).json({ message: "Failed to delete event" });
   }
 };
