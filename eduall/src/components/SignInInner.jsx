@@ -22,15 +22,20 @@ const SignInInner = () => {
         email,
         password,
       });
+
+       console.log("📦 Login response:", res.data); 
+
       if (res.data && res.data.user) {
-        login(res.data.user, res.data.token);
-        console.log(res.data.user);
-        
-        navigate("/");
+        localStorage.setItem("userEmail", res.data.user.email); // ✅ Store only email
+        localStorage.setItem("token", res.data.token);          // Optional: store token
+        login(res.data.user, res.data.token);                   // Update auth context
+        console.log("📦 Login success:", res.data.user.email);
+        navigate("/");                                          // Redirect after login
       } else {
         setError("Invalid credentials or account does not exist.");
       }
     } catch (err) {
+      console.error("❌ Login error:", err);
       setError(
         err.response?.data?.message ||
           "Invalid credentials or account does not exist."
@@ -59,6 +64,7 @@ const SignInInner = () => {
                   Sign in to your account and join us
                 </p>
               </div>
+
               <form onSubmit={handleSubmit}>
                 <div className="mb-24">
                   <label
@@ -74,8 +80,10 @@ const SignInInner = () => {
                     placeholder="Enter Your Email..."
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    required
                   />
                 </div>
+
                 <div className="mb-16">
                   <label
                     htmlFor="password"
@@ -91,16 +99,20 @@ const SignInInner = () => {
                       placeholder="Enter Your Password..."
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
+                      required
                     />
                     <span
                       className={`toggle-password position-absolute top-50 inset-inline-end-0 me-16 translate-middle-y ph-bold ${
                         passwordVisible ? "ph-eye" : "ph-eye-closed"
                       }`}
                       onClick={togglePasswordVisibility}
+                      role="button"
                     ></span>
                   </div>
                 </div>
+
                 {error && <div className="text-danger mb-2">{error}</div>}
+
                 <div className="mb-16 text-end">
                   <Link
                     to="/forgot"
@@ -109,6 +121,7 @@ const SignInInner = () => {
                     Forget password
                   </Link>
                 </div>
+
                 <div className="mb-16">
                   <p className="text-neutral-500">
                     Don't have an account?{" "}
@@ -120,6 +133,7 @@ const SignInInner = () => {
                     </Link>
                   </p>
                 </div>
+
                 <div className="mt-40">
                   <button
                     type="submit"
@@ -132,9 +146,11 @@ const SignInInner = () => {
               </form>
             </div>
           </div>
-          {/* <div className='col-lg-6 d-lg-block d-none'>
-            <div className='account-img'>
-              <img src='assets/images/thumbs/account-img.png' alt='' />
+
+          {/* Uncomment below if you want to include the image section */}
+          {/* <div className="col-lg-6 d-lg-block d-none">
+            <div className="account-img">
+              <img src="assets/images/thumbs/account-img.png" alt="Login Visual" />
             </div>
           </div> */}
         </div>
@@ -144,4 +160,3 @@ const SignInInner = () => {
 };
 
 export default SignInInner;
-

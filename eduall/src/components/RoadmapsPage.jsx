@@ -37,21 +37,19 @@ const RoadmapsPage = () => {
     try {
       setLoading(true);
       setError("");
-      
+
       console.log("🔍 Fetching roadmaps with filters:", filters);
 
-      
-      
       // ✅ Check if any filters are applied
-      const hasFilters = filters.search.trim() || filters.domain.trim() || 
-                        filters.difficulty.trim() || filters.techstack.trim();
-      
+      const hasFilters = filters.search.trim() || filters.domain.trim() ||
+        filters.difficulty.trim() || filters.techstack.trim();
+
       let url = "http://localhost:5000/api/roadmaps";
-      
+
       if (hasFilters) {
         // ✅ Build query parameters
         const queryParams = new URLSearchParams();
-        
+
         if (filters.search.trim()) {
           queryParams.append('search', filters.search.trim());
         }
@@ -64,7 +62,7 @@ const RoadmapsPage = () => {
         if (filters.techstack.trim()) {
           queryParams.append('techstack', filters.techstack.trim());
         }
-        
+
         url = `http://localhost:5000/api/roadmaps/search?${queryParams.toString()}`;
       }
 
@@ -89,7 +87,7 @@ const RoadmapsPage = () => {
         }
         throw new Error(errorMessage);
       }
-      
+
       const data = await response.json();
       console.log("✅ Received data:", data.length, "roadmaps");
 
@@ -136,51 +134,38 @@ const RoadmapsPage = () => {
   //   console.log("🔖 Bookmarked roadmap:", roadmapId);
   // };
 
-const handleBookmark = async (roadmapId) => {
-  const token = localStorage.getItem("token");
-  const email = localStorage.getItem("userEmail"); // ✅ needed for userId
-  if (!token || !email) return alert("Please login first.");
+const handleBookmark = async (roadmap) => {
+  const userId = localStorage.getItem("userEmail");
+  console.log("🧪 Retrieved userId from localStorage:", userId);
 
-  const roadmap = roadmaps.find((r) => r._id === roadmapId);
-  if (!roadmap) {
-    console.error("Roadmap not found:", roadmapId);
-    return alert("Roadmap not found.");
+  if (!userId) {
+    alert("Please login to bookmark this roadmap.");
+    return;
   }
 
-  // ✅ Build a minimal roadmap object to send
-  const roadmapToSend = {
-    _id: roadmap._id,
-    title: roadmap.title,
-    description: roadmap.description,
-    thumbnail: roadmap.thumbnail,
+  const payload = {
+    userId,
+    roadmap: {
+      _id: roadmap._id,
+      title: roadmap.title,
+      description: roadmap.description,
+      thumbnail: roadmap.thumbnail,
+    },
   };
 
-  try {
-    const res = await axios.post(
-      "http://localhost:5000/api/wishlist/add",
-      {
-        userId: email,
-        roadmap: roadmapToSend,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+  console.log("📦 Payload being sent:", payload);
 
-    if (res.status === 200) {
-      alert("Bookmarked successfully!");
-    } else {
-      alert(res.data.message || "Bookmark failed.");
+  try {
+    const response = await axios.post("http://localhost:5000/api/wishlist/add", payload);
+    if (response.status === 200) {
+      console.log("✅ Added to wishlist:", response.data);
+      alert("Roadmap added to wishlist!");
     }
-  } catch (err) {
-    console.error("Bookmark error:", err);
-    alert(err?.response?.data?.message || "Failed to bookmark.");
+  } catch (error) {
+    console.error("❌ Error adding to wishlist:", error);
+    alert("Failed to bookmark. Try again.");
   }
 };
-
-
 
   const handleShare = (roadmap) => {
     const shareUrl = `${window.location.origin}/roadmap/${roadmap._id}`;
@@ -224,17 +209,17 @@ const handleBookmark = async (roadmapId) => {
               <button className="btn btn-primary" onClick={fetchRoadmaps}>
                 🔄 Try Again
               </button>
-              <button 
-                className="btn btn-outline-secondary" 
+              <button
+                className="btn btn-outline-secondary"
                 onClick={clearFilters}
               >
                 🗑️ Clear Filters
               </button>
             </div>
             <small className="text-muted d-block">
-              <strong>Debug Info:</strong><br/>
-              • Check if backend server is running on port 5000<br/>
-              • Current filters: {JSON.stringify(filters)}<br/>
+              <strong>Debug Info:</strong><br />
+              • Check if backend server is running on port 5000<br />
+              • Current filters: {JSON.stringify(filters)}<br />
               • Try clearing filters and reload the page
             </small>
           </div>
@@ -348,7 +333,7 @@ const handleBookmark = async (roadmapId) => {
             </div>
             <h4 className="text-neutral-500 mb-16">No roadmaps found</h4>
             <p className="text-neutral-400 mb-16">
-              {filters.search || filters.domain || filters.difficulty 
+              {filters.search || filters.domain || filters.difficulty
                 ? "Try adjusting your filters or search terms"
                 : "No roadmaps available at the moment"
               }
@@ -375,31 +360,30 @@ const handleBookmark = async (roadmapId) => {
                         e.target.src = "/assets/images/thumbs/course-img1.png";
                       }}
                     />
-                    
+
                     {/* Difficulty Badge */}
-                    <span className={`position-absolute top-3 end-3 badge fw-medium text-white px-3 py-2 ${
-                      roadmap.difficulty === 'Beginner' ? 'bg-success' :
+                    <span className={`position-absolute top-3 end-3 badge fw-medium text-white px-3 py-2 ${roadmap.difficulty === 'Beginner' ? 'bg-success' :
                       roadmap.difficulty === 'Intermediate' ? 'bg-warning' : 'bg-danger'
-                    }`}>
+                      }`}>
                       {roadmap.difficulty}
                     </span>
 
-                  
+
                   </div>
 
                   {/* Content */}
                   <div className="p-24">
                     {/* Title */}
                     <h5 className="mb-16 line-break-title">
-  <Link
-    to={`/roadmap/${roadmap._id}`}
-    className="text-decoration-none text-dark hover-text-primary transition-1"
-  >
-    {roadmap.title.length > 25
-      ? `${roadmap.title.substring(0, 20)}...`
-      : roadmap.title}
-  </Link>
-</h5>
+                      <Link
+                        to={`/roadmap/${roadmap._id}`}
+                        className="text-decoration-none text-dark hover-text-primary transition-1"
+                      >
+                        {roadmap.title.length > 25
+                          ? `${roadmap.title.substring(0, 20)}...`
+                          : roadmap.title}
+                      </Link>
+                    </h5>
 
 
                     {/* Description */}
@@ -418,7 +402,7 @@ const handleBookmark = async (roadmapId) => {
                         <FaCompass className="text-info" size={14} />
                         <span className="text-sm text-neutral-600">{roadmap.domain}</span>
                       </div>
-                      
+
                       <div className="d-flex align-items-center gap-2 mb-2">
                         <FaClock className="text-warning" size={14} />
                         <span className="text-sm text-neutral-600">{roadmap.duration} weeks</span>
@@ -430,28 +414,30 @@ const handleBookmark = async (roadmapId) => {
                       </div>
                     </div>
                     <div className="position-absolute top-50 translate-middle-y end-0 d-flex gap-2">
-                    <button
-                      className="btn btn-sm btn-light rounded-circle p-2 opacity-75 hover-opacity-100"
-                    onClick={() => handleLike(roadmap._id)}
-                    title="Like"
-                    >
-                    <FaHeart className="text-danger" size={20} />
-                  </button>
-                  <button
-                    className="btn btn-sm btn-light rounded-circle p-2 opacity-75 hover-opacity-100"
-                  onClick={() => handleBookmark(roadmap._id)}
-                title="Bookmark"
-                  >
-               <FaBookmark className="text-primary" size={20} />
-              </button>
-              <button
-              className="btn btn-sm btn-light rounded-circle p-2 opacity-75 hover-opacity-100"
-              onClick={() => handleShare(roadmap)}
-              title="Share"
-                >
-    <FaShare className="text-success" size={20} />
-  </button>
-</div>
+                      <button
+                        className="btn btn-sm btn-light rounded-circle p-2 opacity-75 hover-opacity-100"
+                        onClick={() => handleLike(roadmap._id)}
+                        title="Like"
+                      >
+                        <FaHeart className="text-danger" size={20} />
+                      </button>
+                      
+                      <button
+                        className="btn btn-sm btn-light rounded-circle p-2 opacity-75 hover-opacity-100"
+                        onClick={() => handleBookmark(roadmap)}
+                        title="Bookmark"
+                      >
+                        <FaBookmark className="text-primary" size={20} />
+                      </button>
+
+                      <button
+                        className="btn btn-sm btn-light rounded-circle p-2 opacity-75 hover-opacity-100"
+                        onClick={() => handleShare(roadmap)}
+                        title="Share"
+                      >
+                        <FaShare className="text-success" size={20} />
+                      </button>
+                    </div>
 
                     {/* Tech Stack Tags */}
                     {roadmap.techstack && roadmap.techstack.length > 0 && (
@@ -501,7 +487,7 @@ const handleBookmark = async (roadmapId) => {
                           className="btn btn-primary btn-sm px-3 py-2"
                         >
                           <FaEye size={18} className="me-1" />
-                         &nbsp; View 
+                          &nbsp; View
                         </Link>
                       </div>
                     </div>
