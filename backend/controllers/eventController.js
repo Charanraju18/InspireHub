@@ -98,14 +98,22 @@ exports.updateEvent = async (req, res) => {
     const eventId = req.params.id;
     const updatedData = req.body;
 
+    // Fetch existing event
+    const existingEvent = await Event.findById(eventId);
+    if (!existingEvent) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+
+    // If reminderSent is currently true, reset it to false
+    if (existingEvent.reminderSent === true) {
+      updatedData.reminderSent = false;
+    }
+
+    // Proceed with update
     const updatedEvent = await Event.findByIdAndUpdate(eventId, updatedData, {
       new: true,
       runValidators: true,
     });
-
-    if (!updatedEvent) {
-      return res.status(404).json({ message: "Event not found" });
-    }
 
     res.json({ message: "Event updated successfully", event: updatedEvent });
   } catch (error) {
@@ -113,6 +121,7 @@ exports.updateEvent = async (req, res) => {
     res.status(500).json({ message: "Failed to update event" });
   }
 };
+
 
 // DELETE: Delete event by ID
 exports.deleteEvent = async (req, res) => {

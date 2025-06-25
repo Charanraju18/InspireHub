@@ -44,7 +44,9 @@ const RoadmapsAll = () => {
                     tabIndex={0}
                   >
                     <img
-                      src={roadmap.thumbnail || "/images/default-thumbnail.jpg"}
+                      src={
+                        roadmap.thumbnail || "/images/thumbs/createRoadmap.png"
+                      }
                       alt="Roadmap Thumbnail"
                       className="scale-hover-item__img rounded-12 cover-img transition-2"
                     />

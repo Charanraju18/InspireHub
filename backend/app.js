@@ -47,10 +47,6 @@
 //   console.log(`Server running on http://localhost:${PORT}`);
 // });
 
-
-
-
-
 // -----------------------------------
 const express = require("express");
 const cors = require("cors");
@@ -113,6 +109,7 @@ app.use((err, req, res, next) => {
   res.status(500).send("Something broke!");
 });
 
+require("./utils/reminderScheduler");
 
 // Start Server
 app.listen(PORT, () => {

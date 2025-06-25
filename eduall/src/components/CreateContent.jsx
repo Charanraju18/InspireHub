@@ -7,13 +7,13 @@ const CreateContent = () => {
     {
       title: "Create Roadmap",
       description: "Design and share a structured roadmap for learners.",
-      image: "/assets/images/thumbs/blog-img1.png", // Replace with your actual image path
+      image: "/assets/images/thumbs/createRoadmap.png",
       redirect: "/create-roadmap",
     },
     {
       title: "Create Live Event",
       description: "Host a live session for students to join and learn.",
-      image: "/assets/images/thumbs/blog-img1.png", // Replace with your actual image path
+      image: "/assets/images/thumbs/createLiveEvent.png",
       redirect: "/create-event",
     },
   ];
@@ -35,7 +35,11 @@ const CreateContent = () => {
                   src={card.image}
                   alt={card.title}
                   className="rounded-12 w-100"
-                  style={{ height: "200px", objectFit: "cover" }}
+                  style={{
+                    height: "200px",
+                    objectFit: "contain",
+                    backgroundColor: "#f8f9fa",
+                  }}
                 />
               </div>
 

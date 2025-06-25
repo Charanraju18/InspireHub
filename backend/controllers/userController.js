@@ -1,4 +1,6 @@
 const { User } = require("../models/user");
+const { sendRegistrationMail } = require("../utils/mailer");
+const Event = require("../models/events");
 
 const isRegisteredForEvent = async (req, res) => {
   try {
@@ -29,6 +31,7 @@ const registerForEvent = async (req, res) => {
 
   try {
     const user = await User.findById(userId);
+    const event = await Event.findById(eventId);
 
     if (!user || user.role !== "Learner") {
       return res.status(403).json({ message: "Only learners can register" });
@@ -55,11 +58,17 @@ const registerForEvent = async (req, res) => {
     user.learnerProfile.followingContent.registeredEvents.push(eventId);
     await user.save();
 
+    // Send confirmation email
+    if (user.email && event) {
+      await sendRegistrationMail(user.email, event.title);
+    }
+
     res.status(200).json({ message: "Successfully registered for the event" });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
+
 
 module.exports = { registerForEvent, isRegisteredForEvent };
