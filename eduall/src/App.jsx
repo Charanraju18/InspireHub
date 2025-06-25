@@ -51,6 +51,7 @@ import ResetPassPage from "./pages/ResetPassPage.jsx";
 import ForgotPage from "./pages/ForgotPassPage.jsx";
 import CreateContentPage from "./pages/CreateContentPage.jsx";
 import RoadmapDetails from "./components/RoadmapDetails";
+import WishlistPage from "./pages/WishlistPage";
 
 
 function App() {
@@ -105,6 +106,7 @@ function App() {
         <Route exact path="/find-tutors" element={<FindTutorsPage />} />
         <Route exact path="/gallery" element={<GalleryPage />} />
         <Route exact path="/instructor" element={<InstructorPage />} />
+        <Route path="/wishlist" element={<WishlistPage />} />
         <Route
           exact
           path="/instructor-details/:id"
