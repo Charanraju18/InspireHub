@@ -204,42 +204,18 @@ const VisualRoadmapSteps = ({ steps }) => {
       </div>
 
       {steps.map((step, index) => {
-        // Calculate horizontal position for the step (center of step)
         const horizontalSpreadFactor = 100 / (steps.length + 1);
         const leftPositionPercentage = (index + 0.5) * horizontalSpreadFactor;
         const leftPosition = `${leftPositionPercentage}%`;
-
-        // Calculate the X position in pixels relative to the container's *content area*
-        // account for padding of 20px on each side.
-        const effectiveContainerWidth = containerDimensions.width - 40; // 20px left + 20px right padding
-        const stepXCenterPx = (leftPositionPercentage / 100) * effectiveContainerWidth + 20; // Add left padding back
-
-        // Calculate the Y position of the roadline's top edge at this X
-        // Y_roadline_top_edge_at_X = (Roadline's 'top' CSS in px) + (offset from rotation)
+        const effectiveContainerWidth = containerDimensions.width - 40; 
+        const stepXCenterPx = (leftPositionPercentage / 100) * effectiveContainerWidth + 20; 
         const roadlineAbsoluteTopPx = (roadlineInitialTopPercent / 100) * containerDimensions.height;
         const roadlineTranslateYPx = (roadlineHeightPx * roadlineTranslateYPercent) / 100;
-
-        // Visual Y of the roadline's pivot point (left center) relative to container's top
         const roadlinePivotY = roadlineAbsoluteTopPx + roadlineTranslateYPx;
-
-        // Y displacement due to rotation at stepXCenterPx
-        // Note: tan() returns positive for angles in Q1/Q3, negative for Q2/Q4.
-        // Our angle is -23deg (Q4), so tan will be negative, meaning Y decreases as X increases.
-        // The roadline is descending from left to right.
         const yOffsetDueToRotation = stepXCenterPx * Math.tan(roadlineAngleRadians);
-
-        // The Y coordinate of the roadline's *center line* at this step's X
         const roadlineCenterYAtStepX = roadlinePivotY + yOffsetDueToRotation;
-
-        // We want the *bottom of the step circle* to be `desiredGapPx` above the roadline's center line.
-        // So, target Y for the bottom of the step circle is `roadlineCenterYAtStepX - desiredGapPx`.
         const targetStepCircleBottomY = roadlineCenterYAtStepX - desiredGapPx;
-
-        // The 'top' CSS property positions the *top* of the element.
-        // So, step's top = (target Y for bottom of circle) - (height of step circle)
         const topPositionPx = targetStepCircleBottomY - stepCircleHeightPx;
-
-        // Convert calculated pixel topPosition back to percentage for CSS
         const topPosition = `${(topPositionPx / containerDimensions.height) * 100}%`;
 
         return (

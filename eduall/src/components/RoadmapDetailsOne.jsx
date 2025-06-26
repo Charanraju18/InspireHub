@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import {  FaBookmark } from "react-icons/fa";
+import Reviews from "./Discussions";
+
 
 
 // This component handles the visual roadmap steps and their precise alignment with the roadline.
@@ -734,6 +736,7 @@ const RoadmapDetails = () => {
             <VisualRoadmapSteps steps={roadmap.steps} />
           </div>
         </div>
+        <Reviews/>
       </div>
     );
   };

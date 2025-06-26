@@ -1,0 +1,28 @@
+const express = require('express');
+const Contact = require('../models/contact');
+const router = express.Router();
+const authMiddleware = require("../middleware/authMiddleware")
+
+router.post('/', authMiddleware, async (req, res) => {
+    const { name, email, phone, message } = req.body;
+
+    try {
+        const contact = new Contact({ name, email, phone, message });
+        await contact.save();
+        res.status(201).json({ message: 'Contact form submitted successfully!' });
+    } catch (error) {
+        res.status(500).json({ message: 'Server Error' });
+    }
+});
+
+router.get("/", async (req, res) => {
+  try {
+    const contacts = await Contact.find();
+    res.json(contacts);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching contacts" });
+  }
+});
+
+
+module.exports = router;
