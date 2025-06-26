@@ -87,7 +87,8 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // Routes
 app.use("/api/events", require("./routes/eventRoutes"));
 app.use("/api/auth", require("./routes/authRoutes"));
-
+app.use("/api/roadmaps", require("./routes/roadmapRoutes"));
+app.use("/api/follow-instructors", require("./routes/followRoutes"));
 // <<<<<<< HEAD
 app.use("/api/posts", require("./routes/postRoutes"));
 app.use("/api/follow-instructors", require("./routes/followRoutes"));

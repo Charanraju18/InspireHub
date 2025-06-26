@@ -140,13 +140,13 @@ const FooterThree = () => {
                       to='/tel:(207)555-0119'
                       className='text-white d-block hover-text-main-600 mb-4'
                     >
-                      (207) 555-0119
+                      (+91) 1234567890
                     </Link>
                     <Link
                       to='/tel:(704)555-0127'
                       className='text-white d-block hover-text-main-600 mb-0'
                     >
-                      (704) 555-0127
+                      (+91) 2314567891
                     </Link>
                   </div>
                 </div>
@@ -159,7 +159,7 @@ const FooterThree = () => {
                       to='/mailto:dwallo@gmail.com'
                       className='text-white d-block hover-text-main-600 mb-4'
                     >
-                      dwallo@gmail.com
+                      inspirehub@gmail.com
                     </Link>
                     <Link
                       to='/mailto:eduAll@gmail.com'
@@ -175,10 +175,10 @@ const FooterThree = () => {
                   </span>
                   <div className=''>
                     <span className='text-white d-block mb-4'>
-                      5488 srker Rd .
+                      ABD Rd .
                     </span>
                     <span className='text-white d-block mb-0'>
-                      8745 doer Dr.
+                      Aditya University ,Surampalem.
                     </span>
                   </div>
                 </div>
