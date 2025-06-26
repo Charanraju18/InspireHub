@@ -52,14 +52,13 @@ import ForgotPage from "./pages/ForgotPassPage.jsx";
 import CreateContentPage from "./pages/CreateContentPage.jsx";
 import RoadmapDetails from "./components/RoadmapDetails";
 
-
 function App() {
   return (
     <BrowserRouter>
       <RouteScrollToTop />
       <Routes>
         {/* <Route exact path='/' element={<HomePage />} /> */}
-        <Route exact path='/' element={<HomePageTwo />} />
+        <Route exact path="/" element={<HomePageTwo />} />
         {/* <Route exact path='/index-2' element={<HomePageTwo />} /> */}
         {/* <Route exact path='/index-3' element={<HomePageThree />} />
         <Route exact path='/index-4' element={<HomePageFour />} />

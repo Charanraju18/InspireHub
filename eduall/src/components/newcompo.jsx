@@ -10,10 +10,6 @@ const CourseDetails = () => {
   const [replies, setReplies] = useState({});
   const [reviewText, setReviewText] = useState("");
 
-  // Added for load more
-  const [visibleReviews, setVisibleReviews] = useState(2);
-  const [visibleReplies, setVisibleReplies] = useState({});
-
   const defaultProfile =
     "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
@@ -36,14 +32,11 @@ const CourseDetails = () => {
         if (res.data.length > 0) {
           setReviews(res.data);
           const initialReplies = {};
-          const initialVisible = {};
           res.data.forEach((review, i) => {
             initialReplies[i] = { temp: "", list: review.replies || [] };
-            initialVisible[i] = 2;
           });
           setReplies(initialReplies);
-          setVisibleReplies(initialVisible); // Added
-        }
+        } 
       } catch (error) {
         console.error("Error fetching reviews:", error);
       }
@@ -110,7 +103,6 @@ const CourseDetails = () => {
       );
       setReviews((prev) => [res.data, ...prev]);
       setReplies((prev) => ({ 0: { temp: "", list: [] }, ...prev }));
-      setVisibleReplies((prev) => ({ 0: 2, ...prev }));
       setReviewText("");
     } catch (error) {
       console.error("Error submitting review:", error);
@@ -118,18 +110,6 @@ const CourseDetails = () => {
         alert("You need to log in to submit a review.");
       }
     }
-  };
-
-  // Load more handlers
-  const loadMoreReviews = () => {
-    setVisibleReviews((prev) => prev + 2);
-  };
-
-  const loadMoreReplies = (index) => {
-    setVisibleReplies((prev) => ({
-      ...prev,
-      [index]: (prev[index] || 2) + 2,
-    }));
   };
 
   if (!roadmap) {
@@ -160,7 +140,7 @@ const CourseDetails = () => {
                 <div className="review-section">
                   <h4>All Reviews</h4>
 
-                  {reviews.slice(0, visibleReviews).map((review, index) => (
+                  {reviews.map((review, index) => (
                     <div key={review._id} className="review-box">
                       <div className="review-content">
                         <img
@@ -181,37 +161,25 @@ const CourseDetails = () => {
                       </div>
 
                       <div className="reply-block">
-                        {(replies[index]?.list || [])
-                          .slice(0, visibleReplies[index] || 2)
-                          .map((r, i) => (
-                            <div key={i} className="reply-display">
-                              <img
-                                src={
-                                  r.user?.profilePicture
-                                    ? r.user.profilePicture
-                                    : defaultProfile
-                                }
-                                alt={r.user?.name || "User"}
-                                className="reply-avatar"
-                              />
-                              <div>
-                                <h6 className="reply-name">
-                                  {r.user?.name || "Unknown User"}
-                                </h6>
-                                <p className="reply-text">{r.text}</p>
-                              </div>
+                        {(replies[index]?.list || []).map((r, i) => (
+                          <div key={i} className="reply-display">
+                            <img
+                              src={
+                                r.user?.profilePicture
+                                  ? r.user.profilePicture
+                                  : defaultProfile
+                              }
+                              alt={r.user?.name || "User"}
+                              className="reply-avatar"
+                            />
+                            <div>
+                              <h6 className="reply-name">
+                                {r.user?.name || "Unknown User"}
+                              </h6>
+                              <p className="reply-text">{r.text}</p>
                             </div>
-                          ))}
-
-                        {(replies[index]?.list?.length || 0) >
-                          (visibleReplies[index] || 2) && (
-                          <button
-                            className="load-more-replies"
-                            onClick={() => loadMoreReplies(index)}
-                          >
-                            Load More Replies
-                          </button>
-                        )}
+                          </div>
+                        ))}
 
                         <div className="reply-section">
                           <button
@@ -245,15 +213,6 @@ const CourseDetails = () => {
                       </div>
                     </div>
                   ))}
-
-                  {visibleReviews < reviews.length && (
-                    <button
-                      className="load-more-reviews"
-                      onClick={loadMoreReviews}
-                    >
-                      Load More Reviews
-                    </button>
-                  )}
                 </div>
 
                 <form className="review-form" onSubmit={handleReviewSubmit}>
@@ -270,8 +229,6 @@ const CourseDetails = () => {
           </div>
         </div>
       </div>
-
-      {/* Keep original styles + append new ones */}
       <style>{styles}</style>
     </section>
   );
@@ -417,21 +374,6 @@ const styles = `
 .review-form button:hover {
   background-color: #0056b3;
 }
-        .load-more-reviews,
-        .load-more-replies {
-          margin-top: 10px;
-          padding: 6px 12px;
-          background-color: #007bff;
-          color: white;
-          border: none;
-          border-radius: 6px;
-          cursor: pointer;
-        }
-
-        .load-more-reviews:hover,
-        .load-more-replies:hover {
-          background-color: #0056b3;
-        }
 
 /* ------------------- RESPONSIVE ------------------- */
 @media (max-width: 768px) {
