@@ -265,7 +265,7 @@ const ContactInner = () => {
                 </span>
                 <div className="flex-grow-1">
                   <h4 className="mb-12">Main Office</h4>
-                  <p className="text-neutral-500">2972 Westheimer Rd. Santa Ana, Illinois 85486</p>
+                  <p className="text-neutral-500">San Francisco Bay Area, California</p>
                   <Link
                     to="#"
                     className="text-main-600 fw-semibold text-decoration-underline mt-16"
@@ -282,8 +282,8 @@ const ContactInner = () => {
                 </span>
                 <div className="flex-grow-1">
                   <h4 className="mb-12">Email Address</h4>
-                  <p className="text-neutral-500">infoexample@gmail.com</p>
-                  <p className="text-neutral-500">example@gmail.com</p>
+                  <p className="text-neutral-500">inspirehub@gmail.com</p>
+                  <p className="text-neutral-500">officeexample@gmail.com</p>
                   <a
                     href="mailto:infoexample@gmail.com"
                     className="text-main-600 fw-semibold text-decoration-underline mt-16"
@@ -300,8 +300,8 @@ const ContactInner = () => {
                 </span>
                 <div className="flex-grow-1">
                   <h4 className="mb-12">Phone Number</h4>
-                  <p className="text-neutral-500">(505) 555-0125</p>
-                  <p className="text-neutral-500">(406) 555-0120</p>
+                  <p className="text-neutral-500">9090909090</p>
+                  <p className="text-neutral-500">0000444452</p>
                   <a
                     href="tel:(406)555-0120"
                     className="text-main-600 fw-semibold text-decoration-underline mt-16"
