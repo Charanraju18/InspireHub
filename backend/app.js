@@ -64,6 +64,13 @@ const PORT = process.env.PORT || 3000;
 // Connect to MongoDB
 connectDB();
 
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
+
 // Middleware
 app.use(
   cors({
@@ -71,6 +78,7 @@ app.use(
     credentials: true,
   })
 );
+
 app.use(bodyParser.json({ limit: "10mb" }));
 app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
@@ -82,13 +90,14 @@ app.use("/api/roadmaps", require("./routes/roadmapRoutes"));
 app.use("/api/follow-instructors", require("./routes/followRoutes"));
 // <<<<<<< HEAD
 app.use("/api/posts", require("./routes/postRoutes"));
+app.use("/api/follow-instructors", require("./routes/followRoutes"));
 
 // Root Route
 // =======
 app.use("/api/roadmaps", require("./routes/roadmapRoutes"));
-app.use("/", require("./routes/nodeMailerRoute"));
-app.use("/api/reviews", require("./routes/reviewRoutes"));
-//comments route
+app.use("/api/mail", require("./routes/nodeMailerRoute"));
+app.use("/api/users", require("./routes/userRoutes"));
+app.use("/api/wishlist", require("./routes/wishlistRoutes"));
 // >>>>>>> main
 app.get("/", (req, res) => {
   res.send("Hello from Express and MongoDB!");
@@ -99,6 +108,8 @@ app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send("Something broke!");
 });
+
+require("./utils/reminderScheduler");
 
 // Start Server
 app.listen(PORT, () => {

@@ -4,6 +4,7 @@ import HeaderOne from "../components/HeaderOne";
 import ForgotPassComp from "../components/ForgotPassComp";
 import Animation from "../helper/Animation";
 import Preloader from "../helper/Preloader";
+import FooterTwo from "../components/FooterTwo";
 
 const ForgotPassPage = () => {
   return (
@@ -24,7 +25,7 @@ const ForgotPassPage = () => {
       <ForgotPassComp />
 
       {/* FooterOne */}
-      <FooterOne />
+      <FooterTwo />
     </>
   );
 };

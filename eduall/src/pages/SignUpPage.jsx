@@ -4,7 +4,7 @@ import HeaderOne from "../components/HeaderOne";
 import SignUpInner from "../components/SignUpInner";
 import Animation from "../helper/Animation";
 import Preloader from "../helper/Preloader";
-
+import FooterTwo from "../components/FooterTwo";
 const SignUpPage = () => {
   return (
     <>
@@ -24,7 +24,7 @@ const SignUpPage = () => {
       <SignUpInner />
 
       {/* FooterOne */}
-      <FooterOne />
+      <FooterTwo />
     </>
   );
 };

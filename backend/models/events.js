@@ -1,7 +1,11 @@
 const mongoose = require("mongoose");
 
 const eventSchema = new mongoose.Schema({
-  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
   title: { type: String, required: true },
   intro: { type: String, required: true },
   sections: [
@@ -21,6 +25,10 @@ const eventSchema = new mongoose.Schema({
     location: { type: String, required: true },
   },
   joinLink: { type: String, required: true },
+  reminderSent: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const Event = mongoose.models.Event || mongoose.model("Event", eventSchema);

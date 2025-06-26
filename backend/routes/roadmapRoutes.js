@@ -5,12 +5,14 @@ const {
   getAllRoadmaps,
   createRoadmap,
   getRoadmapById,
-  searchRoadmaps,       // ✅ Fixed search
-  getUniqueDomains,     // ✅ New - for home page domains
+  searchRoadmaps,       
+  getUniqueDomains,     
   deleteRoadmap,
   addStepToRoadmap,
   updateRoadmap,
   getRoadmapsByUser,
+  followRoadmap,
+  unfollowRoadmap
 } = require("../controllers/roadmapController");
 
 // ✅ Public routes - IMPORTANT: Order matters! More specific routes first
@@ -25,5 +27,7 @@ router.delete("/:id", authMiddleware, deleteRoadmap);
 router.put("/:id/add-step", authMiddleware, addStepToRoadmap);
 router.put("/:id", authMiddleware, updateRoadmap);
 router.get("/user/my-roadmaps", authMiddleware, getRoadmapsByUser);
+router.post("/:id/follow", authMiddleware, followRoadmap);
+router.post("/:id/unfollow", authMiddleware, unfollowRoadmap);
 
 module.exports = router;
