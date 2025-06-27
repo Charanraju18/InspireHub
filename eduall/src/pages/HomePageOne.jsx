@@ -57,7 +57,7 @@ const HomePageOne = () => {
       <BlogOne />
 
       {/* CertificateOne */}
-      <CertificateOne />
+      {/* <CertificateOne /> */}
 
       {/* FooterOne */}
       <FooterOne />

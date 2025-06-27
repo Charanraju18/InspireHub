@@ -33,7 +33,7 @@ const InstructorDetailsPage = () => {
       {/* <TestimonialsTwo /> */}
 
       {/* CertificateOne */}
-      <CertificateOne />
+      {/* <CertificateOne /> */}
 
       {/* FooterOne */}
       <FooterOne />

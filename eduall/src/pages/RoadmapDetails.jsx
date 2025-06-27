@@ -25,7 +25,7 @@ const RoadmapDetailsPage = () => {
       <RoadmapDetailsOne />
 
       {/* CertificateOne */}
-      <CertificateOne />
+      {/* <CertificateOne /> */}
 
       {/* FooterOne */}
       <FooterOne />

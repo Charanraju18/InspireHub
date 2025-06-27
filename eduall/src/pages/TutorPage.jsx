@@ -25,7 +25,7 @@ const TutorPage = () => {
       <TutorSectionOne />
 
       {/* CertificateOne */}
-      <CertificateOne />
+      {/* <CertificateOne /> */}
 
       {/* FooterOne */}
       <FooterOne />

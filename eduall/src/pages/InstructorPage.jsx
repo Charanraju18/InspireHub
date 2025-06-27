@@ -25,7 +25,7 @@ const InstructorPage = () => {
       <InstructorAll />
 
       {/* CertificateOne */}
-      <CertificateOne />
+      {/* <CertificateOne /> */}
 
       {/* FooterOne */}
       <FooterOne />

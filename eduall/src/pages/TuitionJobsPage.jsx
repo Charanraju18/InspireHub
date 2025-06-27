@@ -25,7 +25,7 @@ const TuitionJobsPage = () => {
       <TuitionJobs />
 
       {/* CertificateOne */}
-      <CertificateOne />
+      {/* <CertificateOne /> */}
 
       {/* FooterOne */}
       <FooterOne />
