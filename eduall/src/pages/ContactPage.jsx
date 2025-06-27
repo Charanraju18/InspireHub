@@ -29,7 +29,7 @@ const ContactPage = () => {
       <ContactInner />
 
       {/* CertificateOne */}
-      <CertificateOne />
+      {/* <CertificateOne /> */}
 
       {/* FooterOne */}
       <FooterOne />

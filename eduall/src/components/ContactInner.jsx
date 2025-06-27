@@ -1,202 +1,3 @@
-// import { Link } from "react-router-dom";
-// import axios from "axios";
-// import { useState } from "react";
-
-// const ContactInner = () => {
-//   const [formData, setFormData] = useState({
-//     name: "",
-//     email: "",
-//     phone: "",
-//     message: "",
-//   });
-
-//   const handleChange = (e) => {
-//     const { name, value } = e.target;
-//     setFormData({ ...formData, [name]: value });
-
-//   };
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     const token = localStorage.getItem("token");
-//     try {
-//       console.log("hi from akhi");
-//       console.log(formData);
-//       const response = await axios.post("http://localhost:5000/api/contact",
-//         formData, {
-//         withCredentials: true,
-//         headers: {
-//           Authorization: `Bearer ${token}`,
-//         },
-//       });
-//       alert(response.data.message);
-//       setFormData({
-//         name: "",
-//         email: "",
-//         phone: "",
-//         message: "",
-//       });
-//     } catch (error) {
-//       alert("Failed to submit form. Please try again later.");
-//     }
-//   };
-
-//   return (
-//     <>
-//       <section className="contact py-120">
-//         <div className="container">
-//           <div className="section-heading text-center">
-//             <div className="flex-align d-inline-flex gap-8 mb-16">
-//               <span className="text-main-600 text-2xl d-flex">
-//                 <i className="ph-bold ph-book" />
-//               </span>
-//               <h5 className="text-main-600 mb-0">Get In Touch</h5>
-//             </div>
-//             <h2 className="mb-24">Let us help you</h2>
-//             <p>
-//               Our platform is built on the principles of innovation, quality,
-//               and inclusivity, aiming to provide a seamless learning experience.
-//             </p>
-//           </div>
-//           <div className="row gy-4">
-//             <div className="col-xl-4 col-md-6">
-//               <div className="contact-item bg-main-25 border border-neutral-30 rounded-12 px-32 py-40 d-flex align-items-start gap-24 hover-bg-main-600 transition-2 hover-border-main-600">
-//                 <span className="contact-item__icon w-60 h-60 text-32 flex-center rounded-circle bg-main-600 text-white flex-shrink-0">
-//                   <i className="ph ph-map-pin-line" />
-//                 </span>
-//                 <div className="flex-grow-1">
-//                   <h4 className="mb-12">Main Office</h4>
-//                   <p className="text-neutral-500">2972 Westheimer Rd. Santa Ana, Illinois 85486</p>
-//                   <Link
-//                     to="#"
-//                     className="text-main-600 fw-semibold text-decoration-underline mt-16"
-//                   >
-//                     Find Location
-//                   </Link>
-//                 </div>
-//               </div>
-//             </div>
-//             <div className="col-xl-4 col-md-6">
-//               <div className="contact-item bg-main-25 border border-neutral-30 rounded-12 px-32 py-40 d-flex align-items-start gap-24 hover-bg-main-600 transition-2 hover-border-main-600">
-//                 <span className="contact-item__icon w-60 h-60 text-32 flex-center rounded-circle bg-main-600 text-white flex-shrink-0">
-//                   <i className="ph ph-envelope-open" />
-//                 </span>
-//                 <div className="flex-grow-1">
-//                   <h4 className="mb-12">Email Address</h4>
-//                   <p className="text-neutral-500">infoexample@gmail.com</p>
-//                   <p className="text-neutral-500">example@gmail.com</p>
-//                   <a
-//                     href="mailto:infoexample@gmail.com"
-//                     className="text-main-600 fw-semibold text-decoration-underline mt-16"
-//                   >
-//                     Get In Touch
-//                   </a>
-//                 </div>
-//               </div>
-//             </div>
-//             <div className="col-xl-4 col-md-6">
-//               <div className="contact-item bg-main-25 border border-neutral-30 rounded-12 px-32 py-40 d-flex align-items-start gap-24 hover-bg-main-600 transition-2 hover-border-main-600">
-//                 <span className="contact-item__icon w-60 h-60 text-32 flex-center rounded-circle bg-main-600 text-white flex-shrink-0">
-//                   <i className="ph ph-phone-call" />
-//                 </span>
-//                 <div className="flex-grow-1">
-//                   <h4 className="mb-12">Phone Number</h4>
-//                   <p className="text-neutral-500">(505) 555-0125</p>
-//                   <p className="text-neutral-500">(406) 555-0120</p>
-//                   <a
-//                     href="tel:(406)555-0120"
-//                     className="text-main-600 fw-semibold text-decoration-underline mt-16"
-//                   >
-//                     Contact Us Today!
-//                   </a>
-//                 </div>
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       </section>
-//       <section className="contact-form-section py-240 bg-main-25 position-relative z-1">
-//         <div className="container">
-//           <div className="row gy-5 align-items-center">
-//             <div className="col-xl-5 col-lg-6">
-//               <div className="p-24 bg-white rounded-12 box-shadow-md">
-//                 <form onSubmit={handleSubmit} id="commentForm">
-//                   <h4 className="mb-0">Get In Touch</h4>
-//                   <div className="mb-24">
-//                     <label htmlFor="name" className="text-neutral-700 text-lg fw-medium mb-12">
-//                       Name
-//                     </label>
-//                     <input
-//                       type="text"
-//                       name="name"
-//                       value={formData.name}
-//                       onChange={handleChange}
-//                       className="common-input rounded-pill border-transparent focus-border-main-600"
-//                       placeholder="Enter Name..."
-//                       required
-//                     />
-//                   </div>
-//                   <div className="mb-24">
-//                     <label htmlFor="email" className="text-neutral-700 text-lg fw-medium mb-12">
-//                       Email
-//                     </label>
-//                     <input
-//                       type="email"
-//                       name="email"
-//                       value={formData.email}
-//                       onChange={handleChange}
-//                       className="common-input rounded-pill border-transparent focus-border-main-600"
-//                       placeholder="Enter Email..."
-//                       required
-//                     />
-//                   </div>
-//                   <div className="mb-24">
-//                     <label htmlFor="phone" className="text-neutral-700 text-lg fw-medium mb-12">
-//                       Phone
-//                     </label>
-//                     <input
-//                       type="tel"
-//                       name="phone"
-//                       value={formData.phone}
-//                       onChange={handleChange}
-//                       className="common-input rounded-pill border-transparent focus-border-main-600"
-//                       placeholder="Enter Your Number..."
-//                     />
-//                   </div>
-//                   <div className="mb-24">
-//                     <label htmlFor="message" className="text-neutral-700 text-lg fw-medium mb-12">
-//                       Message
-//                     </label>
-//                     <textarea
-//                       name="message"
-//                       value={formData.message}
-//                       onChange={handleChange}
-//                       className="common-input rounded-24 border-transparent focus-border-main-600 h-110"
-//                       placeholder="Enter Your Message..."
-//                       required
-//                     />
-//                   </div>
-//                   <div className="mb-0">
-//                     <button
-//                       type="submit"
-//                       className="btn btn-main rounded-pill flex-center gap-8 mt-40"
-//                     >
-//                       Send Message
-//                     </button>
-//                   </div>
-//                 </form>
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       </section>
-//     </>
-//   );
-// };
-
-// export default ContactInner;
-
-
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useState } from "react";
@@ -212,22 +13,22 @@ const ContactInner = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/contact",
-        formData,
-        {
-          withCredentials: true,
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      console.log("hi from akhi");
+      console.log(formData);
+      const response = await axios.post("http://localhost:5000/api/contact",
+        formData, {
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       alert(response.data.message);
       setFormData({
         name: "",
@@ -239,7 +40,6 @@ const ContactInner = () => {
       alert("Failed to submit form. Please try again later.");
     }
   };
-
   return (
     <>
       <section className="contact py-120">
@@ -285,7 +85,7 @@ const ContactInner = () => {
                   <p className="text-neutral-500">inspirehub@gmail.com</p>
                   <p className="text-neutral-500">officeexample@gmail.com</p>
                   <a
-                    href="mailto:infoexample@gmail.com"
+                    href="mailto:inspirehub@gmail.com"
                     className="text-main-600 fw-semibold text-decoration-underline mt-16"
                   >
                     Get In Touch
@@ -303,7 +103,7 @@ const ContactInner = () => {
                   <p className="text-neutral-500">9090909090</p>
                   <p className="text-neutral-500">0000444452</p>
                   <a
-                    href="tel:(406)555-0120"
+                    href="tel:9090909090"
                     className="text-main-600 fw-semibold text-decoration-underline mt-16"
                   >
                     Contact Us Today!
@@ -315,10 +115,10 @@ const ContactInner = () => {
         </div>
       </section>
       <section className="contact-form-section py-240 bg-main-25 position-relative z-1">
-         <img
-          src='assets/images/bg/wave-bg.png'
-          alt=''
-          className='position-absolute top-0 start-0 w-100 h-100 z-n1 d-lg-block d-none'
+        <img
+          src="assets/images/bg/wave-bg.png"
+          alt=""
+          className="position-absolute top-0 start-0 w-100 h-100 z-n1 d-lg-block d-none"
         />
 
         <div className="container">
@@ -343,24 +143,29 @@ const ContactInner = () => {
               </div>
             </div>
             <div className="col-xl-5 col-lg-6">
-              <div className="p-24 bg-white rounded-12 box-shadow-md">
-                <form onSubmit={handleSubmit} id="commentForm">
-                  <h4 className="mb-0">Get In Touch</h4>
-                  <div className="mb-24">
-                    <label htmlFor="name" className="text-neutral-700 text-lg fw-medium mb-12">
+               <div className="p-24 bg-white rounded-12 box-shadow-md">
+                 <form onSubmit={handleSubmit} id="commentForm">
+                   <h4 className="mb-0">Get In Touch</h4>
+                   <div className="mb-24">
+                     <label htmlFor="name" className="text-neutral-700 text-lg fw-medium mb-12">
                       Name
                     </label>
-                    <input
+                     <input
                       type="text"
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
-                      className="common-input rounded-pill border-transparent focus-border-main-600"
+                      className="common-input rounded-pill custom-input"
                       placeholder="Enter Name..."
                       required
+                       style={{
+      border: "1px solid grey !important",
+      padding: "15px",
+      borderRadius: "3px",
+    }}
                     />
                   </div>
-                  <div className="mb-24">
+                   <div className="mb-24">
                     <label htmlFor="email" className="text-neutral-700 text-lg fw-medium mb-12">
                       Email
                     </label>
@@ -369,9 +174,14 @@ const ContactInner = () => {
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
-                      className="common-input rounded-pill border-transparent focus-border-main-600"
+                       className="common-input rounded-pill custom-input"
                       placeholder="Enter Email..."
                       required
+                       style={{
+      border: "1px solid grey !important",
+      padding: "15px",
+      borderRadius: "3px",
+    }}
                     />
                   </div>
                   <div className="mb-24">
@@ -383,8 +193,13 @@ const ContactInner = () => {
                       name="phone"
                       value={formData.phone}
                       onChange={handleChange}
-                      className="common-input rounded-pill border-transparent focus-border-main-600"
+                      className="common-input rounded-pill custom-input"
                       placeholder="Enter Your Number..."
+                       style={{
+      border: "1px solid grey !important",
+      padding: "15px",
+      borderRadius: "3px",
+    }}
                     />
                   </div>
                   <div className="mb-24">
@@ -395,9 +210,14 @@ const ContactInner = () => {
                       name="message"
                       value={formData.message}
                       onChange={handleChange}
-                      className="common-input rounded-24 border-transparent focus-border-main-600 h-110"
+                       className="common-input rounded-pill custom-input"
                       placeholder="Enter Your Message..."
                       required
+                       style={{
+      border: "1px solid grey !important",
+      padding: "15px",
+      borderRadius: "3px",
+    }}
                     />
                   </div>
                   <div className="mb-0">
@@ -413,6 +233,7 @@ const ContactInner = () => {
             </div>
           </div>
         </div>
+
       </section>
     </>
   );
