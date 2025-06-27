@@ -270,7 +270,7 @@ const VisualRoadmapSteps = ({ steps }) => {
               className={`step-bubble ${hoveredStepId === step._id ? "hovered" : ""}`}
             >
               <strong>{step.title}</strong>
-              <h4>{step.description}</h4>
+              <p>{step.description}</p>
             </div>
           </div>
         );
