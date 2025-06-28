@@ -18,12 +18,15 @@ const SignInInner = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", {
-        email,
-        password,
-      });
+      const res = await axios.post(
+        "https://inspirehub-backend-itne.onrender.com/api/auth/login",
+        {
+          email,
+          password,
+        }
+      );
 
-       console.log("📦 Login response:", res.data); 
+      console.log("📦 Login response:", res.data);
 
       if (res.data && res.data.user) {
         localStorage.setItem("userEmail", res.data.user.email); // ✅ Store only email

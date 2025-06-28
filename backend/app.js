@@ -13,7 +13,7 @@
 
 // app.use(
 //   cors({
-//     origin: "http://localhost:3000",
+//     origin: "https://inspirehub-frontend.onrender.com",
 //     credentials: true,
 //   })
 // );
@@ -63,7 +63,7 @@ connectDB();
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://inspirehub-frontend.onrender.com",
     credentials: true,
   })
 );

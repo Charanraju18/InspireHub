@@ -68,7 +68,7 @@ const RoadmapsPage = () => {
         filters.difficulty.trim() ||
         filters.techstack.trim();
 
-      let url = "http://localhost:5000/api/roadmaps";
+      let url = "https://inspirehub-backend-itne.onrender.com/api/roadmaps";
 
       if (hasFilters) {
         // ✅ Build query parameters
@@ -87,7 +87,7 @@ const RoadmapsPage = () => {
           queryParams.append("techstack", filters.techstack.trim());
         }
 
-        url = `http://localhost:5000/api/roadmaps/search?${queryParams.toString()}`;
+        url = `https://inspirehub-backend-itne.onrender.com/api/roadmaps/search?${queryParams.toString()}`;
       }
 
       console.log("🌐 Fetching from URL:", url);
@@ -176,9 +176,12 @@ const RoadmapsPage = () => {
 
     try {
       // Fetch current wishlist
-      const res = await axios.post("http://localhost:5000/api/wishlist/get", {
-        userId,
-      });
+      const res = await axios.post(
+        "https://inspirehub-backend-itne.onrender.com/api/wishlist/get",
+        {
+          userId,
+        }
+      );
 
       const existing = res.data.wishlist || [];
       const alreadyBookmarked = existing.find(
@@ -201,7 +204,7 @@ const RoadmapsPage = () => {
       };
 
       const response = await axios.post(
-        "http://localhost:5000/api/wishlist/add",
+        "https://inspirehub-backend-itne.onrender.com/api/wishlist/add",
         payload
       );
       if (response.status === 200) {
