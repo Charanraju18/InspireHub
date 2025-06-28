@@ -142,7 +142,7 @@ const EventDetailsOne = () => {
               ))}
 
               <div className="position-relative my-32">
-                <img
+                {/* <img
                   src="/assets/images/thumbs/event-detail-img3.png"
                   className="rounded-12 cover-img"
                   alt=""
@@ -152,7 +152,7 @@ const EventDetailsOne = () => {
                   className="play-button position-absolute start-50 top-50 translate-middle z-1 w-72 h-72 flex-center bg-main-two-600 text-white rounded-circle text-2xl"
                 >
                   <i className="ph-fill ph-play" />
-                </span>
+                </span> */}
               </div>
             </div>
 

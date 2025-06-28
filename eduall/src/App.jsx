@@ -66,8 +66,8 @@ function App() {
         <Route exact path='/index-4' element={<HomePageFour />} />
         <Route exact path='/index-5' element={<HomePageFive />} />
         <Route exact path='/index-6' element={<HomePageSix />} /> */}
-        <Route exact path="/about" element={<AboutPage />} />
-        <Route exact path="/about-two" element={<AboutTwoPage />} />
+        {/* <Route exact path="/about" element={<AboutPage />} /> */}
+        <Route exact path="/about" element={<AboutTwoPage />} />
         <Route exact path="/about-three" element={<AboutThreePage />} />
         <Route exact path="/about-four" element={<AboutFourPage />} />
         <Route exact path="/apply-admission" element={<ApplyAdmissionPage />} />

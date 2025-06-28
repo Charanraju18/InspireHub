@@ -82,4 +82,33 @@ const getInTouchToIns = async (toName, toMail, userName, userMsg, userMail, cate
   });
 }
 
-module.exports = { sendRegistrationMail, sendWelcomeEmail, getInTouchToIns };
+function generateOtp(length = 6) {
+  return Math.floor(
+    Math.pow(10, length - 1) + Math.random() * 9 * Math.pow(10, length - 1)
+  ).toString();
+}
+const emailVerifyWithOtp = async (to) => {
+  const otp = generateOtp();
+  const subject = "Verify Your Email with OTP";
+  const message = `
+    <p>Hi there,</p>
+    <p>Your OTP for email verification is: <strong>${otp}</strong></p>
+    <p>Please use this OTP to complete your registration.</p>
+    <p>— InspireHub Team</p>
+  `;
+
+  await transporter.sendMail({
+    from: `"InspireHub" <${process.env.EMAIL_USER}>`,
+    to: to,
+    subject,
+    html: message,
+  });
+  return otp;
+};
+
+module.exports = {
+  sendRegistrationMail,
+  sendWelcomeEmail,
+  getInTouchToIns,
+  emailVerifyWithOtp,
+};

@@ -3,6 +3,7 @@ import Breadcrumb from "../components/Breadcrumb";
 import CertificateTwo from "../components/CertificateTwo";
 import FeaturesTwo from "../components/FeaturesTwo";
 import FooterThree from "../components/FooterThree";
+import FooterTwo from "../components/FooterTwo";
 import HeaderOne from "../components/HeaderOne";
 import InfoSectionOne from "../components/InfoSectionOne";
 import JoinCommunityOne from "../components/JoinCommunityOne";
@@ -38,13 +39,13 @@ const AboutTwoPage = () => {
       <CertificateTwo />
 
       {/* JoinCommunityOne */}
-      <JoinCommunityOne />
+      {/* <JoinCommunityOne /> */}
 
       {/* TestimonialsTwo */}
       <TestimonialsTwo />
 
       {/* FooterThree */}
-      <FooterThree />
+      <FooterTwo />
     </>
   );
 };

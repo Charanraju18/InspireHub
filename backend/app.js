@@ -58,21 +58,9 @@ const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// const seedDomains = require("./seed/domainSeeder");
-// const domainRoutes = require("./routes/domainRoutes");
-
 // Connect to MongoDB
 connectDB();
 
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    credentials: true,
-  })
-);
-
-// Middleware
-// app.use(cors());
 app.use(
   cors({
     origin: "http://localhost:3000",
@@ -98,6 +86,9 @@ app.use("/api/roadmaps", require("./routes/roadmapRoutes"));
 app.use("/api/mail", require("./routes/nodeMailerRoute"));
 app.use("/api/users", require("./routes/userRoutes"));
 app.use("/api/wishlist", require("./routes/wishlistRoutes"));
+app.use('/api/contact', require("./routes/controllerRoutes"));
+app.use("/api/reviews", require("./routes/reviewsRoute"));
+
 // >>>>>>> main
 app.get("/", (req, res) => {
   res.send("Hello from Express and MongoDB!");

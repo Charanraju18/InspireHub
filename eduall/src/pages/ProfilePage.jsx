@@ -567,6 +567,138 @@ const ProfilePage = () => {
 
   const dropdownRef = useRef(null);
 
+  const [isOwnProfile, setIsOwnProfile] = useState(false);
+  const [roadmaps, setRoadmaps] = useState([]);
+  const [editingRoadmap, setEditingRoadmap] = useState(null);
+
+  const [newStep, setNewStep] = useState({
+    title: "",
+    description: "",
+    resources: [{ title: "", link: "", type: "video" }],
+  });
+
+  useEffect(() => {
+    if (user && instructor) {
+      setIsOwnProfile(
+        user._id === instructor._id || user.id === instructor._id
+      );
+      setRoadmaps(instructor.instructorProfile?.content?.roadmapsShared || []);
+    }
+  }, [user, instructor]);
+
+  // Delete roadmap
+  const handleDeleteRoadmap = async (roadmapId) => {
+    if (!window.confirm("Are you sure you want to delete this roadmap?"))
+      return;
+
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        `http://localhost:5000/api/roadmaps/${roadmapId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        setRoadmaps(roadmaps.filter((r) => r._id !== roadmapId));
+        alert("Roadmap deleted successfully!");
+      } else {
+        alert("Failed to delete roadmap");
+      }
+    } catch (error) {
+      console.error("Error deleting roadmap:", error);
+      alert("Error deleting roadmap");
+    }
+  };
+
+  // Add new step to existing roadmap
+  const handleAddStep = async (roadmapId) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        `http://localhost:5000/api/roadmaps/${roadmapId}/add-step`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ step: newStep }),
+        }
+      );
+
+      if (response.ok) {
+        const updatedRoadmap = await response.json();
+        setRoadmaps(
+          roadmaps.map((r) =>
+            r._id === roadmapId ? updatedRoadmap.roadmap : r
+          )
+        );
+        setEditingRoadmap(null);
+        setNewStep({
+          title: "",
+          description: "",
+          resources: [{ title: "", link: "", type: "video" }],
+        });
+        alert("Step added successfully!");
+      } else {
+        alert("Failed to add step");
+      }
+    } catch (error) {
+      console.error("Error adding step:", error);
+      alert("Error adding step");
+    }
+  };
+
+  // Add resource to new step
+  const addResourceToNewStep = () => {
+    setNewStep({
+      ...newStep,
+      resources: [...newStep.resources, { title: "", link: "", type: "video" }],
+    });
+  };
+
+  // Remove resource from new step
+  const removeResourceFromNewStep = (index) => {
+    const updatedResources = newStep.resources.filter((_, i) => i !== index);
+    setNewStep({ ...newStep, resources: updatedResources });
+  };
+
+  // Update resource in new step
+  const updateResourceInNewStep = (index, field, value) => {
+    const updatedResources = [...newStep.resources];
+    updatedResources[index][field] = value;
+    setNewStep({ ...newStep, resources: updatedResources });
+  };
+
+  const inputStyle = {
+    width: "100%",
+    padding: "8px 12px",
+    border: "1px solid #ddd",
+    borderRadius: "4px",
+    marginBottom: "10px",
+  };
+
+  const textareaStyle = {
+    ...inputStyle,
+    minHeight: "80px",
+    resize: "vertical",
+  };
+
+  const buttonStyle = {
+    padding: "8px 16px",
+    margin: "4px",
+    border: "none",
+    borderRadius: "4px",
+    cursor: "pointer",
+    fontSize: "14px",
+  };
+
   // if mouse click outside, closes the dropdown
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -1012,14 +1144,206 @@ const ProfilePage = () => {
                     0 ? (
                       user.instructorProfile.content.roadmapsShared.map(
                         (roadmap, idx) => (
-                          <div className="col-md-4 col-12" key={idx}>
-                            <div className="course-item bg-info-100 rounded-16 p-24 h-100 box-shadow-md d-flex align-items-center gap-16">
-                              <span className="text-info-700 text-2xl d-flex">
-                                <i className="ph-bold ph-map-trifold" />
-                              </span>
-                              <span className="fw-semibold text-info-700 fs-5">
-                                {roadmap.title || "Untitled Roadmap"}
-                              </span>
+                          <div className="col-lg-4 col-md-6 col-12" key={idx}>
+                            <div className="course-item bg-info-100 rounded-16 p-24 h-100 box-shadow-md position-relative">
+                              <div className="d-flex align-items-center gap-16">
+                                <span className="text-info-700 text-2xl d-flex">
+                                  <i className="ph-bold ph-map-trifold" />
+                                </span>
+                                <span className="fw-semibold text-info-700 fs-6">
+                                  {roadmap.title || "Untitled Roadmap"}
+                                </span>
+                              </div>
+
+                              {/* Management buttons for own profile */}
+                              {isOwnProfile && (
+                                <div className="mt-3 d-flex gap-2 flex-wrap">
+                                  <button
+                                    onClick={() =>
+                                      setEditingRoadmap(roadmap._id)
+                                    }
+                                    style={{
+                                      ...buttonStyle,
+                                      backgroundColor: "#28a745",
+                                      color: "white",
+                                      fontSize: "12px",
+                                      padding: "6px 12px",
+                                    }}
+                                  >
+                                    <i className="ph-bold ph-plus" /> Add Step
+                                  </button>
+                                  <button
+                                    onClick={() =>
+                                      handleDeleteRoadmap(roadmap._id)
+                                    }
+                                    style={{
+                                      ...buttonStyle,
+                                      backgroundColor: "#dc3545",
+                                      color: "white",
+                                      fontSize: "12px",
+                                      padding: "6px 12px",
+                                    }}
+                                  >
+                                    <i className="ph-bold ph-trash" /> Delete
+                                  </button>
+                                </div>
+                              )}
+
+                              {/* Add Step Form */}
+                              {editingRoadmap === roadmap._id && (
+                                <div className="mt-3 p-3 bg-light rounded">
+                                  <h6 className="mb-3">Add New Step</h6>
+
+                                  <input
+                                    type="text"
+                                    placeholder="Step Title"
+                                    value={newStep.title}
+                                    onChange={(e) =>
+                                      setNewStep({
+                                        ...newStep,
+                                        title: e.target.value,
+                                      })
+                                    }
+                                    style={inputStyle}
+                                  />
+
+                                  <textarea
+                                    placeholder="Step Description"
+                                    value={newStep.description}
+                                    onChange={(e) =>
+                                      setNewStep({
+                                        ...newStep,
+                                        description: e.target.value,
+                                      })
+                                    }
+                                    style={textareaStyle}
+                                  />
+
+                                  <div className="mb-3">
+                                    <label className="fw-bold d-block mb-2">
+                                      Resources
+                                    </label>
+                                    {newStep.resources.map(
+                                      (resource, resIdx) => (
+                                        <div
+                                          key={resIdx}
+                                          className="border p-2 mb-2 rounded bg-white"
+                                        >
+                                          <div className="row g-2 mb-2">
+                                            <div className="col-md-6">
+                                              <input
+                                                type="text"
+                                                placeholder="Resource Title"
+                                                value={resource.title}
+                                                onChange={(e) =>
+                                                  updateResourceInNewStep(
+                                                    resIdx,
+                                                    "title",
+                                                    e.target.value
+                                                  )
+                                                }
+                                                style={inputStyle}
+                                              />
+                                            </div>
+                                            <div className="col-md-6">
+                                              <select
+                                                value={resource.type}
+                                                onChange={(e) =>
+                                                  updateResourceInNewStep(
+                                                    resIdx,
+                                                    "type",
+                                                    e.target.value
+                                                  )
+                                                }
+                                                style={inputStyle}
+                                              >
+                                                <option value="video">
+                                                  Video
+                                                </option>
+                                                <option value="article">
+                                                  Article
+                                                </option>
+                                                <option value="book">
+                                                  Book
+                                                </option>
+                                                <option value="course">
+                                                  Course
+                                                </option>
+                                              </select>
+                                            </div>
+                                          </div>
+                                          <input
+                                            type="url"
+                                            placeholder="Resource Link"
+                                            value={resource.link}
+                                            onChange={(e) =>
+                                              updateResourceInNewStep(
+                                                resIdx,
+                                                "link",
+                                                e.target.value
+                                              )
+                                            }
+                                            style={inputStyle}
+                                          />
+                                          {newStep.resources.length > 1 && (
+                                            <button
+                                              onClick={() =>
+                                                removeResourceFromNewStep(
+                                                  resIdx
+                                                )
+                                              }
+                                              style={{
+                                                ...buttonStyle,
+                                                backgroundColor: "#dc3545",
+                                                color: "white",
+                                                fontSize: "12px",
+                                                padding: "4px 8px",
+                                              }}
+                                            >
+                                              Remove Resource
+                                            </button>
+                                          )}
+                                        </div>
+                                      )
+                                    )}
+                                    <button
+                                      onClick={addResourceToNewStep}
+                                      style={{
+                                        ...buttonStyle,
+                                        backgroundColor: "#6c757d",
+                                        color: "white",
+                                        fontSize: "12px",
+                                        padding: "6px 12px",
+                                      }}
+                                    >
+                                      + Add Resource
+                                    </button>
+                                  </div>
+
+                                  <div className="d-flex gap-2">
+                                    <button
+                                      onClick={() => handleAddStep(roadmap._id)}
+                                      style={{
+                                        ...buttonStyle,
+                                        backgroundColor: "#28a745",
+                                        color: "white",
+                                      }}
+                                    >
+                                      Save Step
+                                    </button>
+                                    <button
+                                      onClick={() => setEditingRoadmap(null)}
+                                      style={{
+                                        ...buttonStyle,
+                                        backgroundColor: "#6c757d",
+                                        color: "white",
+                                      }}
+                                    >
+                                      Cancel
+                                    </button>
+                                  </div>
+                                </div>
+                              )}
                             </div>
                           </div>
                         )

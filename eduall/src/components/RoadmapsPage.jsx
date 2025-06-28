@@ -168,37 +168,48 @@ const RoadmapsPage = () => {
 
   const handleBookmark = async (roadmap) => {
     const userId = localStorage.getItem("userEmail");
-    console.log("🧪 Retrieved userId from localStorage:", userId);
 
     if (!userId) {
       alert("Please login to bookmark this roadmap.");
       return;
     }
 
-    const payload = {
-      userId,
-      roadmap: {
-        _id: roadmap._id,
-        title: roadmap.title,
-        description: roadmap.description,
-        thumbnail: roadmap.thumbnail,
-      },
-    };
-
-    console.log("📦 Payload being sent:", payload);
-
     try {
+      // Fetch current wishlist
+      const res = await axios.post("http://localhost:5000/api/wishlist/get", {
+        userId,
+      });
+
+      const existing = res.data.wishlist || [];
+      const alreadyBookmarked = existing.find(
+        (item) => item._id === roadmap._id
+      );
+
+      if (alreadyBookmarked) {
+        alert("This roadmap is already in your wishlist.");
+        return;
+      }
+
+      const payload = {
+        userId,
+        roadmap: {
+          _id: roadmap._id,
+          title: roadmap.title,
+          description: roadmap.description,
+          thumbnail: roadmap.thumbnail,
+        },
+      };
+
       const response = await axios.post(
         "http://localhost:5000/api/wishlist/add",
         payload
       );
       if (response.status === 200) {
-        console.log("✅ Added to wishlist:", response.data);
         alert("Roadmap added to wishlist!");
       }
     } catch (error) {
       console.error("❌ Error adding to wishlist:", error);
-      alert("Failed to bookmark. Try again.");
+      alert("Something went wrong. Try again.");
     }
   };
 

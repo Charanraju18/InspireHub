@@ -2,12 +2,15 @@ import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import {  FaBookmark } from "react-icons/fa";
-import { useAuth } from "../authContext";
+import Reviews from "./Discussions";
 
 // This component handles the visual roadmap steps and their precise alignment with the roadline.
 const VisualRoadmapSteps = ({ steps }) => {
   const roadmapContainerRef = useRef(null);
-  const [containerDimensions, setContainerDimensions] = useState({ width: 1000, height: 400 });
+  const [containerDimensions, setContainerDimensions] = useState({
+    width: 1000,
+    height: 400,
+  });
   const [hoveredStepId, setHoveredStepId] = useState(null); // State to track which step is hovered
 
   useEffect(() => {
@@ -38,7 +41,8 @@ const VisualRoadmapSteps = ({ steps }) => {
     updateContainerDimensions();
     window.addEventListener("resize", updateContainerDimensions);
 
-    return () => window.removeEventListener("resize", updateContainerDimensions);
+    return () =>
+      window.removeEventListener("resize", updateContainerDimensions);
   }, [steps]);
 
   const roadlineAngleDegrees = -23;
@@ -60,9 +64,6 @@ const VisualRoadmapSteps = ({ steps }) => {
         maxWidth: "1000px",
         height: containerHeightStyle,
         margin: "2rem auto",
-        background: "#F3F9FF", // Deep blue background
-        borderRadius: "12px",
-        boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
         padding: "20px",
         overflow: "hidden",
       }}
@@ -242,18 +243,24 @@ const VisualRoadmapSteps = ({ steps }) => {
         const leftPosition = `${leftPositionPercentage}%`;
 
         const effectiveContainerWidth = containerDimensions.width - 40;
-        const stepXCenterPx = (leftPositionPercentage / 100) * effectiveContainerWidth + 20;
+        const stepXCenterPx =
+          (leftPositionPercentage / 100) * effectiveContainerWidth + 20;
 
-        const roadlineAbsoluteTopPx = (roadlineInitialTopPercent / 100) * containerDimensions.height;
-        const roadlineTranslateYPx = (roadlineHeightPx * roadlineTranslateYPercent) / 100;
+        const roadlineAbsoluteTopPx =
+          (roadlineInitialTopPercent / 100) * containerDimensions.height;
+        const roadlineTranslateYPx =
+          (roadlineHeightPx * roadlineTranslateYPercent) / 100;
         const roadlinePivotY = roadlineAbsoluteTopPx + roadlineTranslateYPx;
 
-        const yOffsetDueToRotation = stepXCenterPx * Math.tan(roadlineAngleRadians);
+        const yOffsetDueToRotation =
+          stepXCenterPx * Math.tan(roadlineAngleRadians);
         const roadlineCenterYAtStepX = roadlinePivotY + yOffsetDueToRotation;
 
         const targetStepCircleBottomY = roadlineCenterYAtStepX - desiredGapPx;
         const topPositionPx = targetStepCircleBottomY - stepCircleHeightPx;
-        const topPosition = `${(topPositionPx / containerDimensions.height) * 100}%`;
+        const topPosition = `${
+          (topPositionPx / containerDimensions.height) * 100
+        }%`;
 
         return (
           <div
@@ -268,7 +275,9 @@ const VisualRoadmapSteps = ({ steps }) => {
           >
             <div className="step-circle">{index + 1}</div>
             <div
-              className={`step-bubble ${hoveredStepId === step._id ? "hovered" : ""}`}
+              className={`step-bubble ${
+                hoveredStepId === step._id ? "hovered" : ""
+              }`}
             >
               <strong>{step.title}</strong>
               <p>{step.description}</p>
@@ -282,391 +291,500 @@ const VisualRoadmapSteps = ({ steps }) => {
 
 // ... (RoadmapDetails component remains the same as it uses VisualRoadmapSteps)
 const RoadmapDetails = () => {
-    const { id } = useParams();
-    const { user, isAuthenticated } = useAuth();
-    const [roadmap, setRoadmap] = useState(null);
-    const [loading, setLoading] = useState(true);
-    // Instructor follow state
-    const [isFollowingInstructor, setIsFollowingInstructor] = useState(false);
-    const [followLoading, setFollowLoading] = useState(false);
-    const [showUnfollowModal, setShowUnfollowModal] = useState(false);
+  const { id } = useParams();
+  const [roadmap, setRoadmap] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-    // Fetch roadmap and instructor follow status
-    useEffect(() => {
-      const fetchRoadmap = async () => {
-        try {
-          const res = await axios.get(`http://localhost:5000/api/roadmaps/${id}`);
-          setRoadmap(res.data);
-          // Check instructor follow status if user and instructor exist
-          if (user && res.data.createdBy?._id) {
-            const token = user.token || localStorage.getItem("token");
-            const followRes = await fetch(
-              `http://localhost:5000/api/follow-instructors/check-follow/${res.data.createdBy._id}`,
-              {
-                headers: token ? { Authorization: `Bearer ${token}` } : {},
-                credentials: "include",
-              }
-            );
-            const followData = await followRes.json();
-            setIsFollowingInstructor(!!followData.data?.isFollowing);
-          } else {
-            setIsFollowingInstructor(false);
-          }
-        } catch (error) {
-          console.error("Failed to fetch roadmap", error);
-        } finally {
-          setLoading(false);
-        }
-      };
-      fetchRoadmap();
-    }, [id, user]);
-
-    // Follow/unfollow instructor
-    const handleFollowInstructor = async () => {
-      if (!user || !roadmap?.createdBy?._id) {
-        alert("You must be logged in to follow this instructor.");
-        return;
-      }
-      setFollowLoading(true);
-      const instructorId = roadmap.createdBy._id;
-      const token = user.token || localStorage.getItem("token");
+  useEffect(() => {
+    const fetchRoadmap = async () => {
       try {
-        const res = await fetch(
-          `http://localhost:5000/api/follow-instructors/follow/${instructorId}`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            credentials: "include",
-            body: JSON.stringify({}),
-          }
-        );
-        if (!res.ok) throw new Error("Follow failed");
-        setIsFollowingInstructor(true);
-      } catch (err) {
-        alert("Failed to follow instructor");
-        console.error("Follow instructor error:", err);
+        const res = await axios.get(`http://localhost:5000/api/roadmaps/${id}`);
+        setRoadmap(res.data);
+      } catch (error) {
+        console.error("Failed to fetch roadmap", error);
       } finally {
-        setFollowLoading(false);
+        setLoading(false);
       }
     };
 
-    const handleUnfollowInstructor = async () => {
-      if (!user || !roadmap?.createdBy?._id) return;
-      setFollowLoading(true);
-      const instructorId = roadmap.createdBy._id;
-      const token = user.token || localStorage.getItem("token");
-      try {
-        const res = await fetch(
-          `http://localhost:5000/api/follow-instructors/unfollow/${instructorId}`,
-          {
-            method: "DELETE",
-            headers: token ? { Authorization: `Bearer ${token}` } : {},
-            credentials: "include",
-          }
-        );
-        if (!res.ok) throw new Error("Unfollow failed");
-        setIsFollowingInstructor(false);
-      } catch (err) {
-        alert("Failed to unfollow instructor");
-        console.error("Unfollow instructor error:", err);
-      } finally {
-        setFollowLoading(false);
-        setShowUnfollowModal(false);
-      }
-    };
+    fetchRoadmap();
+  }, [id]);
 
-    if (loading) return <p className="text-center mt-5">Loading roadmap...</p>;
-    if (!roadmap)
-      return <p className="text-center mt-5 text-danger">Roadmap not found</p>;
+  if (loading) return <p className="text-center mt-5">Loading roadmap...</p>;
+  if (!roadmap)
+    return <p className="text-center mt-5 text-danger">Roadmap not found</p>;
 
-    const isOwnProfile = user && roadmap.createdBy?._id === user._id;
-
-    return (
-      <div className="container py-5">
-        {/* Unfollow Confirmation Modal */}
-        {showUnfollowModal && (
+  return (
+    <div className="container py-5" style={{ marginTop: "30px" }}>
+      {/* Top Section - User Profile, Bookmark Icon */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          margintop: "10rem",
+          border: "3px solid #F3F9FF",
+          backgroundColor: "#f9f9f9",
+          borderRadius: "10px",
+          boxShadow: "0px 0px 1px 5px #F3F9FF",
+        }}
+      >
+        {/* User Profile */}
+        <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
+          <img
+            src={
+              roadmap.createdBy?.profilePicture ||
+              "/assets/images/users/user-img1.png"
+            }
+            alt={roadmap.createdBy?.name || "Instructor"}
+            className="rounded-circle"
+            style={{ width: "70px", height: "70px", objectFit: "cover" }}
+            onError={(e) => {
+              e.target.src = "/assets/images/users/user-img1.png";
+            }}
+          />
           <div
             style={{
-              position: "fixed",
-              top: 0,
-              left: 0,
-              width: "100vw",
-              height: "100vh",
-              background: "rgba(0,0,0,0.4)",
               display: "flex",
-              alignItems: "center",
+              flexDirection: "column",
               justifyContent: "center",
-              zIndex: 9999,
             }}
           >
-            <div
-              style={{
-                background: "#fff",
-                borderRadius: 12,
-                padding: 32,
-                minWidth: 320,
-                boxShadow: "0 4px 32px rgba(0,0,0,0.15)",
-                textAlign: "center",
-              }}
-            >
-              <h5 style={{ marginBottom: 16 }}>Unfollow Instructor?</h5>
-              <p style={{ marginBottom: 24 }}>
-                Are you sure you want to unfollow this instructor?
-              </p>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  gap: 16,
-                }}
-              >
-                <button
-                  className="btn btn-danger"
-                  onClick={handleUnfollowInstructor}
-                  style={{ minWidth: 80 }}
-                  disabled={followLoading}
-                >
-                  Unfollow
-                </button>
-                <button
-                  className="btn btn-secondary"
-                  onClick={() => setShowUnfollowModal(false)}
-                  style={{ minWidth: 80 }}
-                  disabled={followLoading}
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-        {/* Top Section - User Profile, Bookmark Icon */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", margintop: "10rem"}}>
-          {/* User Profile */}
-          <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
-            <img
-              src={roadmap.createdBy?.profilePicture || "/assets/images/users/user-img1.png"}
-              alt={roadmap.createdBy?.name || "Instructor"}
-              className="rounded-circle"
-              style={{ width: "75px", height: "75px", objectFit: "cover" }}
-              onError={(e) => {
-                e.target.src = "/assets/images/users/user-img1.png";
-              }}
-            />
-            <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
-              <p className="mb-0 text-sm fw-medium text-neutral-700" style={{ fontSize: "25px", color: "#666" , fontWeight: "400"}}>
-                {roadmap.createdBy?.name || "Anonymous"}
-              </p>
-              <p className="mb-0" style={{ fontSize: "18px", color: "#666" }}>
-                {roadmap.createdBy.instructorProfile?.experienceYears} years exp.
-              </p>
-            </div>
-          </div>
-
-          {/* Bookmark Icon and Instructor Follow Button */}
-          <div style={{ fontSize: "30px", color: "#007bff", display: "flex", flexDirection: "column", alignItems: "center" }}>
-            <FaBookmark className="text-primary" size={35} />
-            {/* Follow Instructor button */}
-            {!isOwnProfile && isAuthenticated && (
-              isFollowingInstructor ? (
-                <button
-                  type="button"
-                  onClick={() => setShowUnfollowModal(true)}
-                  className="btn w-125 text-white"
-                  style={{ backgroundColor: "#0D6EFD", marginTop: "10px" }}
-                  disabled={followLoading}
-                >
-                  ✔ Following
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={handleFollowInstructor}
-                  className="btn w-125 text-white"
-                  style={{ backgroundColor: "#0D6EFD", marginTop: "10px" }}
-                  disabled={followLoading}
-                >
-                  + Follow
-                </button>
-              )
-            )}
+            <p style={{ fontSize: "24px", color: "black", fontWeight: "600" }}>
+              {roadmap.createdBy?.name || "Anonymous"}
+            </p>
+            <p className="mb-0" style={{ fontSize: "18px", color: "#666" }}>
+              {roadmap.createdBy.instructorProfile.experienceYears} years exp.
+            </p>
           </div>
         </div>
 
-        {/* Title */}
-        <div style={{  paddingBottom: "10px", marginBottom: "20px" }}>
-          <h2 className="mb-0" style={{ color: "#333" }}>{roadmap.title}</h2>
-        </div>
+        {/* Bookmark Icon */}
+        <div
+          style={{
+            height: "100%",
+            fontSize: "30px",
+            color: "#007bff",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "10px",
+            width: "10%",
+          }}
+        >
+          <FaBookmark className="text-primary" size={30} />
 
-        {/* Description */}
-        <div style={{padding: "15px", marginBottom: "30px", minHeight: "100px", background: "#f8f8f8" }}>
-          {/* <h4 style={{ color: "#555", marginBottom: "10px" }}>Description</h4> */}
-          <p>{roadmap.description}</p>
+          {/* Follow button */}
+          <button
+            style={{
+              backgroundColor: "#007bff",
+              color: "#fff",
+              border: "none",
+              borderRadius: "5px",
+              padding: "8px 16px",
+              fontSize: "12px",
+              cursor: "pointer",
+              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+              transition: "transform 0.2s, box-shadow 0.2s",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = "scale(1.05)";
+              e.currentTarget.style.boxShadow = "0 6px 10px rgba(0, 0, 0, 0.2)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "scale(1)";
+              e.currentTarget.style.boxShadow = "0 4px 6px rgba(0, 0, 0, 0.1)";
+            }}
+          >
+            Follow
+          </button>
         </div>
+      </div>
 
-        {/* Left Column (Domain, Difficulty etc.) and Right Column (Steps Animation) */}
-        <div style={{ display: "flex", gap: "30px", flexDirection: "row" }}>
-          {/* Left Column */}
-         <div
-    style={{
-      flex: 1,
-      border: "2px solid #dedede",
-      padding: "20px",
-      borderRadius: "12px",
-      background: "linear-gradient(135deg, #ffffff, #f8f9fa)",
-      boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
-      transition: "transform 0.3s ease, box-shadow 0.3s ease",
-      animation: "fadeIn 1s ease-out",
-    }}
-    onMouseEnter={(e) => {
-      e.currentTarget.style.transform = "scale(1.02)";
-      e.currentTarget.style.boxShadow = "0 6px 15px rgba(0, 0, 0, 0.2)";
-    }}
-    onMouseLeave={(e) => {
-      e.currentTarget.style.transform = "scale(1)";
-      e.currentTarget.style.boxShadow = "0 4px 10px rgba(0, 0, 0, 0.1)";
-    }}
-  >
-    <style>
-      {`
+      {/* Title */}
+      <div style={{ paddingTop: "10px", marginBottom: "0px" }}>
+        <p
+          className="mb-0"
+          style={{
+            color: "#333",
+            fontSize: "30px", // Dynamically adjusts based on text length.
+            wordWrap: "break-word", // Ensures long words wrap to the next line.
+          }}
+        >
+          {roadmap.title}
+        </p>
+      </div>
+
+      {/* Description */}
+      <div
+        style={{
+          padding: "0px",
+          marginBottom: "30px",
+          minHeight: "auto", // Adjusts height based on content.
+        }}
+      >
+        <p>{roadmap.description}</p>
+      </div>
+
+      {/* Left Column (Domain, Difficulty etc.) and Right Column (Steps Animation) */}
+      <div style={{ display: "flex", gap: "30px", flexDirection: "row" }}>
+        {/* Left Column */}
+        <div
+          style={{
+            flex: 1,
+            border: "2px solid #dedede",
+            padding: "20px",
+            borderRadius: "12px",
+            background: "#F3F9FF",
+            boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
+            transition: "transform 0.3s ease, box-shadow 0.3s ease",
+            animation: "fadeIn 1s ease-out",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = "scale(1.02)";
+            e.currentTarget.style.boxShadow = "0 6px 15px rgba(0, 0, 0, 0.2)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = "scale(1)";
+            e.currentTarget.style.boxShadow = "0 4px 10px rgba(0, 0, 0, 0.1)";
+          }}
+        >
+          <style>
+            {`
         @keyframes fadeIn {
           0% { opacity: 0; transform: translateY(10px); }
           100% { opacity: 1; transform: translateY(0); }
         }
       `}
-    </style>
-
-    {/* Domain */}
-    <div
-      style={{
-        marginBottom: "20px",
-        borderBottom: "2px solid #eaeaea",
-        paddingBottom: "12px",
-      }}
-    >
-      <h5 style={{ color: "#007bff", marginBottom: "8px", fontWeight: "600" }}>
-        Domain:
-      </h5>
-      <p style={{ margin: 0, fontSize: "14px", color: "#555" }}>
-        {roadmap.domain}
-      </p>
-    </div>
-
-    {/* Difficulty */}
-    <div
-      style={{
-        marginBottom: "20px",
-        borderBottom: "2px solid #eaeaea",
-        paddingBottom: "12px",
-      }}
-    >
-      <h5 style={{ color: "#007bff", marginBottom: "8px", fontWeight: "600" }}>
-        Difficulty:
-      </h5>
-      <p style={{ margin: 0, fontSize: "14px", color: "#555" }}>
-        {roadmap.difficulty}
-      </p>
-    </div>
-
-    {/* Estimated Duration */}
-    <div
-      style={{
-        marginBottom: "20px",
-        borderBottom: "2px solid #eaeaea",
-        paddingBottom: "12px",
-      }}
-    >
-      <h5 style={{ color: "#007bff", marginBottom: "8px", fontWeight: "600" }}>
-        Estimated Duration:
-      </h5>
-      <p style={{ margin: 0, fontSize: "14px", color: "#555" }}>
-        {roadmap.estimatedDurationWeeks} weeks
-      </p>
-    </div>
-
-    {/* Prerequisites */}
-    <div
-      style={{
-        marginBottom: "20px",
-        borderBottom: "2px solid #eaeaea",
-        paddingBottom: "12px",
-      }}
-    >
-      <h5 style={{ color: "#007bff", marginBottom: "8px", fontWeight: "600" }}>
-        Prerequisites:
-      </h5>
-      <ul style={{ listStyleType: "none", paddingLeft: "0", margin: 0 }}>
-        {roadmap.prerequisites.map((pre, idx) => (
-          <li
-            key={idx}
+          </style>
+          <div
             style={{
               display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              marginBottom: "8px",
-              fontSize: "14px",
-              color: "#555",
+              flexDirection: "column",
+              gap: "16px",
+              backgroundColor: "#5193DA",
+              padding: "20px",
+              borderRadius: "12px",
+              maxWidth: "400px",
+              margin: "auto",
             }}
           >
-            <span
+            {/* Company Address */}
+            <div
               style={{
-                width: "8px",
-                height: "8px",
-                borderRadius: "50%",
-                backgroundColor: "#007bff",
+                display: "flex",
+                alignItems: "center",
+                gap: "12px",
+                backgroundColor: "#f8f8f8",
+                borderRadius: "12px",
+                padding: "16px",
+                boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                transition: "transform 0.2s ease, box-shadow 0.2s ease",
               }}
-            ></span>
-            {pre}
-          </li>
-        ))}
-      </ul>
-    </div>
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "scale(1.02)";
+                e.currentTarget.style.boxShadow =
+                  "0 6px 12px rgba(0, 0, 0, 0.2)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "scale(1)";
+                e.currentTarget.style.boxShadow =
+                  "0 4px 6px rgba(0, 0, 0, 0.1)";
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "24px",
+                  color: "#ff6f61",
+                }}
+              >
+                🌐
+              </div>
+              <div>
+                <h5
+                  style={{
+                    margin: "0",
+                    color: "#444",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {roadmap.domain}
+                </h5>
+                <p
+                  style={{
+                    margin: "0",
+                    color: "#666",
+                    fontSize: "14px",
+                  }}
+                >
+                  Domain
+                </p>
+              </div>
+            </div>
 
-    {/* Resources */}
-    <div>
-      <h5 style={{ color: "#007bff", marginBottom: "8px", fontWeight: "600" }}>
-        Resources:
-      </h5>
-      <ul style={{ listStyleType: "none", paddingLeft: "0", margin: 0 }}>
-        {roadmap.tags.map((resource, idx) => (
-          <li
-            key={idx}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              marginBottom: "8px",
-              fontSize: "14px",
-              color: "#555",
-            }}
-          >
-            <span
+            {/* Contact Us */}
+            <div
               style={{
-                width: "8px",
-                height: "8px",
-                borderRadius: "50%",
-                backgroundColor: "#28a745",
+                display: "flex",
+                alignItems: "center",
+                gap: "12px",
+                backgroundColor: "#f8f8f8",
+                borderRadius: "12px",
+                padding: "16px",
+                boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                transition: "transform 0.2s ease, box-shadow 0.2s ease",
               }}
-            ></span>
-            {resource}
-          </li>
-        ))}
-      </ul>
-    </div>
-  </div>
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "scale(1.02)";
+                e.currentTarget.style.boxShadow =
+                  "0 6px 12px rgba(0, 0, 0, 0.2)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "scale(1)";
+                e.currentTarget.style.boxShadow =
+                  "0 4px 6px rgba(0, 0, 0, 0.1)";
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "24px",
+                  color: "#ff6f61",
+                }}
+              >
+                🎓
+              </div>
+              <div>
+                <h5
+                  style={{
+                    margin: "0",
+                    color: "#444",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {roadmap.difficulty}
+                </h5>
+                <p
+                  style={{
+                    margin: "0",
+                    color: "#666",
+                    fontSize: "14px",
+                  }}
+                >
+                  Difficulty Level
+                </p>
+              </div>
+            </div>
 
+            {/* Email Us */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "12px",
+                backgroundColor: "#f8f8f8",
+                borderRadius: "12px",
+                padding: "16px",
+                boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                transition: "transform 0.2s ease, box-shadow 0.2s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "scale(1.02)";
+                e.currentTarget.style.boxShadow =
+                  "0 6px 12px rgba(0, 0, 0, 0.2)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "scale(1)";
+                e.currentTarget.style.boxShadow =
+                  "0 4px 6px rgba(0, 0, 0, 0.1)";
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "24px",
+                  color: "#ff6f61",
+                }}
+              >
+                🕒
+              </div>
+              <div>
+                <h5
+                  style={{
+                    margin: "0",
+                    color: "#444",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {roadmap.estimatedDurationWeeks} weeks
+                </h5>
+                <p
+                  style={{
+                    margin: "0",
+                    color: "#666",
+                    fontSize: "14px",
+                  }}
+                >
+                  Estimated Duration
+                </p>
+              </div>
+            </div>
 
-          {/* Right Column - Steps Animation (Visual Roadmap Steps Component) */}
-          <div style={{ flex: 2, display: "flex", flexDirection: "column", alignItems: "center", background:"#F3F9FF"}}>
-            <h4 style={{ textAlign: "center", marginBottom: "1rem", color: "#333" }}>Pathway</h4> {/* */}
-            <VisualRoadmapSteps steps={roadmap.steps} />
+            {/* Active Hours */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "12px",
+                backgroundColor: "#f8f8f8",
+                borderRadius: "12px",
+                padding: "16px",
+                boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                transition: "transform 0.2s ease, box-shadow 0.2s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "scale(1.02)";
+                e.currentTarget.style.boxShadow =
+                  "0 6px 12px rgba(0, 0, 0, 0.2)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "scale(1)";
+                e.currentTarget.style.boxShadow =
+                  "0 4px 6px rgba(0, 0, 0, 0.1)";
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "24px",
+                  color: "#ff6f61",
+                }}
+              >
+                🧠
+              </div>
+              <div>
+                <ul
+                  style={{
+                    listStyleType: "none",
+                    paddingLeft: "0",
+                    margin: "8px 0 0",
+                  }}
+                >
+                  {roadmap.prerequisites.map((pre, idx) => (
+                    <li
+                      key={idx}
+                      style={{
+                        margin: "0",
+                        color: "#444",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      <span></span>
+                      {pre}
+                    </li>
+                  ))}
+                </ul>
+                <p
+                  style={{
+                    margin: "0",
+                    color: "#666",
+                    fontSize: "14px",
+                  }}
+                >
+                  Prerequisites
+                </p>
+              </div>
+            </div>
+            {/* Company Address */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "12px",
+                backgroundColor: "#f8f8f8",
+                borderRadius: "12px",
+                padding: "16px",
+                boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                transition: "transform 0.2s ease, box-shadow 0.2s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "scale(1.02)";
+                e.currentTarget.style.boxShadow =
+                  "0 6px 12px rgba(0, 0, 0, 0.2)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "scale(1)";
+                e.currentTarget.style.boxShadow =
+                  "0 4px 6px rgba(0, 0, 0, 0.1)";
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "24px",
+                  color: "#ff6f61",
+                }}
+              >
+                📚
+              </div>
+
+              <div>
+                <p
+                  style={{
+                    margin: "0",
+                    color: "#444",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Rescourses
+                </p>
+                {roadmap.steps.map((step, i) => (
+                  <div key={i}>
+                    <p>
+                      Step {i + 1}:{" "}
+                      {step.resources.map((res, j) => (
+                        <a
+                          key={j}
+                          href={res.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{ marginRight: "10px" }}
+                        >
+                          {res.link}
+                        </a>
+                      ))}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
+
+          {/* Domain */}
+        </div>
+
+        {/* Right Column - Steps Animation (Visual Roadmap Steps Component) */}
+        <div
+          style={{
+            flex: 2,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            background: "#F3F9FF",
+            padding: "20px",
+            background: "#F3F9FF",
+            borderRadius: "12px",
+            boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
+          }}
+        >
+          <h4
+            style={{ textAlign: "center", marginBottom: "1rem", color: "#333" }}
+          >
+            Pathway
+          </h4>{" "}
+          {/* */}
+          <VisualRoadmapSteps steps={roadmap.steps} />
         </div>
       </div>
-    );
-  };
+      <Reviews />
+    </div>
+  );
+};
 
 export default RoadmapDetails;

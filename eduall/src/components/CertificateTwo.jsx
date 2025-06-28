@@ -3,7 +3,7 @@ const CertificateTwo = () => {
     <section className="certificate-two py-120 position-relative z-1 mash-bg-main mash-bg-main-two mash-reverse">
       <div className="section-heading text-center">
         <h2 className="mb-24 wow bounceIn">
-          Go through specific technology domain roadmaps from the EduAll
+          Go through specific technology domain roadmaps from the InspireHub
         </h2>
         <p className=" wow bounceInUp">
           Roadmaps which one can follow to excell in a specific domain by
