@@ -1,7 +1,7 @@
 // routes/wishlistRoutes.js
 const express = require("express");
 const router = express.Router();
-const wishlistController = require("../controllers/WishlistController");
+const wishlistController = require("../controllers/wishlistController");
 
 // POST - Add roadmap to wishlist
 router.post("/add", wishlistController.addRoadmapToWishlist);
