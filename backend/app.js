@@ -43,7 +43,7 @@ app.use((err, req, res, next) => {
 app.use(express.static(path.join(__dirname, "eduall", "build")));
 
 app.use("*", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "eduall", "dist", "index.html"));
+  res.sendFile(path.resolve(__dirname, "eduall", "build", "index.html"));
 });
 
 require("./utils/reminderScheduler");
