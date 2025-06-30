@@ -66,12 +66,14 @@ app.use((err, req, res, next) => {
   res.status(500).send("Something broke!");
 });
 
-// Serve static files from frontend build
-app.use(express.static(path.join(__dirname, "eduall", "build")));
+// Simple test route
+app.get("/", (req, res) => {
+  res.json({ message: "Backend is working!" });
+});
 
-// Catch-all handler for frontend routing
-app.get("*", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "eduall", "build", "index.html"));
+// API 404 handler
+app.use("/api/*", (req, res) => {
+  res.status(404).json({ error: "API endpoint not found" });
 });
 
 require("./utils/reminderScheduler");
