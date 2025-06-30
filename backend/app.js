@@ -25,18 +25,18 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // TEMPORARY: Load routes one by one to find the problematic one
 // Comment out all routes first, then uncomment them one by one
 
-console.log("Loading eventRoutes...");
-app.use("/api/events", require("./routes/eventRoutes"));
-console.log("✓ eventRoutes loaded successfully");
+// console.log("Loading eventRoutes...");
+// app.use("/api/events", require("./routes/eventRoutes"));
+// console.log("✓ eventRoutes loaded successfully");
 
 // STOP HERE FIRST - test if the error still occurs
 // If no error, uncomment the next route and test again
 
-/*
 console.log("Loading authRoutes...");
 app.use("/api/auth", require("./routes/authRoutes"));
 console.log("✓ authRoutes loaded successfully");
 
+/*
 console.log("Loading postRoutes...");
 app.use("/api/posts", require("./routes/postRoutes"));
 console.log("✓ postRoutes loaded successfully");
