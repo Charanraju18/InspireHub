@@ -52,17 +52,20 @@ console.log("All routes loaded successfully!");
 
 // Error Handler Middleware
 app.use((err, req, res, next) => {
+  console.log("getting error here in 1");
   console.error(err.stack);
   res.status(500).send("Something broke!");
 });
 
 // Simple test route
 app.get("/", (req, res) => {
+  console.log("getting error here in 2");
   res.json({ message: "Backend is working!" });
 });
 
 // API 404 handler
 app.use("/api/*", (req, res) => {
+  console.log("getting error here in 3");
   res.status(404).json({ error: "API endpoint not found" });
 });
 
