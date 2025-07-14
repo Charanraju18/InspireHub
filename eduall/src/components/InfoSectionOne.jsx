@@ -86,19 +86,7 @@ const InfoSectionOne = () => {
             data-aos="fade-up"
             data-aos-duration={1000}
           >
-            <div className="info-item animation-item flex-align gap-20">
-              <span className="w-60 h-60 flex-center bg-white text-main-600 text-28 rounded-circle flex-shrink-0">
-                <i className="animate__heartBeat ph-bold ph-certificate" />
-              </span>
-              <div className="flex-grow-1">
-                <h5 className="mb-8 text-white fw-medium">
-                  Certified by Experience
-                </h5>
-                <span className="text-sm text-white">
-                  Certificates guided by real-world mentors.
-                </span>
-              </div>
-            </div>
+            
           </div>
         </div>
       </div>

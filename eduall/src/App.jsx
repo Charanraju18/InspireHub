@@ -1,6 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import RouteScrollToTop from "./helper/RouteScrollToTop.jsx";
-// import HomePageOne from "./pages/HomePageOne";
 import AboutPage from "./pages/AboutPage.jsx";
 import AboutFourPage from "./pages/AboutFourPage.jsx";
 import AboutThreePage from "./pages/AboutThreePage.jsx";
