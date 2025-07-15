@@ -11,6 +11,7 @@ import TestimonialsOne from "../components/TestimonialsOne";
 import Animation from "../helper/Animation";
 import Preloader from "../helper/Preloader";
 import FooterTwo from "../components/FooterTwo";
+import AboutTwo from "../components/AboutTwo";
 const AboutPage = () => {
   return (
     <>
@@ -27,7 +28,7 @@ const AboutPage = () => {
       <Breadcrumb title={"About Us"} />
 
       {/* AboutOne */}
-      <AboutOne />
+      <AboutTwo />
 
       {/* InstructorOne */}
       <InstructorOne />

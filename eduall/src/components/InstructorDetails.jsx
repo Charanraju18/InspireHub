@@ -36,7 +36,7 @@ const InstructorDetails = ({
   const fetchInstructorDetails = async (instructorId) => {
     try {
       const res = await fetch(
-        `http://localhost:5000/api/auth/instructors/${instructorId}`
+        `https://inspirehub-backend-itne.onrender.com/api/auth/instructors/${instructorId}`
       );
       const data = await res.json();
       if (!res.ok) throw new Error(data.msg || "Failed to fetch instructor");
@@ -80,7 +80,7 @@ const InstructorDetails = ({
       const token = localStorage.getItem("token");
       try {
         const res = await fetch(
-          `http://localhost:5000/api/follow-instructors/check-follow/${instructorId}`,
+          `https://inspirehub-backend-itne.onrender.com/api/follow-instructors/check-follow/${instructorId}`,
           {
             headers: token ? { Authorization: `Bearer ${token}` } : {},
             credentials: "include",
@@ -103,7 +103,7 @@ const InstructorDetails = ({
     const token = localStorage.getItem("token");
     try {
       const res = await fetch(
-        `http://localhost:5000/api/follow-instructors/followers/${instructorId}`,
+        `https://inspirehub-backend-itne.onrender.com/api/follow-instructors/followers/${instructorId}`,
         {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
           credentials: "include",
@@ -128,7 +128,7 @@ const InstructorDetails = ({
       const token = localStorage.getItem("token");
       try {
         const res = await fetch(
-          `http://localhost:5000/api/follow-instructors/following`,
+          `https://inspirehub-backend-itne.onrender.com/api/follow-instructors/following`,
           {
             headers: token ? { Authorization: `Bearer ${token}` } : {},
             credentials: "include",
@@ -152,7 +152,7 @@ const InstructorDetails = ({
 
     try {
       const res = await fetch(
-        `http://localhost:5000/api/follow-instructors/follow/${instructorId}`,
+        `https://inspirehub-backend-itne.onrender.com/api/follow-instructors/follow/${instructorId}`,
         {
           method: "POST",
           headers: {
@@ -184,7 +184,7 @@ const InstructorDetails = ({
     const token = localStorage.getItem("token");
     try {
       const res = await fetch(
-        `http://localhost:5000/api/follow-instructors/unfollow/${instructorId}`,
+        `https://inspirehub-backend-itne.onrender.com/api/follow-instructors/unfollow/${instructorId}`,
         {
           method: "DELETE",
           headers: token ? { Authorization: `Bearer ${token}` } : {},
@@ -206,7 +206,7 @@ const InstructorDetails = ({
   const handleDelete = async (eventId) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/events/${eventId}`,
+        `https://inspirehub-backend-itne.onrender.com/api/events/${eventId}`,
         {
           method: "DELETE",
         }
@@ -229,11 +229,11 @@ const InstructorDetails = ({
   const handleUpdate = async (eventId) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/events/${eventId}`
+        `https://inspirehub-backend-itne.onrender.com/api/events/${eventId}`
       );
       if (response.ok) {
         const eventData = await response.json();
-        setEditableEvent(eventData); 
+        setEditableEvent(eventData);
         setShowForm(true);
       } else {
         alert("Failed to fetch event data.");
@@ -258,7 +258,7 @@ const InstructorDetails = ({
     };
     try {
       const res = await fetch(
-        "http://localhost:5000/api/users/get-in-touch",
+        "https://inspirehub-backend-itne.onrender.com/api/users/get-in-touch",
         {
           method: "POST",
           headers: {
@@ -279,7 +279,6 @@ const InstructorDetails = ({
       alert("An error occurred while sending your message.");
     }
   };
-
 
   if (loading) return <div className="text-center my-5">Loading...</div>;
   if (error) return <div className="text-center my-5 text-danger">{error}</div>;
@@ -393,16 +392,16 @@ const InstructorDetails = ({
                                 key === "linkedin"
                                   ? "ph-bold ph-linkedin-logo"
                                   : key === "github"
-                                    ? "ph-bold ph-github-logo"
-                                    : key === "twitter"
-                                      ? "ph-bold ph-twitter-logo"
-                                      : key === "portfolio"
-                                        ? "ph-bold ph-globe"
-                                        : key === "youtube"
-                                          ? "ph-bold ph-youtube-logo"
-                                          : key === "instagram"
-                                            ? "ph-bold ph-instagram-logo"
-                                            : "ph-bold ph-globe"
+                                  ? "ph-bold ph-github-logo"
+                                  : key === "twitter"
+                                  ? "ph-bold ph-twitter-logo"
+                                  : key === "portfolio"
+                                  ? "ph-bold ph-globe"
+                                  : key === "youtube"
+                                  ? "ph-bold ph-youtube-logo"
+                                  : key === "instagram"
+                                  ? "ph-bold ph-instagram-logo"
+                                  : "ph-bold ph-globe"
                               }
                             />
                           </a>
@@ -440,9 +439,7 @@ const InstructorDetails = ({
               <div className="border border-neutral-30 rounded-12 bg-white p-8">
                 <div className="border border-neutral-30 rounded-12 bg-main-25 p-32 bg-main-25">
                   <h5 className="mb-20 text-center">Get in Touch</h5>
-                  <form
-                    onSubmit={handleGetInTouch}
-                  >
+                  <form onSubmit={handleGetInTouch}>
                     <div className="mb-16">
                       <select name="category" className="form-control" required>
                         <option value="">Select Category</option>
@@ -461,7 +458,11 @@ const InstructorDetails = ({
                         required
                       ></textarea>
                     </div>
-                    <button type="submit" className="btn w-100 text-white " style={{ backgroundColor: "#066CCB" }}>
+                    <button
+                      type="submit"
+                      className="btn w-100 text-white "
+                      style={{ backgroundColor: "#066CCB" }}
+                    >
                       Send Message
                     </button>
                   </form>
@@ -571,15 +572,15 @@ const InstructorDetails = ({
                   </span>
                   <span className="text-md text-neutral-700 fw-semibold">
                     {instructor.instructorProfile?.reviews &&
-                      instructor.instructorProfile.reviews.length > 0
+                    instructor.instructorProfile.reviews.length > 0
                       ? (
-                        instructor.instructorProfile.reviews.reduce(
-                          (acc, r) =>
-                            acc +
-                            (typeof r.rating === "number" ? r.rating : 0),
-                          0
-                        ) / instructor.instructorProfile.reviews.length
-                      ).toFixed(1)
+                          instructor.instructorProfile.reviews.reduce(
+                            (acc, r) =>
+                              acc +
+                              (typeof r.rating === "number" ? r.rating : 0),
+                            0
+                          ) / instructor.instructorProfile.reviews.length
+                        ).toFixed(1)
                       : 0}
                     <span className="text-neutral-100 fw-normal">
                       ({instructor.instructorProfile?.reviews?.length || "0"})
@@ -653,7 +654,7 @@ const InstructorDetails = ({
             <h4 className="mb-24">Roadmaps Shared</h4>
             <div className="row gy-4 mb-32">
               {instructor.instructorProfile?.content?.roadmapsShared?.length >
-                0 ? (
+              0 ? (
                 instructor.instructorProfile.content.roadmapsShared.map(
                   (roadmap, idx) => (
                     <div className="col-lg-4 col-md-6 col-12" key={idx}>
@@ -688,7 +689,7 @@ const InstructorDetails = ({
                     e.preventDefault();
                     try {
                       const res = await fetch(
-                        `http://localhost:5000/api/events/${editableEvent._id}`,
+                        `https://inspirehub-backend-itne.onrender.com/api/events/${editableEvent._id}`,
                         {
                           method: "PUT",
                           headers: {
@@ -734,8 +735,8 @@ const InstructorDetails = ({
                       value={
                         editableEvent.schedule?.startTime
                           ? toLocalDateTimeInputValue(
-                            editableEvent.schedule.startTime
-                          )
+                              editableEvent.schedule.startTime
+                            )
                           : ""
                       }
                       onChange={(e) =>
@@ -758,8 +759,8 @@ const InstructorDetails = ({
                       value={
                         editableEvent.schedule?.endTime
                           ? toLocalDateTimeInputValue(
-                            editableEvent.schedule.endTime
-                          )
+                              editableEvent.schedule.endTime
+                            )
                           : ""
                       }
                       onChange={(e) =>
@@ -790,7 +791,7 @@ const InstructorDetails = ({
 
             <div className="row gy-4">
               {instructor.instructorProfile?.content?.liveEventsHosted?.length >
-                0 ? (
+              0 ? (
                 instructor.instructorProfile.content.liveEventsHosted.map(
                   (event, idx) => (
                     <div className="col-lg-6 col-md-12 col-12" key={idx}>

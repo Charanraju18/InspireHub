@@ -20,7 +20,9 @@ const CourseDetails = () => {
   useEffect(() => {
     const fetchRoadmap = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/roadmaps/${id}`);
+        const res = await axios.get(
+          `https://inspirehub-backend-itne.onrender.com/api/roadmaps/${id}`
+        );
         setRoadmap(res.data);
       } catch (error) {
         console.error("Error fetching roadmap:", error);
@@ -29,9 +31,12 @@ const CourseDetails = () => {
 
     const fetchReviews = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/reviews/${id}`, {
-          withCredentials: true,
-        });
+        const res = await axios.get(
+          `https://inspirehub-backend-itne.onrender.com/api/reviews/${id}`,
+          {
+            withCredentials: true,
+          }
+        );
 
         if (res.data.length > 0) {
           setReviews(res.data);
@@ -70,7 +75,7 @@ const CourseDetails = () => {
     if (!text) return;
     try {
       const res = await axios.post(
-        `http://localhost:5000/api/reviews/reply/${reviewId}`,
+        `https://inspirehub-backend-itne.onrender.com/api/reviews/reply/${reviewId}`,
         { text },
         {
           withCredentials: true,
@@ -99,7 +104,7 @@ const CourseDetails = () => {
 
     try {
       const res = await axios.post(
-        `http://localhost:5000/api/reviews/${id}`,
+        `https://inspirehub-backend-itne.onrender.com/api/reviews/${id}`,
         { text: reviewText },
         {
           withCredentials: true,
@@ -154,11 +159,8 @@ const CourseDetails = () => {
           <div className="inner-box">
             <div className="row gy-4">
               <div className="col-xl-8 mx-auto">
-                <h2>{roadmap.title}</h2>
-                <p>{roadmap.description}</p>
-
                 <div className="review-section">
-                  <h4>All Reviews</h4>
+                  <h4>Discussions</h4>
 
                   {reviews.slice(0, visibleReviews).map((review, index) => (
                     <div key={review._id} className="review-box">
@@ -279,7 +281,6 @@ const CourseDetails = () => {
 
 const styles = `
 .course-details-outer {
-  background-color: #f0f2f5;
   padding: 60px 0;
 }
 .container {
@@ -289,25 +290,27 @@ const styles = `
   padding: 0 16px;
 }
 .outer-box {
-  background-color: #e8eaf0;
+  background-color:#F3F9FF;
   padding: 40px;
   border-radius: 20px;
+   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
 }
 .inner-box {
-  background-color: #ffffff;
+
   padding: 40px 50px;
   border-radius: 24px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+
 }
 .review-section {
   margin-top: 30px;
 }
 .review-box {
-  background-color: #f9f9f9;
+  background-color: #ffffff;
   padding: 16px 20px;
   border-radius: 12px;
   margin-bottom: 24px;
   border-left: 5px solid #007bff;
+  border-right: 5px solid #007bff;
 }
 .review-content {
   display: flex;

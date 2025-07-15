@@ -31,8 +31,8 @@ export const AuthProvider = ({ children }) => {
     const token = localStorage.getItem("token");
     if (token) {
       axios
-        .get("http://localhost:5000/api/auth/profile", {
-          headers: { Authorization: `Bearer ${token}`},
+        .get("https://inspirehub-backend-itne.onrender.com/api/auth/profile", {
+          headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
           setUser({ ...res.data, token });

@@ -23,7 +23,7 @@ const JoinCommunityOne = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/mailSender",
+        "https://inspirehub-backend-itne.onrender.com/mailSender",
         payload
       );
 
@@ -42,20 +42,21 @@ const JoinCommunityOne = () => {
   };
 
   return (
-    <section className='join-community'>
-      <div className='container container--lg'>
-        <div className='bg-main-25 rounded-20 py-120 px-8'>
-          <div className='container'>
-            <div className='row gy-4 align-items-center'>
-              <div className='col-lg-6'>
-                <div className='join-community__content'>
-                  <div className='mb-40'>
-                    <h2 className='mb-24 wow bounceIn'>
+    <section className="join-community">
+      <div className="container container--lg">
+        <div className="bg-main-25 rounded-20 py-120 px-8">
+          <div className="container">
+            <div className="row gy-4 align-items-center">
+              <div className="col-lg-6">
+                <div className="join-community__content">
+                  <div className="mb-40">
+                    <h2 className="mb-24 wow bounceIn">
                       Join the InspireHub Community: Start Now
                     </h2>
-                    <p className='text-neutral-500 text-line-2 wow bounceInUp'>
-                      Ready to explore insightful content and connect with fellow learners? Sign up now and start 
-                      discovering  — all at your own pace.
+                    <p className="text-neutral-500 text-line-2 wow bounceInUp">
+                      Ready to explore insightful content and connect with
+                      fellow learners? Sign up now and start discovering — all
+                      at your own pace.
                     </p>
                   </div>
                   <form action="#">
@@ -147,10 +148,10 @@ const JoinCommunityOne = () => {
                 <div className="join-community__thumb text-end position-relative">
                   <img
                     // src='assets/images/thumbs/join-community-img.png'
-                    src='assets/images/thumbs/joinCommunity.png'
-                    alt=''
-                    className='wow bounceIn'
-                    data-tilt=''
+                    src="assets/images/thumbs/joinCommunity.png"
+                    alt=""
+                    className="wow bounceIn"
+                    data-tilt=""
                     data-tilt-max={12}
                     data-tilt-speed={500}
                     data-tilt-perspective={5000}

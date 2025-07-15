@@ -252,7 +252,7 @@ const ContactInner = () => {
               <h5 className="text-main-600 mb-0">Get In Touch</h5>
             </div>
             <h2 className="mb-24">Let us help you</h2>
-            <p>
+            <p className="">
               Our platform is built on the principles of innovation, quality,
               and inclusivity, aiming to provide a seamless learning experience.
             </p>
@@ -265,7 +265,9 @@ const ContactInner = () => {
                 </span>
                 <div className="flex-grow-1">
                   <h4 className="mb-12">Main Office</h4>
-                  <p className="text-neutral-500">San Francisco Bay Area, California</p>
+                  <p className="text-neutral-500">
+                    2972 Westheimer Rd. Santa Ana, Illinois 85486{" "}
+                  </p>
                   <Link
                     to="#"
                     className="text-main-600 fw-semibold text-decoration-underline mt-16"
@@ -282,8 +284,8 @@ const ContactInner = () => {
                 </span>
                 <div className="flex-grow-1">
                   <h4 className="mb-12">Email Address</h4>
-                  <p className="text-neutral-500">inspirehub@gmail.com</p>
-                  <p className="text-neutral-500">officeexample@gmail.com</p>
+                  <p className="text-neutral-500">infoexample@gmail.com</p>
+                  <p className="text-neutral-500">example@gmail.com</p>
                   <a
                     href="mailto:infoexample@gmail.com"
                     className="text-main-600 fw-semibold text-decoration-underline mt-16"
@@ -300,8 +302,8 @@ const ContactInner = () => {
                 </span>
                 <div className="flex-grow-1">
                   <h4 className="mb-12">Phone Number</h4>
-                  <p className="text-neutral-500">9090909090</p>
-                  <p className="text-neutral-500">0000444452</p>
+                  <p className="text-neutral-500">(505) 555-0125</p>
+                  <p className="text-neutral-500">(406) 555-0120</p>
                   <a
                     href="tel:(406)555-0120"
                     className="text-main-600 fw-semibold text-decoration-underline mt-16"
@@ -315,12 +317,11 @@ const ContactInner = () => {
         </div>
       </section>
       <section className="contact-form-section py-240 bg-main-25 position-relative z-1">
-         <img
-          src='assets/images/bg/wave-bg.png'
-          alt=''
-          className='position-absolute top-0 start-0 w-100 h-100 z-n1 d-lg-block d-none'
+        <img
+          src="assets/images/bg/wave-bg.png"
+          alt=""
+          className="position-absolute top-0 start-0 w-100 h-100 z-n1 d-lg-block d-none"
         />
-
         <div className="container">
           <div className="row gy-5 align-items-center">
             <div className="col-xl-7 col-lg-6 pe-lg-5">
@@ -332,7 +333,7 @@ const ContactInner = () => {
                   <h5 className="text-main-600 mb-0">Contact Us</h5>
                 </div>
                 <h2 className="mb-24">
-                  Have questions? Don't hesitate to contact us
+                  Have questions? don't hesitate to contact us
                 </h2>
                 <p className="text-neutral-500 text-line-3 max-w-636">
                   We are passionate about transforming lives through education.
@@ -341,74 +342,106 @@ const ContactInner = () => {
                   shape the future.
                 </p>
               </div>
+              <div className="flex-align gap-40 flex-wrap">
+                Ganga Maheshwari Bathula
+                <div className="">
+                  <ul className="flex-align gap-4 mb-10">
+                    <li className="text-warning-600 text-2xl d-flex">
+                      <i className="ph-fill ph-star" />
+                    </li>
+                    <li className="text-warning-600 text-2xl d-flex">
+                      <i className="ph-fill ph-star" />
+                    </li>
+                    <li className="text-warning-600 text-2xl d-flex">
+                      <i className="ph-fill ph-star" />
+                    </li>
+                    <li className="text-warning-600 text-2xl d-flex">
+                      <i className="ph-fill ph-star" />
+                    </li>
+                    <li className="text-warning-600 text-2xl d-flex">
+                      <i className="ph-fill ph-star-half" />
+                    </li>
+                  </ul>
+                  <span className="text-neutral-700 fw-medium">
+                    {" "}
+                    2.5k+ reviews (4.95 of 5)
+                  </span>
+                </div>
+              </div>
             </div>
             <div className="col-xl-5 col-lg-6">
               <div className="p-24 bg-white rounded-12 box-shadow-md">
-                <form onSubmit={handleSubmit} id="commentForm">
-                  <h4 className="mb-0">Get In Touch</h4>
-                  <div className="mb-24">
-                    <label htmlFor="name" className="text-neutral-700 text-lg fw-medium mb-12">
-                      Name
-                    </label>
-                    <input
-                      type="text"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      className="common-input rounded-pill border-transparent focus-border-main-600"
-                      placeholder="Enter Name..."
-                      required
-                    />
-                  </div>
-                  <div className="mb-24">
-                    <label htmlFor="email" className="text-neutral-700 text-lg fw-medium mb-12">
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      className="common-input rounded-pill border-transparent focus-border-main-600"
-                      placeholder="Enter Email..."
-                      required
-                    />
-                  </div>
-                  <div className="mb-24">
-                    <label htmlFor="phone" className="text-neutral-700 text-lg fw-medium mb-12">
-                      Phone
-                    </label>
-                    <input
-                      type="tel"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleChange}
-                      className="common-input rounded-pill border-transparent focus-border-main-600"
-                      placeholder="Enter Your Number..."
-                    />
-                  </div>
-                  <div className="mb-24">
-                    <label htmlFor="message" className="text-neutral-700 text-lg fw-medium mb-12">
-                      Message
-                    </label>
-                    <textarea
-                      name="message"
-                      value={formData.message}
-                      onChange={handleChange}
-                      className="common-input rounded-24 border-transparent focus-border-main-600 h-110"
-                      placeholder="Enter Your Message..."
-                      required
-                    />
-                  </div>
-                  <div className="mb-0">
-                    <button
-                      type="submit"
-                      className="btn btn-main rounded-pill flex-center gap-8 mt-40"
-                    >
-                      Send Message
-                    </button>
-                  </div>
-                </form>
+                <div className="border border-neutral-30 rounded-8 bg-main-25 p-24">
+                  <form action="#" id="commentForm">
+                    <h4 className="mb-0">Get In Touch</h4>
+                    <span className="d-block border border-neutral-30 my-24 border-dashed" />
+                    <div className="mb-24">
+                      <label
+                        htmlFor="name"
+                        className="text-neutral-700 text-lg fw-medium mb-12"
+                      >
+                        Name{" "}
+                      </label>
+                      <input
+                        type="text"
+                        className="common-input rounded-pill border-transparent focus-border-main-600"
+                        id="name"
+                        placeholder="Enter Name..."
+                      />
+                    </div>
+                    <div className="mb-24">
+                      <label
+                        htmlFor="email"
+                        className="text-neutral-700 text-lg fw-medium mb-12"
+                      >
+                        Email{" "}
+                      </label>
+                      <input
+                        type="email"
+                        className="common-input rounded-pill border-transparent focus-border-main-600"
+                        id="email"
+                        placeholder="Enter Email..."
+                      />
+                    </div>
+                    <div className="mb-24">
+                      <label
+                        htmlFor="phone"
+                        className="text-neutral-700 text-lg fw-medium mb-12"
+                      >
+                        Phone{" "}
+                      </label>
+                      <input
+                        type="tel"
+                        className="common-input rounded-pill border-transparent focus-border-main-600"
+                        id="phone"
+                        placeholder="Enter Your Number..."
+                      />
+                    </div>
+                    <div className="mb-24">
+                      <label
+                        htmlFor="desc"
+                        className="text-neutral-700 text-lg fw-medium mb-12"
+                      >
+                        Message
+                      </label>
+                      <textarea
+                        id="desc"
+                        className="common-input rounded-24 border-transparent focus-border-main-600 h-110"
+                        placeholder="Enter Your Message..."
+                        defaultValue={""}
+                      />
+                    </div>
+                    <div className="mb-0">
+                      <button
+                        type="submit"
+                        className="btn btn-main rounded-pill flex-center gap-8 mt-40"
+                      >
+                        Send Message
+                        <i className="ph-bold ph-arrow-up-right d-flex text-lg" />
+                      </button>
+                    </div>
+                  </form>
+                </div>
               </div>
             </div>
           </div>

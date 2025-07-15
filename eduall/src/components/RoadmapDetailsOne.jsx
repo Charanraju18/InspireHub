@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { FaBookmark } from "react-icons/fa";
+import {  FaBookmark } from "react-icons/fa";
 import Reviews from "./Discussions";
-import { useAuth } from "../authContext";
+
 // This component handles the visual roadmap steps and their precise alignment with the roadline.
 const VisualRoadmapSteps = ({ steps }) => {
   const roadmapContainerRef = useRef(null);
@@ -292,106 +292,31 @@ const VisualRoadmapSteps = ({ steps }) => {
 // ... (RoadmapDetails component remains the same as it uses VisualRoadmapSteps)
 const RoadmapDetails = () => {
   const { id } = useParams();
-  const { user, isAuthenticated } = useAuth();
   const [roadmap, setRoadmap] = useState(null);
   const [loading, setLoading] = useState(true);
-  // Instructor follow state
-  const [isFollowingInstructor, setIsFollowingInstructor] = useState(false);
-  const [followLoading, setFollowLoading] = useState(false);
-  const [showUnfollowModal, setShowUnfollowModal] = useState(false);
 
-  // Fetch roadmap and instructor follow status
   useEffect(() => {
     const fetchRoadmap = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/roadmaps/${id}`);
+        const res = await axios.get(
+          `https://inspirehub-backend-itne.onrender.com/api/roadmaps/${id}`
+        );
         setRoadmap(res.data);
-        // Check instructor follow status if user and instructor exist
-        if (user && res.data.createdBy?._id) {
-          const token = user.token || localStorage.getItem("token");
-          const followRes = await fetch(
-            `http://localhost:5000/api/follow-instructors/check-follow/${res.data.createdBy._id}`,
-            {
-              headers: token ? { Authorization: `Bearer ${token}` } : {},
-              credentials: "include",
-            }
-          );
-          const followData = await followRes.json();
-          setIsFollowingInstructor(!!followData.data?.isFollowing);
-        } else {
-          setIsFollowingInstructor(false);
-        }
       } catch (error) {
         console.error("Failed to fetch roadmap", error);
       } finally {
         setLoading(false);
       }
     };
+  //   fetchRoadmap();
+  // }, [id, user]);
+
     fetchRoadmap();
-  }, [id, user]);
-
-  // Follow/unfollow instructor
-  const handleFollowInstructor = async () => {
-    if (!user || !roadmap?.createdBy?._id) {
-      alert("You must be logged in to follow this instructor.");
-      return;
-    }
-    setFollowLoading(true);
-    const instructorId = roadmap.createdBy._id;
-    const token = user.token || localStorage.getItem("token");
-    try {
-      const res = await fetch(
-        `http://localhost:5000/api/follow-instructors/follow/${instructorId}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          credentials: "include",
-          body: JSON.stringify({}),
-        }
-      );
-      if (!res.ok) throw new Error("Follow failed");
-      setIsFollowingInstructor(true);
-    } catch (err) {
-      alert("Failed to follow instructor");
-      console.error("Follow instructor error:", err);
-    } finally {
-      setFollowLoading(false);
-    }
-  };
-
-  const handleUnfollowInstructor = async () => {
-    if (!user || !roadmap?.createdBy?._id) return;
-    setFollowLoading(true);
-    const instructorId = roadmap.createdBy._id;
-    const token = user.token || localStorage.getItem("token");
-    try {
-      const res = await fetch(
-        `http://localhost:5000/api/follow-instructors/unfollow/${instructorId}`,
-        {
-          method: "DELETE",
-          headers: token ? { Authorization: `Bearer ${token}` } : {},
-          credentials: "include",
-        }
-      );
-      if (!res.ok) throw new Error("Unfollow failed");
-      setIsFollowingInstructor(false);
-    } catch (err) {
-      alert("Failed to unfollow instructor");
-      console.error("Unfollow instructor error:", err);
-    } finally {
-      setFollowLoading(false);
-      setShowUnfollowModal(false);
-    }
-  };
+  }, [id]);
 
   if (loading) return <p className="text-center mt-5">Loading roadmap...</p>;
   if (!roadmap)
     return <p className="text-center mt-5 text-danger">Roadmap not found</p>;
-
-  const isOwnProfile = user && roadmap.createdBy?._id === user._id;
 
   return (
     <div className="container py-5" style={{ marginTop: "30px" }}>
