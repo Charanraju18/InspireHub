@@ -551,7 +551,7 @@ const FooterTwo = () => {
                   {" "}
                   {/* <img src='assets/images/logo/logo-white.png' alt='' /> */}
                   {/* <img src='assets/images/logo/logooRemovebg.png' alt='' /> */}
-                  <img src="assets/images/logo/logoo.png" alt="Logo" />
+                  <img src="/assets/images/logo/logoo.png" alt="Logo" />
                 </Link>
               </div>
               <p

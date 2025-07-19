@@ -19,7 +19,9 @@ const InstructorDetails = ({
   const [instructor, setInstructor] = useState(propInstructor || null);
   const [loading, setLoading] = useState(!propInstructor);
   const [error, setError] = useState(null);
-
+  console.log(id);
+  console.log(currentUser?._id);
+  console.log(isAuthenticated);
   const [isFollowing, setIsFollowing] = useState(false);
   const [followersCount, setFollowersCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
@@ -36,7 +38,7 @@ const InstructorDetails = ({
   const fetchInstructorDetails = async (instructorId) => {
     try {
       const res = await fetch(
-        `https://inspirehub-backend-itne.onrender.com/api/auth/instructors/${instructorId}`
+        `http://localhost:5000/api/auth/instructors/${instructorId}`
       );
       const data = await res.json();
       if (!res.ok) throw new Error(data.msg || "Failed to fetch instructor");
@@ -80,7 +82,7 @@ const InstructorDetails = ({
       const token = localStorage.getItem("token");
       try {
         const res = await fetch(
-          `https://inspirehub-backend-itne.onrender.com/api/follow-instructors/check-follow/${instructorId}`,
+          `http://localhost:5000/api/follow-instructors/check-follow/${instructorId}`,
           {
             headers: token ? { Authorization: `Bearer ${token}` } : {},
             credentials: "include",
@@ -103,7 +105,7 @@ const InstructorDetails = ({
     const token = localStorage.getItem("token");
     try {
       const res = await fetch(
-        `https://inspirehub-backend-itne.onrender.com/api/follow-instructors/followers/${instructorId}`,
+        `http://localhost:5000/api/follow-instructors/followers/${instructorId}`,
         {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
           credentials: "include",
@@ -128,7 +130,7 @@ const InstructorDetails = ({
       const token = localStorage.getItem("token");
       try {
         const res = await fetch(
-          `https://inspirehub-backend-itne.onrender.com/api/follow-instructors/following`,
+          `http://localhost:5000/api/follow-instructors/following`,
           {
             headers: token ? { Authorization: `Bearer ${token}` } : {},
             credentials: "include",
@@ -152,7 +154,7 @@ const InstructorDetails = ({
 
     try {
       const res = await fetch(
-        `https://inspirehub-backend-itne.onrender.com/api/follow-instructors/follow/${instructorId}`,
+        `http://localhost:5000/api/follow-instructors/follow/${instructorId}`,
         {
           method: "POST",
           headers: {
@@ -184,7 +186,7 @@ const InstructorDetails = ({
     const token = localStorage.getItem("token");
     try {
       const res = await fetch(
-        `https://inspirehub-backend-itne.onrender.com/api/follow-instructors/unfollow/${instructorId}`,
+        `http://localhost:5000/api/follow-instructors/unfollow/${instructorId}`,
         {
           method: "DELETE",
           headers: token ? { Authorization: `Bearer ${token}` } : {},
@@ -206,7 +208,7 @@ const InstructorDetails = ({
   const handleDelete = async (eventId) => {
     try {
       const response = await fetch(
-        `https://inspirehub-backend-itne.onrender.com/api/events/${eventId}`,
+        `http://localhost:5000/api/events/${eventId}`,
         {
           method: "DELETE",
         }
@@ -229,7 +231,7 @@ const InstructorDetails = ({
   const handleUpdate = async (eventId) => {
     try {
       const response = await fetch(
-        `https://inspirehub-backend-itne.onrender.com/api/events/${eventId}`
+        `http://localhost:5000/api/events/${eventId}`
       );
       if (response.ok) {
         const eventData = await response.json();
@@ -257,16 +259,13 @@ const InstructorDetails = ({
       category: formData.get("category"),
     };
     try {
-      const res = await fetch(
-        "https://inspirehub-backend-itne.onrender.com/api/users/get-in-touch",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
+      const res = await fetch("http://localhost:5000/api/users/get-in-touch", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
       if (res.ok) {
         alert("Message sent successfully!");
         form.reset();
@@ -689,7 +688,7 @@ const InstructorDetails = ({
                     e.preventDefault();
                     try {
                       const res = await fetch(
-                        `https://inspirehub-backend-itne.onrender.com/api/events/${editableEvent._id}`,
+                        `http://localhost:5000/api/events/${editableEvent._id}`,
                         {
                           method: "PUT",
                           headers: {
@@ -795,91 +794,95 @@ const InstructorDetails = ({
                 instructor.instructorProfile.content.liveEventsHosted.map(
                   (event, idx) => (
                     <div className="col-lg-6 col-md-12 col-12" key={idx}>
-                      <div className="position-relative">
-                        <button
-                          className="btn btn-light p-2 rounded-circle"
-                          style={{
-                            border: "none",
-                            cursor: "pointer",
-                            position: "absolute",
-                            top: 8,
-                            right: 8,
-                            zIndex: 1050, // Ensure the button stays above other elements
-                          }}
-                          onClick={() =>
-                            setShowOptions((prev) =>
-                              prev === idx ? null : idx
-                            )
-                          }
-                        >
-                          <i
-                            className="ph-bold ph-dots-three-vertical"
-                            style={{ color: "black", fontSize: "24px" }} // Adjust the font size as needed
-                          />
-                        </button>
-                        {showOptions === idx && (
-                          <div
-                            ref={dropdownRef}
-                            className="position-absolute bg-white border rounded-12 shadow-sm"
+                      {currentUser?._id === id && (
+                        <div className="position-relative">
+                          <button
+                            className="btn btn-light p-2 rounded-circle"
                             style={{
-                              top: "40px",
-                              right: 0,
-                              zIndex: 1000,
-                              minWidth: 150,
-                              padding: "8px 8px",
-                              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                              border: "none",
+                              cursor: "pointer",
+                              position: "absolute",
+                              top: 8,
+                              right: 8,
+                              zIndex: 1050, // Ensure the button stays above other elements
                             }}
+                            onClick={() =>
+                              setShowOptions((prev) =>
+                                prev === idx ? null : idx
+                              )
+                            }
                           >
-                            <button
-                              className="dropdown-item text-start px-3 py-2"
+                            <i
+                              className="ph-bold ph-dots-three-vertical"
+                              style={{ color: "black", fontSize: "24px" }} // Adjust the font size as needed
+                            />
+                          </button>
+                          {showOptions === idx && (
+                            <div
+                              ref={dropdownRef}
+                              className="position-absolute bg-white border rounded-12 shadow-sm"
                               style={{
-                                fontSize: "18px",
-                                color: "#333",
-                                backgroundColor: "transparent",
-                                border: "none",
-                                cursor: "pointer",
-                                transition: "background-color 0.2s ease",
+                                top: "40px",
+                                right: 0,
+                                zIndex: 1000,
+                                minWidth: 150,
+                                padding: "8px 8px",
+                                boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
                               }}
-                              onClick={() => handleUpdate(event._id)} // Pass event ID to update handler
-                              onMouseEnter={(e) =>
-                                (e.target.style.backgroundColor = "#F3F9FF")
-                              }
-                              onMouseLeave={(e) =>
-                                (e.target.style.backgroundColor = "transparent")
-                              }
                             >
-                              Update
-                            </button>
-                            <button
-                              className="dropdown-item text-start px-3 py-2 text-danger"
-                              style={{
-                                fontSize: "18px",
-                                color: "#dc3545",
-                                backgroundColor: "transparent",
-                                border: "none",
-                                cursor: "pointer",
-                                transition: "background-color 0.2s ease",
-                              }}
-                              onClick={() => {
-                                const confirmDelete = window.confirm(
-                                  "Are you sure you want to delete this event?"
-                                );
-                                if (confirmDelete) {
-                                  handleDelete(event._id);
+                              <button
+                                className="dropdown-item text-start px-3 py-2"
+                                style={{
+                                  fontSize: "18px",
+                                  color: "#333",
+                                  backgroundColor: "transparent",
+                                  border: "none",
+                                  cursor: "pointer",
+                                  transition: "background-color 0.2s ease",
+                                }}
+                                onClick={() => handleUpdate(event._id)} // Pass event ID to update handler
+                                onMouseEnter={(e) =>
+                                  (e.target.style.backgroundColor = "#F3F9FF")
                                 }
-                              }} // Pass event ID to delete handler
-                              onMouseEnter={(e) =>
-                                (e.target.style.backgroundColor = "#F3F9FF")
-                              }
-                              onMouseLeave={(e) =>
-                                (e.target.style.backgroundColor = "transparent")
-                              }
-                            >
-                              Delete
-                            </button>
-                          </div>
-                        )}
-                      </div>
+                                onMouseLeave={(e) =>
+                                  (e.target.style.backgroundColor =
+                                    "transparent")
+                                }
+                              >
+                                Update
+                              </button>
+                              <button
+                                className="dropdown-item text-start px-3 py-2 text-danger"
+                                style={{
+                                  fontSize: "18px",
+                                  color: "#dc3545",
+                                  backgroundColor: "transparent",
+                                  border: "none",
+                                  cursor: "pointer",
+                                  transition: "background-color 0.2s ease",
+                                }}
+                                onClick={() => {
+                                  const confirmDelete = window.confirm(
+                                    "Are you sure you want to delete this event?"
+                                  );
+                                  if (confirmDelete) {
+                                    handleDelete(event._id);
+                                  }
+                                }} // Pass event ID to delete handler
+                                onMouseEnter={(e) =>
+                                  (e.target.style.backgroundColor = "#F3F9FF")
+                                }
+                                onMouseLeave={(e) =>
+                                  (e.target.style.backgroundColor =
+                                    "transparent")
+                                }
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      )}
                       <div className="course-item bg-white rounded-16 p-12 h-100 box-shadow-md d-flex flex-column flex-md-row align-items-md-center gap-24">
                         <div
                           className="course-item__thumb rounded-12 overflow-hidden position-relative mb-3 mb-md-0"

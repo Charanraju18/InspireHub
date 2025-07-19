@@ -68,7 +68,7 @@ const RoadmapsPage = () => {
         filters.difficulty.trim() ||
         filters.techstack.trim();
 
-      let url = "https://inspirehub-backend-itne.onrender.com/api/roadmaps";
+      let url = "http://localhost:5000/api/roadmaps";
 
       if (hasFilters) {
         // ✅ Build query parameters
@@ -87,7 +87,7 @@ const RoadmapsPage = () => {
           queryParams.append("techstack", filters.techstack.trim());
         }
 
-        url = `https://inspirehub-backend-itne.onrender.com/api/roadmaps/search?${queryParams.toString()}`;
+        url = `http://localhost:5000/api/roadmaps/search?${queryParams.toString()}`;
       }
 
       console.log("🌐 Fetching from URL:", url);
@@ -167,28 +167,41 @@ const RoadmapsPage = () => {
   // };
 
   const handleBookmark = async (roadmap) => {
-    const userId = localStorage.getItem("userEmail");
-
-    if (!userId) {
-      alert("Please login to bookmark this roadmap.");
-      return;
-    }
-
     try {
-      // Fetch current wishlist
-      const res = await axios.post(
-        "https://inspirehub-backend-itne.onrender.com/api/wishlist/get",
+      const userId = localStorage.getItem("userEmail");
+
+      if (!userId) {
+        alert("Please login to bookmark this roadmap.");
+        return;
+      }
+
+      // Validate roadmap structure
+      if (!roadmap?._id || !roadmap?.title) {
+        console.error("Invalid roadmap structure:", roadmap);
+        alert("Invalid roadmap data. Please try again.");
+        return;
+      }
+
+      console.log("📤 Checking existing wishlist...");
+      const fetchResponse = await axios.post(
+        "http://localhost:5000/api/wishlist/get",
+        { userId },
         {
-          userId,
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
       );
 
-      const existing = res.data.wishlist || [];
-      const alreadyBookmarked = existing.find(
-        (item) => item._id === roadmap._id
+      const existingWishlist = fetchResponse.data?.wishlist || [];
+      console.log("📝 Existing wishlist items:", existingWishlist);
+
+      // Check for duplicates using _id (as string)
+      const isAlreadyBookmarked = existingWishlist.some(
+        (item) => item._id.toString() === roadmap._id.toString()
       );
 
-      if (alreadyBookmarked) {
+      if (isAlreadyBookmarked) {
         alert("This roadmap is already in your wishlist.");
         return;
       }
@@ -196,23 +209,56 @@ const RoadmapsPage = () => {
       const payload = {
         userId,
         roadmap: {
-          _id: roadmap._id,
+          _id: roadmap._id, // Ensure this matches your schema
           title: roadmap.title,
-          description: roadmap.description,
-          thumbnail: roadmap.thumbnail,
+          description: roadmap.description || "", // Handle missing description
+          thumbnail: roadmap.thumbnail || "", // Handle missing thumbnail
         },
       };
 
-      const response = await axios.post(
-        "https://inspirehub-backend-itne.onrender.com/api/wishlist/add",
-        payload
+      console.log("📤 Adding to wishlist with payload:", payload);
+      const addResponse = await axios.post(
+        "http://localhost:5000/api/wishlist/add",
+        payload,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
       );
-      if (response.status === 200) {
+
+      if (addResponse.status === 200) {
+        console.log("✅ Successfully added to wishlist:", addResponse.data);
         alert("Roadmap added to wishlist!");
+      } else {
+        console.warn("Unexpected response status:", addResponse.status);
+        alert("Operation completed, but with unexpected response.");
       }
     } catch (error) {
-      console.error("❌ Error adding to wishlist:", error);
-      alert("Something went wrong. Try again.");
+      console.error("❌ Error in handleBookmark:", error);
+
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        console.error("Response data:", error.response.data);
+        console.error("Response status:", error.response.status);
+        console.error("Response headers:", error.response.headers);
+
+        if (error.response.status === 401) {
+          alert("Session expired. Please login again.");
+        } else {
+          alert(
+            `Error: ${error.response.data.message || "Server error occurred"}`
+          );
+        }
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error("No response received:", error.request);
+        alert("Network error. Please check your connection.");
+      } else {
+        // Something happened in setting up the request
+        console.error("Request setup error:", error.message);
+        alert("Application error. Please try again.");
+      }
     }
   };
 

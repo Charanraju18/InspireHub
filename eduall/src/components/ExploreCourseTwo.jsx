@@ -51,7 +51,7 @@ const ExploreCourseTwo = () => {
 
       // ✅ Fetch all roadmaps first
       const roadmapsResponse = await fetch(
-        "https://inspirehub-backend-itne.onrender.com/api/roadmaps"
+        "http://localhost:5000/api/roadmaps"
       );
 
       if (!roadmapsResponse.ok) {
@@ -66,7 +66,7 @@ const ExploreCourseTwo = () => {
       // ✅ Try to fetch domains, but don't fail if it doesn't work
       try {
         const domainsResponse = await fetch(
-          "https://inspirehub-backend-itne.onrender.com/api/roadmaps/domains"
+          "http://localhost:5000/api/roadmaps/domains"
         );
 
         if (domainsResponse.ok) {

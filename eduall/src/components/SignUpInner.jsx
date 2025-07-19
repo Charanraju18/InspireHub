@@ -99,14 +99,11 @@ const SignUpInner = () => {
     }
     setOtpLoading(true);
     try {
-      const res = await fetch(
-        "https://inspirehub-backend-itne.onrender.com/api/auth/otp-send",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: form.email }),
-        }
-      );
+      const res = await fetch("http://localhost:5000/api/auth/otp-send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: form.email }),
+      });
       if (res.ok) {
         setOtpSent(true);
         setOtpError("");
@@ -119,18 +116,6 @@ const SignUpInner = () => {
     setOtpLoading(false);
   };
 
-  const handleOtpChange = (e, idx) => {
-    const value = e.target.value.replace(/\D/g, "");
-    if (value.length > 1) return;
-    const newOtp = [...otp];
-    newOtp[idx] = value;
-    setOtp(newOtp);
-    // Move to next box if value entered
-    if (value && idx < 5) {
-      document.getElementById(`otp-box-${idx + 1}`)?.focus();
-    }
-  };
-
   const handleVerifyOtp = async () => {
     setOtpError("");
     const enteredOtp = otp.join("");
@@ -140,14 +125,11 @@ const SignUpInner = () => {
     }
     setOtpLoading(true);
     try {
-      const res = await fetch(
-        "https://inspirehub-backend-itne.onrender.com/api/auth/otp-verify",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: form.email, otp: enteredOtp }),
-        }
-      );
+      const res = await fetch("http://localhost:5000/api/auth/otp-verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: form.email, otp: enteredOtp }),
+      });
       if (res.ok) {
         setOtpVerified(true);
         setOtpError("");
@@ -245,14 +227,11 @@ const SignUpInner = () => {
       };
     }
     try {
-      const res = await fetch(
-        "https://inspirehub-backend-itne.onrender.com/api/auth/full-signup",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        }
-      );
+      const res = await fetch("http://localhost:5000/api/auth/full-signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
       if (res.ok) {
         navigate("/sign-in");
       } else {
@@ -267,6 +246,40 @@ const SignUpInner = () => {
   const handleConfirmPass = (e) => {
     if (e.target.value !== form.password) {
       setError("Passwords do not match.");
+    }
+  };
+
+  const handleOtpChange = (e, idx) => {
+    const value = e.target.value.replace(/\D/g, "");
+    if (value.length > 1) return;
+
+    const newOtp = [...otp];
+    newOtp[idx] = value;
+    setOtp(newOtp);
+
+    // Move to next box if value entered
+    if (value && idx < 5) {
+      document.getElementById(`otp-box-${idx + 1}`)?.focus();
+    }
+  };
+
+  // Add this new function to handle keydown events
+  const handleKeyDown = (e, idx) => {
+    // Handle backspace
+    if (e.key === "Backspace") {
+      e.preventDefault();
+      const newOtp = [...otp];
+
+      if (newOtp[idx] !== "") {
+        // Clear current box
+        newOtp[idx] = "";
+        setOtp(newOtp);
+      } else if (idx > 0) {
+        // Move to previous box and clear it
+        newOtp[idx - 1] = "";
+        setOtp(newOtp);
+        document.getElementById(`otp-box-${idx - 1}`)?.focus();
+      }
     }
   };
 
@@ -379,6 +392,8 @@ const SignUpInner = () => {
                     )}
                   </div>
                 </div>
+
+                {/* Email and OTP Section */}
                 <div className="col-sm-6">
                   <label
                     htmlFor="email"
@@ -421,66 +436,317 @@ const SignUpInner = () => {
                     </button>
                   </div>
                 </div>
-                <div className="col-sm-6">
-                  {/* OTP Section */}
+
+                {/* OTP Verification Section - Responsive positioning */}
+                <div className="col-sm-6 d-none d-md-block">
+                  {/* Desktop: Show beside email (above 768px) */}
                   {otpSent && !otpVerified && (
-                    <div className="mt-3">
-                      <div className="m-10 text-center fw-medium">
-                        Enter the 6-digit OTP sent to your email
+                    <div className="mt-3 w-100">
+                      <label className="text-neutral-700 text-lg fw-medium mb-12 d-block">
+                        Email Verification
+                      </label>
+                      <div className="mb-3 text-center fw-medium text-sm text-neutral-600">
+                        Enter the 6-digit OTP
                       </div>
-                      <div
-                        style={{
-                          display: "flex",
-                          gap: 8,
-                          justifyContent: "center",
-                          alignItems: "center",
-                          marginBottom: 12,
-                        }}
-                      >
-                        {otp.map((digit, idx) => (
-                          <input
-                            key={idx}
-                            id={`otp-box-${idx}`}
-                            type="text"
-                            maxLength={1}
-                            value={digit}
-                            onChange={(e) => handleOtpChange(e, idx)}
-                            style={{
-                              width: 40,
-                              height: 44,
-                              textAlign: "center",
-                              fontSize: 20,
-                              border: "1.5px solid #bbb",
-                              borderRadius: 8,
-                              background: "#fff",
-                            }}
-                          />
-                        ))}
+
+                      {/* OTP Input Container */}
+                      <div className="d-flex justify-content-center align-items-center mb-3">
+                        <div className="d-flex gap-2 flex-nowrap">
+                          {otp.map((digit, idx) => (
+                            <input
+                              key={idx}
+                              id={`otp-box-desktop-${idx}`}
+                              type="text"
+                              maxLength={1}
+                              value={digit}
+                              onChange={(e) => handleOtpChange(e, idx)}
+                              onKeyDown={(e) => handleKeyDown(e, idx)}
+                              style={{
+                                width: "45px",
+                                height: "45px",
+                                fontSize: "18px",
+                                fontWeight: "600",
+                                textAlign: "center",
+                                border: "2px solid #e0e0e0",
+                                borderRadius: "8px",
+                                backgroundColor: "#f8f9fa",
+                                color: "#333",
+                                outline: "none",
+                                transition: "all 0.3s ease",
+                              }}
+                              onFocus={(e) => {
+                                e.target.style.borderColor = "#007bff";
+                                e.target.style.backgroundColor = "#fff";
+                                e.target.style.boxShadow =
+                                  "0 0 0 2px rgba(0, 123, 255, 0.1)";
+                                e.target.style.transform = "scale(1.05)";
+                              }}
+                              onBlur={(e) => {
+                                e.target.style.borderColor = "#e0e0e0";
+                                e.target.style.backgroundColor = "#f8f9fa";
+                                e.target.style.boxShadow = "none";
+                                e.target.style.transform = "scale(1)";
+                              }}
+                            />
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Submit OTP Button - Compact for desktop */}
+                      <div className="d-flex justify-content-center">
                         <button
                           type="button"
-                          className="btn btn-main ms-2"
+                          className="btn btn-sm"
                           onClick={handleVerifyOtp}
                           disabled={otpLoading}
+                          style={{
+                            background: otpLoading
+                              ? "linear-gradient(135deg, #6c757d 0%, #5a6268 100%)"
+                              : "linear-gradient(135deg, #007bff 0%, #0056b3 100%)",
+                            color: "#fff",
+                            border: "none",
+                            borderRadius: "20px",
+                            padding: "8px 20px",
+                            fontSize: "14px",
+                            fontWeight: "600",
+                            transition: "all 0.3s ease",
+                            cursor: otpLoading ? "not-allowed" : "pointer",
+                            minWidth: "120px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            gap: "6px",
+                          }}
                         >
+                          {otpLoading && (
+                            <div
+                              style={{
+                                width: "12px",
+                                height: "12px",
+                                border: "2px solid transparent",
+                                borderTop: "2px solid #fff",
+                                borderRadius: "50%",
+                                animation: "spin 1s linear infinite",
+                              }}
+                            />
+                          )}
                           {otpLoading ? "Verifying..." : "Submit OTP"}
                         </button>
                       </div>
-                      {otpError && (
-                        <div
-                          className="text-danger mt-2 text-center"
-                          style={{ fontSize: 14 }}
-                        >
-                          {otpError}
-                        </div>
-                      )}
                     </div>
                   )}
+
                   {otpVerified && (
-                    <div className="text-success mt-2 fw-semibold text-center">
-                      Email verified!
+                    <div className="mt-3">
+                      <div
+                        className="text-success fw-semibold text-center p-2 rounded-8"
+                        style={{
+                          background:
+                            "linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%)",
+                          border: "1px solid #c3e6cb",
+                          fontSize: "14px",
+                        }}
+                      >
+                        <i
+                          className="ph-bold ph-check-circle me-1"
+                          style={{ fontSize: "16px" }}
+                        ></i>
+                        Email verified!
+                      </div>
+                    </div>
+                  )}
+
+                  {!otpSent && !otpVerified && (
+                    <div className="mt-3">
+                      <div className="text-muted text-center small">
+                        Click "Verify" to receive OTP
+                      </div>
                     </div>
                   )}
                 </div>
+
+                {/* Mobile OTP Section - Full width below email (below 768px) */}
+                <div className="col-sm-12 d-md-none">
+                  {otpSent && !otpVerified && (
+                    <div className="mt-3 w-100">
+                      <label className="text-neutral-700 text-lg fw-medium mb-12 d-block">
+                        Email Verification
+                      </label>
+                      <div className="mb-3 text-center fw-medium text-sm text-neutral-600">
+                        Enter the 6-digit OTP sent to your email
+                      </div>
+
+                      {/* OTP Input Container */}
+                      <div className="d-flex justify-content-center align-items-center mb-4">
+                        <div
+                          className="d-flex gap-2 flex-nowrap"
+                          style={{
+                            overflowX: "auto",
+                            padding: "8px",
+                            justifyContent: "center",
+                            minWidth: "fit-content",
+                          }}
+                        >
+                          {otp.map((digit, idx) => (
+                            <input
+                              key={idx}
+                              id={`otp-box-mobile-${idx}`}
+                              type="text"
+                              maxLength={1}
+                              value={digit}
+                              onChange={(e) => handleOtpChange(e, idx)}
+                              onKeyDown={(e) => handleKeyDown(e, idx)}
+                              style={{
+                                width: "45px",
+                                height: "45px",
+                                fontSize: "16px",
+                                fontWeight: "600",
+                                textAlign: "center",
+                                border: "2px solid #e0e0e0",
+                                borderRadius: "12px",
+                                backgroundColor: "#f8f9fa",
+                                color: "#333",
+                                outline: "none",
+                                transition: "all 0.3s ease",
+                                flexShrink: 0,
+                              }}
+                              onFocus={(e) => {
+                                e.target.style.borderColor = "#007bff";
+                                e.target.style.backgroundColor = "#fff";
+                                e.target.style.boxShadow =
+                                  "0 0 0 3px rgba(0, 123, 255, 0.1)";
+                                e.target.style.transform = "scale(1.05)";
+                              }}
+                              onBlur={(e) => {
+                                e.target.style.borderColor = "#e0e0e0";
+                                e.target.style.backgroundColor = "#f8f9fa";
+                                e.target.style.boxShadow = "none";
+                                e.target.style.transform = "scale(1)";
+                              }}
+                            />
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Submit OTP Button */}
+                      <div className="d-flex justify-content-center">
+                        <button
+                          type="button"
+                          className="btn position-relative"
+                          onClick={handleVerifyOtp}
+                          disabled={otpLoading}
+                          style={{
+                            background: otpLoading
+                              ? "linear-gradient(135deg, #6c757d 0%, #5a6268 100%)"
+                              : "linear-gradient(135deg, #007bff 0%, #0056b3 100%)",
+                            color: "#fff",
+                            border: "none",
+                            borderRadius: "25px",
+                            padding: "12px 32px",
+                            fontSize: "16px",
+                            fontWeight: "600",
+                            letterSpacing: "0.5px",
+                            boxShadow: otpLoading
+                              ? "0 4px 15px rgba(108, 117, 125, 0.3)"
+                              : "0 4px 15px rgba(0, 123, 255, 0.3)",
+                            transition: "all 0.3s ease",
+                            cursor: otpLoading ? "not-allowed" : "pointer",
+                            minWidth: "160px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            gap: "8px",
+                          }}
+                          onMouseEnter={(e) => {
+                            if (!otpLoading) {
+                              e.target.style.transform = "translateY(-2px)";
+                              e.target.style.boxShadow =
+                                "0 6px 20px rgba(0, 123, 255, 0.4)";
+                            }
+                          }}
+                          onMouseLeave={(e) => {
+                            if (!otpLoading) {
+                              e.target.style.transform = "translateY(0)";
+                              e.target.style.boxShadow =
+                                "0 4px 15px rgba(0, 123, 255, 0.3)";
+                            }
+                          }}
+                        >
+                          {otpLoading && (
+                            <div
+                              style={{
+                                width: "16px",
+                                height: "16px",
+                                border: "2px solid transparent",
+                                borderTop: "2px solid #fff",
+                                borderRadius: "50%",
+                                animation: "spin 1s linear infinite",
+                              }}
+                            />
+                          )}
+                          {otpLoading ? "Verifying..." : "Submit OTP"}
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {otpVerified && (
+                    <div className="mt-3">
+                      <div
+                        className="text-success fw-semibold text-center p-3 rounded-12"
+                        style={{
+                          background:
+                            "linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%)",
+                          border: "1px solid #c3e6cb",
+                        }}
+                      >
+                        <i
+                          className="ph-bold ph-check-circle me-2"
+                          style={{ fontSize: "18px" }}
+                        ></i>
+                        Email verified successfully!
+                      </div>
+                    </div>
+                  )}
+
+                  {!otpSent && !otpVerified && (
+                    <div className="mt-3">
+                      <div className="text-muted text-center small">
+                        Click "Verify" to receive OTP
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Error Message */}
+                {otpError && (
+                  <div className="col-sm-12">
+                    <div
+                      className="text-danger mt-2 text-center small fw-medium"
+                      style={{
+                        background: "#fff5f5",
+                        border: "1px solid #fed7d7",
+                        borderRadius: "8px",
+                        padding: "8px 12px",
+                      }}
+                    >
+                      {otpError}
+                    </div>
+                  </div>
+                )}
+
+                {/* Add CSS animation for spinner */}
+                <style jsx>{`
+                  @keyframes spin {
+                    0% {
+                      transform: rotate(0deg);
+                    }
+                    100% {
+                      transform: rotate(360deg);
+                    }
+                  }
+                `}</style>
+
                 <div className="col-sm-6">
                   <label
                     htmlFor="password"

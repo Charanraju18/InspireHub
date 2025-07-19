@@ -15,32 +15,76 @@ const SignInInner = () => {
     setPasswordVisible(!passwordVisible);
   };
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     console.log("Sending login request with:", { email, password });
+  //     const res = await axios.post(
+  //       "http://localhost:5000/api/auth/login",
+  //       { email, password },
+  //       {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     );
+
+  //     console.log("📦 Login response:", res.data);
+
+  //     if (res.data && res.data.user) {
+  //       localStorage.setItem("userEmail", res.data.user.email); // ✅ Store only email
+  //       localStorage.setItem("token", res.data.token);          // Optional: store token
+  //       login(res.data.user, res.data.token);                   // Update auth context
+  //       console.log("📦 Login success:", res.data.user.email);
+  //       navigate("/");                                          // Redirect after login
+  //     } else {
+  //       setError("Invalid credentials or account does not exist.");
+  //     }
+  //   } catch (err) {
+  //     console.error("❌ Login error:", err);
+  //     setError(
+  //       err.response?.data?.message ||
+  //         "Invalid credentials or account does not exist."
+  //     );
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const trimmedEmail = email.trim();
+      const trimmedPassword = password.trim();
+
+      console.log("Sending login request with:", {
+        email: trimmedEmail,
+        password: trimmedPassword,
+      });
+
       const res = await axios.post(
-        "https://inspirehub-backend-itne.onrender.com/api/auth/login",
+        "http://localhost:5000/api/auth/login",
+        { email: trimmedEmail, password: trimmedPassword },
         {
-          email,
-          password,
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
       );
 
       console.log("📦 Login response:", res.data);
 
       if (res.data && res.data.user) {
-        localStorage.setItem("userEmail", res.data.user.email); // ✅ Store only email
-        localStorage.setItem("token", res.data.token);          // Optional: store token
-        login(res.data.user, res.data.token);                   // Update auth context
+        localStorage.setItem("userEmail", res.data.user.email);
+        localStorage.setItem("token", res.data.token);
+        login(res.data.user, res.data.token);
         console.log("📦 Login success:", res.data.user.email);
-        navigate("/");                                          // Redirect after login
+        navigate("/");
       } else {
         setError("Invalid credentials or account does not exist.");
       }
     } catch (err) {
       console.error("❌ Login error:", err);
       setError(
-        err.response?.data?.message ||
+        err.response?.data?.msg || // Use `msg` from backend error response
           "Invalid credentials or account does not exist."
       );
     }

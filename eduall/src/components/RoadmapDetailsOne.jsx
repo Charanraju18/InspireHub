@@ -298,9 +298,7 @@ const RoadmapDetails = () => {
   useEffect(() => {
     const fetchRoadmap = async () => {
       try {
-        const res = await axios.get(
-          `https://inspirehub-backend-itne.onrender.com/api/roadmaps/${id}`
-        );
+        const res = await axios.get(`http://localhost:5000/api/roadmaps/${id}`);
         setRoadmap(res.data);
       } catch (error) {
         console.error("Failed to fetch roadmap", error);

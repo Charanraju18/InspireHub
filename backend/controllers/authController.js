@@ -1,24 +1,40 @@
 const { User } = require("../models/user");
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
+const jwt = require("jsonwebtoken");
 const { sendWelcomeEmail } = require("../utils/mailer");
 
 exports.login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    let { email, password } = req.body;
+
+    // Trim input to avoid trailing spaces causing mismatch
+    email = email.trim();
+    password = password.trim();
 
     const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ msg: "Invalid credentials" });
-
+    console.log("🔍 DB lookup user:", user);
+    if (!user) {
+      return res
+        .status(400)
+        .json({ msg: "Invalid credentials: no user found" });
+    }
+    console.log("Password from request (trimmed):", password); // Add this
+    console.log("Hashed password from DB:", user.password); // Add this
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ msg: "Invalid credentials" });
+    console.log("🔑 Password match:", isMatch);
+
+    if (!isMatch) {
+      return res
+        .status(400)
+        .json({ msg: "Invalid credentials: password mismatch" });
+    }
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
     });
 
-    res.status(200).json({
+    return res.status(200).json({
       token,
       user: {
         id: user._id,
@@ -29,6 +45,7 @@ exports.login = async (req, res) => {
       },
     });
   } catch (err) {
+    console.error("❌ Login server error:", err);
     res.status(500).json({ msg: "Server error", error: err.message });
   }
 };
@@ -36,7 +53,7 @@ exports.login = async (req, res) => {
 // Full Signup
 exports.fullSignup = async (req, res) => {
   try {
-    const {
+    let {
       name,
       email,
       password,
@@ -50,6 +67,10 @@ exports.fullSignup = async (req, res) => {
       instructorProfile,
       learnerProfile,
     } = req.body;
+
+    // Trim email and password for safety
+    email = email.trim();
+    password = password.trim();
 
     const existingUser = await User.findOne({ email });
     if (existingUser)
@@ -111,7 +132,7 @@ exports.forgotPassword = async (req, res) => {
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "15m",
     });
-    const resetLink = `https://inspirehub-frontend.onrender.com/reset-password/${token}`;
+    const resetLink = `http://localhost:3000/reset-password/${token}`;
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -145,8 +166,7 @@ exports.resetPassword = async (req, res) => {
     const user = await User.findById(decoded.id);
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-    user.password = hashedPassword;
+    user.password = newPassword;
     await user.save();
 
     res.status(200).json({ message: "Password has been reset successfully" });

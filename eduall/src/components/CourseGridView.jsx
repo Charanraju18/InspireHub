@@ -9,9 +9,7 @@ const CourseGridView = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await axios.get(
-          "https://inspirehub-backend-itne.onrender.com/api/posts"
-        );
+        const response = await axios.get("http://localhost:5000/api/posts");
         setPostList(response.data);
       } catch (error) {
         console.error("Error fetching posts:", error);
@@ -30,12 +28,9 @@ const CourseGridView = () => {
       };
 
       // Update backend
-      await axios.put(
-        `https://inspirehub-backend-itne.onrender.com/api/posts/${id}`,
-        {
-          likes: updatedPost.likes,
-        }
-      );
+      await axios.put(`http://localhost:5000/api/posts/${id}`, {
+        likes: updatedPost.likes,
+      });
 
       // Update local state
       setPostList((prevPosts) =>

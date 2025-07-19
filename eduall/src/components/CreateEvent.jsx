@@ -101,7 +101,7 @@ const EventForm = () => {
 
     try {
       const res = await axios.post(
-        "https://inspirehub-backend-itne.onrender.com/api/events/createEvent",
+        "http://localhost:5000/api/events/createEvent",
         formData,
         {
           headers: {

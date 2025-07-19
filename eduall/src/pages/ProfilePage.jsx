@@ -168,7 +168,7 @@ const ProfileEditForm = ({ user, learnerProfile, onClose, onUpdate }) => {
         };
       }
       const res = await axios.put(
-        "https://inspirehub-backend-itne.onrender.com/api/auth/update-profile",
+        "http://localhost:5000/api/auth/update-profile",
         updateData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -594,7 +594,7 @@ const ProfilePage = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
-        `https://inspirehub-backend-itne.onrender.com/api/roadmaps/${roadmapId}`,
+        `http://localhost:5000/api/roadmaps/${roadmapId}`,
         {
           method: "DELETE",
           headers: {
@@ -621,7 +621,7 @@ const ProfilePage = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
-        `https://inspirehub-backend-itne.onrender.com/api/roadmaps/${roadmapId}/add-step`,
+        `http://localhost:5000/api/roadmaps/${roadmapId}/add-step`,
         {
           method: "PUT",
           headers: {
@@ -716,7 +716,7 @@ const ProfilePage = () => {
   const fetchInstructorDetails = async (instructorId) => {
     try {
       const res = await fetch(
-        `https://inspirehub-backend-itne.onrender.com/api/auth/instructors/${instructorId}`
+        `http://localhost:5000/api/auth/instructors/${instructorId}`
       );
       const data = await res.json();
       if (!res.ok) throw new Error(data.msg || "Failed to fetch instructor");
@@ -733,7 +733,7 @@ const ProfilePage = () => {
   const handleUpdateEvent = async (eventId) => {
     try {
       const response = await fetch(
-        `https://inspirehub-backend-itne.onrender.com/api/events/${eventId}`
+        `http://localhost:5000/api/events/${eventId}`
       );
       if (response.ok) {
         const eventData = await response.json();
@@ -751,7 +751,7 @@ const ProfilePage = () => {
   const handleDeleteEvent = async (eventId) => {
     try {
       const response = await fetch(
-        `https://inspirehub-backend-itne.onrender.com/api/events/${eventId}`,
+        `http://localhost:5000/api/events/${eventId}`,
         {
           method: "DELETE",
         }
@@ -790,16 +790,13 @@ const ProfilePage = () => {
         setLoading(false);
         return;
       }
-      const res = await axios.get(
-        "https://inspirehub-backend-itne.onrender.com/api/auth/profile",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const res = await axios.get("http://localhost:5000/api/auth/profile", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setUser(res.data);
       if (res.data.role === "Learner") {
         const learnerRes = await axios.get(
-          "https://inspirehub-backend-itne.onrender.com/api/auth/learner-content",
+          "http://localhost:5000/api/auth/learner-content",
           { headers: { Authorization: `Bearer ${token}` } }
         );
         setLearnerProfile(learnerRes.data);
@@ -1370,7 +1367,7 @@ const ProfilePage = () => {
                           e.preventDefault();
                           try {
                             const res = await fetch(
-                              `https://inspirehub-backend-itne.onrender.com/api/events/${editableEvent._id}`,
+                              `http://localhost:5000/api/events/${editableEvent._id}`,
                               {
                                 method: "PUT",
                                 headers: {

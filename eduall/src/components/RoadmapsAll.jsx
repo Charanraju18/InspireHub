@@ -8,9 +8,7 @@ const RoadmapsAll = () => {
   useEffect(() => {
     const fetchRoadmaps = async () => {
       try {
-        const res = await fetch(
-          "https://inspirehub-backend-itne.onrender.com/api/roadmaps"
-        );
+        const res = await fetch("http://localhost:5000/api/roadmaps");
         const data = await res.json();
         setRoadmaps(data);
       } catch (err) {

@@ -3,8 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 const getImageUrl = (image) => {
   if (!image) return "/assets/images/thumbs/event-detail-img1.png";
-  if (image.startsWith("/uploads"))
-    return `https://inspirehub-backend-itne.onrender.com${image}`;
+  if (image.startsWith("/uploads")) return `http://localhost:5000${image}`;
   return image;
 };
 
@@ -30,9 +29,7 @@ const EventsAllOne = () => {
     const fetchEvents = async () => {
       try {
         setLoading(true);
-        const res = await fetch(
-          "https://inspirehub-backend-itne.onrender.com/api/events"
-        );
+        const res = await fetch("http://localhost:5000/api/events");
         if (!res.ok) throw new Error("Failed to fetch events");
         const data = await res.json();
 

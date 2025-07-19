@@ -94,7 +94,6 @@ function App() {
         />
         <Route exact path="/create-event" element={<CreateEventsPage />} />
         <Route exact path="/create-roadmap" element={<CreateRoadMap />} />
-        <Route exact path="/roadmaps" element={<CourseListViewPage />} />
 
         <Route exact path="/event-details/:id" element={<EventDetailsPage />} />
         <Route exact path="/events" element={<EventsPage />} />

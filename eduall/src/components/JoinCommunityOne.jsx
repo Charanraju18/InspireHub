@@ -23,7 +23,7 @@ const JoinCommunityOne = () => {
 
     try {
       const response = await axios.post(
-        "https://inspirehub-backend-itne.onrender.com/mailSender",
+        "http://localhost:5000/mailSender",
         payload
       );
 
