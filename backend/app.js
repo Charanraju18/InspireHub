@@ -9,37 +9,24 @@ const app = express();
 // Connect to MongoDB
 connectDB();
 
-// 1. Increase backend port to avoid conflict with frontend
-const PORT = process.env.PORT || 5000; // Changed from 3000 to 5000
-
-// 2. Enhanced CORS configuration
+// Enhanced CORS configuration
 const corsOptions = {
-  origin: [
-    "https://inspirehub-frontend.onrender.com", // Your React app
-    // Add other allowed origins as needed
-  ],
+  origin: process.env.REACT_APP_FRONTEND_URL || "http://localhost:3000",
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: [
-    "Content-Type",
-    "Authorization",
-    "X-Requested-With",
-    "Accept",
-  ],
-  optionsSuccessStatus: 200, // For legacy browser support
+  allowedHeaders: ["Content-Type", "Authorization"]
 };
 
-// 3. Middleware ordering optimized
-app.use(cors(corsOptions)); // CORS first
+app.use(cors(corsOptions));
 
-// Body parsing middleware (express.json is enough, no need for body-parser in Express 4.16+)
+// Body parsing middleware
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
 // Static files
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// 4. API Routes - moved before static React files
+// API Routes
 app.use("/api/events", require("./routes/eventRoutes"));
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/posts", require("./routes/postRoutes"));
@@ -51,25 +38,36 @@ app.use("/api/wishlist", require("./routes/wishlistRoutes"));
 app.use("/api/contact", require("./routes/controllerRoutes"));
 app.use("/api/reviews", require("./routes/reviewsRoute"));
 
-// 5. Error Handler Middleware
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'OK', timestamp: new Date() });
+});
+
+// Client-side routing - Express 5 compatible splat parameter
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, "eduall", "build")));
+
+  // Proper Express 5 splat parameter handling
+  app.get('/*', (req, res) => {
+    res.sendFile(path.join(__dirname, "eduall", "build", "index.html"), (err) => {
+      if (err) {
+        res.status(500).send('Error loading the application');
+      }
+    });
+  });
+}
+
+// Error Handler Middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({
     message: "Internal Server Error",
-    error: process.env.NODE_ENV === "development" ? err.message : undefined,
+    error: process.env.NODE_ENV === 'development' ? err.message : undefined
   });
 });
 
-// 6. Static files for React app - only in production
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "eduall", "build")));
-
-  app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "eduall", "build", "index.html"));
-  });
-}
-
 // Start Server
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Server running on render`);
+  console.log(`Server running on port ${PORT}`);
 });
