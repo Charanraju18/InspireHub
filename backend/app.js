@@ -43,20 +43,22 @@ app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'OK', timestamp: new Date() });
 });
 
-// Client-side routing - Express 5 compatible splat parameter
+// Client-side routing for production
 if (process.env.NODE_ENV === 'production') {
+  // Serve static files from React app
   app.use(express.static(path.join(__dirname, "eduall", "build")));
 
-  // Proper Express 5 splat parameter handling
-  app.get("/*splat", (req, res) => {
-    res.sendFile(
-      path.join(__dirname, "eduall", "build", "index.html"),
-      (err) => {
-        if (err) {
-          res.status(500).send("Error loading the application");
-        }
-      }
-    );
+  // Explicitly handle known client-side routes first
+  const clientRoutes = ['/', '/about', '/contact']; // Add all your client routes here
+  clientRoutes.forEach(route => {
+    app.get(route, (req, res) => {
+      res.sendFile(path.join(__dirname, "eduall", "build", "index.html"));
+    });
+  });
+
+  // Then handle all other routes (must come last)
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, "eduall", "build", "index.html"));
   });
 }
 
