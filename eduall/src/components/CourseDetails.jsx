@@ -20,7 +20,9 @@ const CourseDetails = () => {
   useEffect(() => {
     const fetchRoadmap = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/roadmaps/${id}`);
+        const res = await axios.get(
+          `https://inspirehub-backend-itne.onrender.com/api/roadmaps/${id}`
+        );
         setRoadmap(res.data);
       } catch (error) {
         console.error("Error fetching roadmap:", error);
@@ -29,9 +31,12 @@ const CourseDetails = () => {
 
     const fetchReviews = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/reviews/${id}`, {
-          withCredentials: true,
-        });
+        const res = await axios.get(
+          `https://inspirehub-backend-itne.onrender.com/api/reviews/${id}`,
+          {
+            withCredentials: true,
+          }
+        );
 
         if (res.data.length > 0) {
           setReviews(res.data);
@@ -70,7 +75,7 @@ const CourseDetails = () => {
     if (!text) return;
     try {
       const res = await axios.post(
-        `http://localhost:5000/api/reviews/reply/${reviewId}`,
+        `https://inspirehub-backend-itne.onrender.com/api/reviews/reply/${reviewId}`,
         { text },
         {
           withCredentials: true,
@@ -99,7 +104,7 @@ const CourseDetails = () => {
 
     try {
       const res = await axios.post(
-        `http://localhost:5000/api/reviews/${id}`,
+        `https://inspirehub-backend-itne.onrender.com/api/reviews/${id}`,
         { text: reviewText },
         {
           withCredentials: true,

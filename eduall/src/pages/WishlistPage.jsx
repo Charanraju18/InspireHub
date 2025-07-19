@@ -27,9 +27,12 @@ const WishlistPage = () => {
       }
 
       try {
-        const res = await axios.post("http://localhost:5000/api/wishlist/get", {
-          userId,
-        });
+        const res = await axios.post(
+          "https://inspirehub-backend-itne.onrender.com/api/wishlist/get",
+          {
+            userId,
+          }
+        );
 
         if (res.data.wishlist) {
           setWishlist(res.data.wishlist);
@@ -49,10 +52,13 @@ const WishlistPage = () => {
     if (!userId) return;
 
     try {
-      await axios.post("http://localhost:5000/api/wishlist/remove", {
-        userId,
-        roadmapId,
-      });
+      await axios.post(
+        "https://inspirehub-backend-itne.onrender.com/api/wishlist/remove",
+        {
+          userId,
+          roadmapId,
+        }
+      );
       setWishlist((prev) => prev.filter((r) => r._id !== roadmapId));
     } catch (error) {
       console.error("Remove error:", error);

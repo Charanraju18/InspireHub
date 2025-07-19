@@ -38,7 +38,7 @@ const InstructorDetails = ({
   const fetchInstructorDetails = async (instructorId) => {
     try {
       const res = await fetch(
-        `http://localhost:5000/api/auth/instructors/${instructorId}`
+        `https://inspirehub-backend-itne.onrender.com/api/auth/instructors/${instructorId}`
       );
       const data = await res.json();
       if (!res.ok) throw new Error(data.msg || "Failed to fetch instructor");
@@ -82,7 +82,7 @@ const InstructorDetails = ({
       const token = localStorage.getItem("token");
       try {
         const res = await fetch(
-          `http://localhost:5000/api/follow-instructors/check-follow/${instructorId}`,
+          `https://inspirehub-backend-itne.onrender.com/api/follow-instructors/check-follow/${instructorId}`,
           {
             headers: token ? { Authorization: `Bearer ${token}` } : {},
             credentials: "include",
@@ -105,7 +105,7 @@ const InstructorDetails = ({
     const token = localStorage.getItem("token");
     try {
       const res = await fetch(
-        `http://localhost:5000/api/follow-instructors/followers/${instructorId}`,
+        `https://inspirehub-backend-itne.onrender.com/api/follow-instructors/followers/${instructorId}`,
         {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
           credentials: "include",
@@ -130,7 +130,7 @@ const InstructorDetails = ({
       const token = localStorage.getItem("token");
       try {
         const res = await fetch(
-          `http://localhost:5000/api/follow-instructors/following`,
+          `https://inspirehub-backend-itne.onrender.com/api/follow-instructors/following`,
           {
             headers: token ? { Authorization: `Bearer ${token}` } : {},
             credentials: "include",
@@ -154,7 +154,7 @@ const InstructorDetails = ({
 
     try {
       const res = await fetch(
-        `http://localhost:5000/api/follow-instructors/follow/${instructorId}`,
+        `https://inspirehub-backend-itne.onrender.com/api/follow-instructors/follow/${instructorId}`,
         {
           method: "POST",
           headers: {
@@ -186,7 +186,7 @@ const InstructorDetails = ({
     const token = localStorage.getItem("token");
     try {
       const res = await fetch(
-        `http://localhost:5000/api/follow-instructors/unfollow/${instructorId}`,
+        `https://inspirehub-backend-itne.onrender.com/api/follow-instructors/unfollow/${instructorId}`,
         {
           method: "DELETE",
           headers: token ? { Authorization: `Bearer ${token}` } : {},
@@ -208,7 +208,7 @@ const InstructorDetails = ({
   const handleDelete = async (eventId) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/events/${eventId}`,
+        `https://inspirehub-backend-itne.onrender.com/api/events/${eventId}`,
         {
           method: "DELETE",
         }
@@ -231,7 +231,7 @@ const InstructorDetails = ({
   const handleUpdate = async (eventId) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/events/${eventId}`
+        `https://inspirehub-backend-itne.onrender.com/api/events/${eventId}`
       );
       if (response.ok) {
         const eventData = await response.json();
@@ -259,13 +259,16 @@ const InstructorDetails = ({
       category: formData.get("category"),
     };
     try {
-      const res = await fetch("http://localhost:5000/api/users/get-in-touch", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+      const res = await fetch(
+        "https://inspirehub-backend-itne.onrender.com/api/users/get-in-touch",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
       if (res.ok) {
         alert("Message sent successfully!");
         form.reset();
@@ -688,7 +691,7 @@ const InstructorDetails = ({
                     e.preventDefault();
                     try {
                       const res = await fetch(
-                        `http://localhost:5000/api/events/${editableEvent._id}`,
+                        `https://inspirehub-backend-itne.onrender.com/api/events/${editableEvent._id}`,
                         {
                           method: "PUT",
                           headers: {

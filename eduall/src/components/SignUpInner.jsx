@@ -99,11 +99,14 @@ const SignUpInner = () => {
     }
     setOtpLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/api/auth/otp-send", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: form.email }),
-      });
+      const res = await fetch(
+        "https://inspirehub-backend-itne.onrender.com/api/auth/otp-send",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: form.email }),
+        }
+      );
       if (res.ok) {
         setOtpSent(true);
         setOtpError("");
@@ -125,11 +128,14 @@ const SignUpInner = () => {
     }
     setOtpLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/api/auth/otp-verify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: form.email, otp: enteredOtp }),
-      });
+      const res = await fetch(
+        "https://inspirehub-backend-itne.onrender.com/api/auth/otp-verify",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: form.email, otp: enteredOtp }),
+        }
+      );
       if (res.ok) {
         setOtpVerified(true);
         setOtpError("");
@@ -227,11 +233,14 @@ const SignUpInner = () => {
       };
     }
     try {
-      const res = await fetch("http://localhost:5000/api/auth/full-signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      const res = await fetch(
+        "https://inspirehub-backend-itne.onrender.com/api/auth/full-signup",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }
+      );
       if (res.ok) {
         navigate("/sign-in");
       } else {

@@ -11,7 +11,7 @@ const EventDetailsOne = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/api/events/${id}`)
+      .get(`https://inspirehub-backend-itne.onrender.com/api/events/${id}`)
       .then((res) => setSelectedEvent(res.data))
       .catch((err) => console.error("Error loading event", err));
   }, [id]);
@@ -23,7 +23,7 @@ const EventDetailsOne = () => {
 
       try {
         const res = await fetch(
-          `http://localhost:5000/api/users/is-registered/${id}`,
+          `https://inspirehub-backend-itne.onrender.com/api/users/is-registered/${id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -83,7 +83,7 @@ const EventDetailsOne = () => {
       }
 
       const res = await fetch(
-        "http://localhost:5000/api/users/register-event",
+        "https://inspirehub-backend-itne.onrender.com/api/users/register-event",
         {
           method: "POST",
           headers: {
@@ -110,7 +110,7 @@ const EventDetailsOne = () => {
         <img
           src={
             selectedEvent?.schedule?.image?.startsWith("/uploads")
-              ? `http://localhost:5000${selectedEvent.schedule.image}`
+              ? `https://inspirehub-backend-itne.onrender.com${selectedEvent.schedule.image}`
               : selectedEvent?.schedule?.image ||
                 "/assets/images/thumbs/event-detail-img1.png"
           }

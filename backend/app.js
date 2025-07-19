@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 5000; // Changed from 3000 to 5000
 // 2. Enhanced CORS configuration
 const corsOptions = {
   origin: [
-    "http://localhost:3000", // Your React app
+    "https://inspirehub-frontend.onrender.com", // Your React app
     // Add other allowed origins as needed
   ],
   credentials: true,
@@ -71,5 +71,5 @@ if (process.env.NODE_ENV === "production") {
 
 // Start Server
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server running on render`);
 });
