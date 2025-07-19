@@ -57,7 +57,7 @@ if (process.env.NODE_ENV === 'production') {
   });
 
   // Then handle all other routes (must come last)
-  app.get('*', (req, res) => {
+  app.get("/*splat", (req, res) => {
     res.sendFile(path.join(__dirname, "eduall", "build", "index.html"));
   });
 }
