@@ -48,12 +48,15 @@ if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, "eduall", "build")));
 
   // Proper Express 5 splat parameter handling
-  app.get('/*', (req, res) => {
-    res.sendFile(path.join(__dirname, "eduall", "build", "index.html"), (err) => {
-      if (err) {
-        res.status(500).send('Error loading the application');
+  app.get("/*splat", (req, res) => {
+    res.sendFile(
+      path.join(__dirname, "eduall", "build", "index.html"),
+      (err) => {
+        if (err) {
+          res.status(500).send("Error loading the application");
+        }
       }
-    });
+    );
   });
 }
 
