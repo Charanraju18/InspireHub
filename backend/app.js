@@ -3,26 +3,31 @@ const cors = require("cors");
 require("dotenv").config();
 const connectDB = require("./config/db");
 const path = require("path");
-const Route = require("./routes/nodeMailerRoute");
+// const Route = require("./routes/nodeMailerRoute"); // This import is unused, can be removed
 
 const app = express();
 
+// Connect to MongoDB
 connectDB();
 
+// CORS options to allow communication from your frontend
 const corsOptions = {
   origin: process.env.REACT_APP_FRONTEND_URL || "http://localhost:3000",
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  allowedHeaders: ["Content-Type", "Authorization"]
 };
 
 app.use(cors(corsOptions));
 
+// Body parsers for JSON and URL-encoded data with a limit
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
+// Serve static files from the 'uploads' directory
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
+// API Routes
 app.use("/api/events", require("./routes/eventRoutes"));
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/posts", require("./routes/postRoutes"));
@@ -34,25 +39,28 @@ app.use("/api/wishlist", require("./routes/wishlistRoutes"));
 app.use("/api/contact", require("./routes/controllerRoutes"));
 app.use("/api/reviews", require("./routes/reviewsRoute"));
 
-app.get("/api/health", (req, res) => {
-  res.status(200).json({ status: "OK", timestamp: new Date() });
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'OK', timestamp: new Date() });
 });
 
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "eduall", "build")));
+// Serve frontend static assets in production
+if (process.env.NODE_ENV === 'production') {
+  // Correctly define the path to your frontend build directory
+  // Assuming 'eduall' is a sibling directory to 'backend'
+  const frontendBuildPath = path.join(__dirname, "..", "eduall", "build");
 
-  const clientRoutes = ["/", "/about", "/contact"];
-  clientRoutes.forEach((route) => {
-    app.get(route, (req, res) => {
-      res.sendFile(path.join(__dirname, "eduall", "build", "index.html"));
-    });
-  });
+  // Serve static files from the frontend build directory
+  app.use(express.static(frontendBuildPath));
 
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "eduall", "build", "index.html"));
+  // For client-side routing, send index.html for all routes not handled by API
+  // This ensures React Router can take over
+  app.get("/*", (req, res) => { // Use "/*" instead of "/*splat" for broader catch-all
+    res.sendFile(path.join(frontendBuildPath, "index.html"));
   });
 }
 
+// Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({
@@ -61,6 +69,7 @@ app.use((err, req, res, next) => {
   });
 });
 
+// Start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
