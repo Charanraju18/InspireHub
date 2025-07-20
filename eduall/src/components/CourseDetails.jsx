@@ -21,7 +21,7 @@ const CourseDetails = () => {
     const fetchRoadmap = async () => {
       try {
         const res = await axios.get(
-          `https://inspirehub-backend-itne.onrender.com/api/roadmaps/${id}`
+          `${process.env.REACT_APP_BACKEND_URL}/api/roadmaps/${id}`
         );
         setRoadmap(res.data);
       } catch (error) {
@@ -32,7 +32,7 @@ const CourseDetails = () => {
     const fetchReviews = async () => {
       try {
         const res = await axios.get(
-          `https://inspirehub-backend-itne.onrender.com/api/reviews/${id}`,
+          `${process.env.REACT_APP_BACKEND_URL}/api/reviews/${id}`,
           {
             withCredentials: true,
           }
@@ -75,7 +75,7 @@ const CourseDetails = () => {
     if (!text) return;
     try {
       const res = await axios.post(
-        `https://inspirehub-backend-itne.onrender.com/api/reviews/reply/${reviewId}`,
+        `${process.env.REACT_APP_BACKEND_URL}/api/reviews/reply/${reviewId}`,
         { text },
         {
           withCredentials: true,
@@ -104,7 +104,7 @@ const CourseDetails = () => {
 
     try {
       const res = await axios.post(
-        `https://inspirehub-backend-itne.onrender.com/api/reviews/${id}`,
+        `${process.env.REACT_APP_BACKEND_URL}/api/reviews/${id}`,
         { text: reviewText },
         {
           withCredentials: true,

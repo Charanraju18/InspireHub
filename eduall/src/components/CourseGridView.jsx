@@ -10,7 +10,7 @@ const CourseGridView = () => {
     const fetchPosts = async () => {
       try {
         const response = await axios.get(
-          "https://inspirehub-backend-itne.onrender.com/api/posts"
+          `${process.env.REACT_APP_BACKEND_URL}/api/posts`
         );
         setPostList(response.data);
       } catch (error) {
@@ -30,12 +30,9 @@ const CourseGridView = () => {
       };
 
       // Update backend
-      await axios.put(
-        `https://inspirehub-backend-itne.onrender.com/api/posts/${id}`,
-        {
-          likes: updatedPost.likes,
-        }
-      );
+      await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/posts/${id}`, {
+        likes: updatedPost.likes,
+      });
 
       // Update local state
       setPostList((prevPosts) =>

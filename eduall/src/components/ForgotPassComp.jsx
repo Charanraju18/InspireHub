@@ -13,7 +13,7 @@ const ForgotPassComp = () => {
     setLoading(true);
     try {
       const res = await fetch(
-        "https://inspirehub-backend-itne.onrender.com/api/auth/forgot-password",
+        `${process.env.REACT_APP_BACKEND_URL}/api/auth/forgot-password`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

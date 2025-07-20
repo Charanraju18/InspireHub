@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 const getImageUrl = (image) => {
   if (!image) return "/assets/images/thumbs/event-detail-img1.png";
   if (image.startsWith("/uploads"))
-    return `https://inspirehub-backend-itne.onrender.com${image}`;
+    return `${process.env.REACT_APP_BACKEND_URL}${image}`;
   return image;
 };
 
@@ -31,7 +31,7 @@ const EventsAllOne = () => {
       try {
         setLoading(true);
         const res = await fetch(
-          "https://inspirehub-backend-itne.onrender.com/api/events"
+          `${process.env.REACT_APP_BACKEND_URL}/api/events`
         );
         if (!res.ok) throw new Error("Failed to fetch events");
         const data = await res.json();

@@ -299,7 +299,7 @@ const RoadmapDetails = () => {
     const fetchRoadmap = async () => {
       try {
         const res = await axios.get(
-          `https://inspirehub-backend-itne.onrender.com/api/roadmaps/${id}`
+          `${process.env.REACT_APP_BACKEND_URL}/api/roadmaps/${id}`
         );
         setRoadmap(res.data);
       } catch (error) {

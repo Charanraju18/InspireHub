@@ -271,7 +271,7 @@
 //   useEffect(() => {
 //     const fetchRoadmap = async () => {
 //       try {
-//         const res = await axios.get(`https://inspirehub-backend-itne.onrender.com/api/roadmaps/${id}`);
+//         const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/roadmaps/${id}`);
 //         setRoadmap(res.data);
 //       } catch (error) {
 //         console.error("Failed to fetch roadmap", error);
@@ -731,7 +731,7 @@ const RoadmapDetails = () => {
       try {
         setLoading(true);
         setError(null);
-        const res = await axios.get(`https://inspirehub-backend-itne.onrender.com/api/roadmaps/${id}`);
+        const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/roadmaps/${id}`);
         setRoadmap(res.data);
       } catch (error) {
         console.error("Failed to fetch roadmap", error);

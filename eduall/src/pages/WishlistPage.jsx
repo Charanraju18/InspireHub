@@ -28,7 +28,7 @@ const WishlistPage = () => {
 
       try {
         const res = await axios.post(
-          "https://inspirehub-backend-itne.onrender.com/api/wishlist/get",
+          `${process.env.REACT_APP_BACKEND_URL}/api/wishlist/get`,
           {
             userId,
           }
@@ -53,7 +53,7 @@ const WishlistPage = () => {
 
     try {
       await axios.post(
-        "https://inspirehub-backend-itne.onrender.com/api/wishlist/remove",
+        `${process.env.REACT_APP_BACKEND_URL}/api/wishlist/remove`,
         {
           userId,
           roadmapId,

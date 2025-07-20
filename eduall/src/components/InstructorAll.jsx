@@ -11,7 +11,7 @@ const InstructorAll = () => {
       try {
         const token = localStorage.getItem("token");
         const res = await fetch(
-          "https://inspirehub-backend-itne.onrender.com/api/auth/instructors",
+          `${process.env.REACT_APP_BACKEND_URL}/api/auth/instructors`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

@@ -38,7 +38,7 @@ const InstructorDetails = ({
   const fetchInstructorDetails = async (instructorId) => {
     try {
       const res = await fetch(
-        `https://inspirehub-backend-itne.onrender.com/api/auth/instructors/${instructorId}`
+        `${process.env.REACT_APP_BACKEND_URL}/api/auth/instructors/${instructorId}`
       );
       const data = await res.json();
       if (!res.ok) throw new Error(data.msg || "Failed to fetch instructor");
@@ -82,7 +82,7 @@ const InstructorDetails = ({
       const token = localStorage.getItem("token");
       try {
         const res = await fetch(
-          `https://inspirehub-backend-itne.onrender.com/api/follow-instructors/check-follow/${instructorId}`,
+          `${process.env.REACT_APP_BACKEND_URL}/api/follow-instructors/check-follow/${instructorId}`,
           {
             headers: token ? { Authorization: `Bearer ${token}` } : {},
             credentials: "include",
@@ -105,7 +105,7 @@ const InstructorDetails = ({
     const token = localStorage.getItem("token");
     try {
       const res = await fetch(
-        `https://inspirehub-backend-itne.onrender.com/api/follow-instructors/followers/${instructorId}`,
+        `${process.env.REACT_APP_BACKEND_URL}/api/follow-instructors/followers/${instructorId}`,
         {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
           credentials: "include",
@@ -130,7 +130,7 @@ const InstructorDetails = ({
       const token = localStorage.getItem("token");
       try {
         const res = await fetch(
-          `https://inspirehub-backend-itne.onrender.com/api/follow-instructors/following`,
+          `${process.env.REACT_APP_BACKEND_URL}/api/follow-instructors/following`,
           {
             headers: token ? { Authorization: `Bearer ${token}` } : {},
             credentials: "include",
@@ -154,7 +154,7 @@ const InstructorDetails = ({
 
     try {
       const res = await fetch(
-        `https://inspirehub-backend-itne.onrender.com/api/follow-instructors/follow/${instructorId}`,
+        `${process.env.REACT_APP_BACKEND_URL}/api/follow-instructors/follow/${instructorId}`,
         {
           method: "POST",
           headers: {
@@ -186,7 +186,7 @@ const InstructorDetails = ({
     const token = localStorage.getItem("token");
     try {
       const res = await fetch(
-        `https://inspirehub-backend-itne.onrender.com/api/follow-instructors/unfollow/${instructorId}`,
+        `${process.env.REACT_APP_BACKEND_URL}/api/follow-instructors/unfollow/${instructorId}`,
         {
           method: "DELETE",
           headers: token ? { Authorization: `Bearer ${token}` } : {},
@@ -208,7 +208,7 @@ const InstructorDetails = ({
   const handleDelete = async (eventId) => {
     try {
       const response = await fetch(
-        `https://inspirehub-backend-itne.onrender.com/api/events/${eventId}`,
+        `${process.env.REACT_APP_BACKEND_URL}/api/events/${eventId}`,
         {
           method: "DELETE",
         }
@@ -231,7 +231,7 @@ const InstructorDetails = ({
   const handleUpdate = async (eventId) => {
     try {
       const response = await fetch(
-        `https://inspirehub-backend-itne.onrender.com/api/events/${eventId}`
+        `${process.env.REACT_APP_BACKEND_URL}/api/events/${eventId}`
       );
       if (response.ok) {
         const eventData = await response.json();
@@ -260,7 +260,7 @@ const InstructorDetails = ({
     };
     try {
       const res = await fetch(
-        "https://inspirehub-backend-itne.onrender.com/api/users/get-in-touch",
+        `${process.env.REACT_APP_BACKEND_URL}/api/users/get-in-touch`,
         {
           method: "POST",
           headers: {
@@ -691,7 +691,7 @@ const InstructorDetails = ({
                     e.preventDefault();
                     try {
                       const res = await fetch(
-                        `https://inspirehub-backend-itne.onrender.com/api/events/${editableEvent._id}`,
+                        `${process.env.REACT_APP_BACKEND_URL}/api/events/${editableEvent._id}`,
                         {
                           method: "PUT",
                           headers: {

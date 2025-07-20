@@ -35,7 +35,7 @@ const ResetPassComp = () => {
     setLoading(true);
     try {
       const res = await fetch(
-        `https://inspirehub-backend-itne.onrender.com/api/auth/reset-password/${token}`,
+        `${process.env.REACT_APP_BACKEND_URL}/api/auth/reset-password/${token}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

@@ -375,7 +375,7 @@ const RoadmapForm = () => {
       }
 
       const res = await fetch(
-        "https://inspirehub-backend-itne.onrender.com/api/roadmaps/create",
+        `${process.env.REACT_APP_BACKEND_URL}/api/roadmaps/create`,
         {
           method: "POST",
           headers: headers,

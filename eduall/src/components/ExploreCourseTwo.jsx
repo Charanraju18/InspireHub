@@ -51,7 +51,7 @@ const ExploreCourseTwo = () => {
 
       // ✅ Fetch all roadmaps first
       const roadmapsResponse = await fetch(
-        "https://inspirehub-backend-itne.onrender.com/api/roadmaps"
+        `${process.env.REACT_APP_BACKEND_URL}/api/roadmaps`
       );
 
       if (!roadmapsResponse.ok) {
@@ -66,7 +66,7 @@ const ExploreCourseTwo = () => {
       // ✅ Try to fetch domains, but don't fail if it doesn't work
       try {
         const domainsResponse = await fetch(
-          "https://inspirehub-backend-itne.onrender.com/api/roadmaps/domains"
+          `${process.env.REACT_APP_BACKEND_URL}/api/roadmaps/domains`
         );
 
         if (domainsResponse.ok) {

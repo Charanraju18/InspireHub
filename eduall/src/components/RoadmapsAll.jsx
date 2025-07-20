@@ -9,7 +9,7 @@ const RoadmapsAll = () => {
     const fetchRoadmaps = async () => {
       try {
         const res = await fetch(
-          "https://inspirehub-backend-itne.onrender.com/api/roadmaps"
+          `${process.env.REACT_APP_BACKEND_URL}/api/roadmaps`
         );
         const data = await res.json();
         setRoadmaps(data);

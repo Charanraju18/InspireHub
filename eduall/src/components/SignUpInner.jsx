@@ -100,7 +100,7 @@ const SignUpInner = () => {
     setOtpLoading(true);
     try {
       const res = await fetch(
-        "https://inspirehub-backend-itne.onrender.com/api/auth/otp-send",
+        `${process.env.REACT_APP_BACKEND_URL}/api/auth/otp-send`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -129,7 +129,7 @@ const SignUpInner = () => {
     setOtpLoading(true);
     try {
       const res = await fetch(
-        "https://inspirehub-backend-itne.onrender.com/api/auth/otp-verify",
+        `${process.env.REACT_APP_BACKEND_URL}/api/auth/otp-verify`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -234,7 +234,7 @@ const SignUpInner = () => {
     }
     try {
       const res = await fetch(
-        "https://inspirehub-backend-itne.onrender.com/api/auth/full-signup",
+        `${process.env.REACT_APP_BACKEND_URL}/api/auth/full-signup`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

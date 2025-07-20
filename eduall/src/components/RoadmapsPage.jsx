@@ -68,7 +68,7 @@ const RoadmapsPage = () => {
         filters.difficulty.trim() ||
         filters.techstack.trim();
 
-      let url = "https://inspirehub-backend-itne.onrender.com/api/roadmaps";
+      let url = `${process.env.REACT_APP_BACKEND_URL}/api/roadmaps`;
 
       if (hasFilters) {
         // ✅ Build query parameters
@@ -87,7 +87,9 @@ const RoadmapsPage = () => {
           queryParams.append("techstack", filters.techstack.trim());
         }
 
-        url = `https://inspirehub-backend-itne.onrender.com/api/roadmaps/search?${queryParams.toString()}`;
+        url = `${
+          process.env.REACT_APP_BACKEND_URL
+        }/api/roadmaps/search?${queryParams.toString()}`;
       }
 
       console.log("🌐 Fetching from URL:", url);
@@ -184,7 +186,7 @@ const RoadmapsPage = () => {
 
       console.log("📤 Checking existing wishlist...");
       const fetchResponse = await axios.post(
-        "https://inspirehub-backend-itne.onrender.com/api/wishlist/get",
+        `${process.env.REACT_APP_BACKEND_URL}/api/wishlist/get`,
         { userId },
         {
           headers: {
@@ -218,7 +220,7 @@ const RoadmapsPage = () => {
 
       console.log("📤 Adding to wishlist with payload:", payload);
       const addResponse = await axios.post(
-        "https://inspirehub-backend-itne.onrender.com/api/wishlist/add",
+        `${process.env.REACT_APP_BACKEND_URL}/api/wishlist/add`,
         payload,
         {
           headers: {

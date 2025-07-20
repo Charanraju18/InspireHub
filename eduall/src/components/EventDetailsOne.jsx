@@ -11,7 +11,7 @@ const EventDetailsOne = () => {
 
   useEffect(() => {
     axios
-      .get(`https://inspirehub-backend-itne.onrender.com/api/events/${id}`)
+      .get(`${process.env.REACT_APP_BACKEND_URL}/api/events/${id}`)
       .then((res) => setSelectedEvent(res.data))
       .catch((err) => console.error("Error loading event", err));
   }, [id]);
@@ -23,7 +23,7 @@ const EventDetailsOne = () => {
 
       try {
         const res = await fetch(
-          `https://inspirehub-backend-itne.onrender.com/api/users/is-registered/${id}`,
+          `${process.env.REACT_APP_BACKEND_URL}/api/users/is-registered/${id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -83,7 +83,7 @@ const EventDetailsOne = () => {
       }
 
       const res = await fetch(
-        "https://inspirehub-backend-itne.onrender.com/api/users/register-event",
+        `${process.env.REACT_APP_BACKEND_URL}/api/users/register-event`,
         {
           method: "POST",
           headers: {
@@ -110,7 +110,7 @@ const EventDetailsOne = () => {
         <img
           src={
             selectedEvent?.schedule?.image?.startsWith("/uploads")
-              ? `https://inspirehub-backend-itne.onrender.com${selectedEvent.schedule.image}`
+              ? `${process.env.REACT_APP_BACKEND_URL}${selectedEvent.schedule.image}`
               : selectedEvent?.schedule?.image ||
                 "/assets/images/thumbs/event-detail-img1.png"
           }

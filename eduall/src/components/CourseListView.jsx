@@ -14,7 +14,7 @@
 //   useEffect(() => {
 //     const fetchPosts = async () => {
 //       try {
-//         const response = await axios.get("https://inspirehub-backend-itne.onrender.com/api/posts");
+//         const response = await axios.get("${process.env.REACT_APP_BACKEND_URL}/api/posts");
 //         const postsWithLikes = response.data.map((post) => ({
 //           ...post,
 //           isLiked: false, // Default state
@@ -45,7 +45,7 @@
 //       );
 
 //       // Update the backend
-//       await axios.put(`https://inspirehub-backend-itne.onrender.com/api/posts/${id}`, {
+//       await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/posts/${id}`, {
 //         likes: updatedPost.likes,
 //       });
 //     } catch (error) {
@@ -299,7 +299,7 @@ const CourseListView = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await axios.get("https://inspirehub-backend-itne.onrender.com/api/roadmaps");
+        const response = await axios.get("${process.env.REACT_APP_BACKEND_URL}/api/roadmaps");
         const postsWithDefaults = response.data.map((post) => ({
           ...post,
           isLiked: false, // Default state
@@ -333,7 +333,7 @@ const CourseListView = () => {
       );
 
       // Update the backend
-      await axios.put(`https://inspirehub-backend-itne.onrender.com/api/posts/${id}`, {
+      await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/posts/${id}`, {
         likes: updatedPost.likes,
       });
     } catch (error) {
