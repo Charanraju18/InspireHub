@@ -24,7 +24,7 @@ app.use(cors(corsOptions));
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
-// Serve static files from the 'uploads' directory
+// Serve static files from the 'uploads' directory (if needed for backend uploads)
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // API Routes
@@ -44,21 +44,8 @@ app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'OK', timestamp: new Date() });
 });
 
-// Serve frontend static assets in production
-if (process.env.NODE_ENV === 'production') {
-  // Correctly define the path to your frontend build directory
-  // Assuming 'eduall' is a sibling directory to 'backend'
-  const frontendBuildPath = path.join(__dirname, "..", "eduall", "build");
-
-  // Serve static files from the frontend build directory
-  app.use(express.static(frontendBuildPath));
-
-  // For client-side routing, send index.html for all routes not handled by API
-  // This ensures React Router can take over
-  app.get("/*", (req, res) => { // Use "/*" instead of "/*splat" for broader catch-all
-    res.sendFile(path.join(frontendBuildPath, "index.html"));
-  });
-}
+// Removed frontend static file serving block:
+// if (process.env.NODE_ENV === 'production') { ... }
 
 // Error handling middleware
 app.use((err, req, res, next) => {
