@@ -33,14 +33,15 @@ const TestimonialsTwo = () => {
             <span className="text-main-600 text-2xl d-flex">
               <i className="ph-bold ph-book" />
             </span>
-            <h5 className='text-main-600 mb-0'>
+            <h5 className="text-main-600 mb-0">
               {/* Testimonials from Happy Learners */}
               Voices from Our InspireHub Learners
             </h5>
           </div>
-          <h2 className='mb-24 wow bounceIn'>What Our Learners Are Saying</h2>
-          <p className=' wow bounceInUp'>
-            Stories from our thriving community of learners who are growing through shared experiences and knowledge.
+          <h2 className="mb-24 wow bounceIn">What Our Learners Are Saying</h2>
+          <p className=" wow bounceInUp">
+            Stories from our thriving community of learners who are growing
+            through shared experiences and knowledge.
           </p>
         </div>
         <Slider
@@ -70,16 +71,18 @@ const TestimonialsTwo = () => {
                 <i className="ph-fill ph-star-half" />
               </li>
             </ul>
-            <p className='text-neutral-700 text-xl'>
-              "Exploring InspireHub has been a game-changer for me. The posts shared by instructors are insightful and practical 
-               I’ve picked up skills that actually matter in real-world projects. Definitely a space I keep coming back to"
+            <p className="text-neutral-700 text-xl">
+              "Exploring InspireHub has been a game-changer for me. The posts
+              shared by instructors are insightful and practical I’ve picked up
+              skills that actually matter in real-world projects. Definitely a
+              space I keep coming back to"
             </p>
             <div className="flex-between gap-24 flex-wrap pt-28 mt-28 border-top border-neutral-50 mt-28 border-dashed border-0">
               <div className="flex-align gap-24 ">
                 <img
-                  src='assets/images/thumbs/men.png'
-                  alt=''
-                  className='w-60 h-60 object-fit-cover rounded-circle'
+                  src="assets/images/thumbs/men.png"
+                  alt=""
+                  className="w-60 h-60 object-fit-cover rounded-circle"
                 />
                 <div className="">
                   <h5 className="mb-8 fw-medium">Sachin</h5>
@@ -87,7 +90,7 @@ const TestimonialsTwo = () => {
                 </div>
               </div>
               <span className="quate text-48 d-flex opacity-25">
-                <img src="assets/images/icons/quote-icon.jpg" alt="" />
+                <img src="assets/images/icons/quote-icon.png" alt="" />
               </span>
             </div>
           </div>
@@ -113,18 +116,18 @@ const TestimonialsTwo = () => {
                 <i className="ph-fill ph-star-half" />
               </li>
             </ul>
-            <p className='text-neutral-700 text-xl'>
-              "I wasn’t sure what to expect at first, but InspireHub changed how I see learning. The freedom
-               to explore topics at my own pace,and connect with experienced learners, makes it 
-               an amazing platform!"
+            <p className="text-neutral-700 text-xl">
+              "I wasn’t sure what to expect at first, but InspireHub changed how
+              I see learning. The freedom to explore topics at my own pace,and
+              connect with experienced learners, makes it an amazing platform!"
             </p>
             <div className="flex-between gap-24 flex-wrap pt-28 mt-28 border-top border-neutral-50 mt-28 border-dashed border-0">
               <div className="flex-align gap-24 ">
                 <img
-                // src='assets/images/thumbs/testi-img2.png'
-                  src='assets/images/thumbs/women.png'
-                  alt=''
-                  className='w-60 h-60 object-fit-cover rounded-circle'
+                  // src='assets/images/thumbs/testi-img2.png'
+                  src="assets/images/thumbs/women.png"
+                  alt=""
+                  className="w-60 h-60 object-fit-cover rounded-circle"
                 />
                 <div className="">
                   <h5 className="mb-8 fw-medium">Smriti</h5>
@@ -158,21 +161,22 @@ const TestimonialsTwo = () => {
                 <i className="ph-fill ph-star-half" />
               </li>
             </ul>
-            <p className='text-neutral-700 text-xl'>
+            <p className="text-neutral-700 text-xl">
               {/* "I was at first doubtful about web based learning, yet adjusted my
               viewpoint totally. The courses are very much planned to learn at
               my own speed is important." */}
-              "I was initially doubtful about online learning, but InspireHub completely changed my perspective.
-               The posts are shared by experienced instructors, and the freedom to 
-               explore them at my own pace is truly empowering"
+              "I was initially doubtful about online learning, but InspireHub
+              completely changed my perspective. The posts are shared by
+              experienced instructors, and the freedom to explore them at my own
+              pace is truly empowering"
             </p>
             <div className="flex-between gap-24 flex-wrap pt-28 mt-28 border-top border-neutral-50 mt-28 border-dashed border-0">
               <div className="flex-align gap-24 ">
                 <img
                   // src='assets/images/thumbs/user-two-img3.png'
-                  src='assets/images/thumbs/man.png'
-                  alt=''
-                  className='w-60 h-60 object-fit-cover rounded-circle'
+                  src="assets/images/thumbs/man.png"
+                  alt=""
+                  className="w-60 h-60 object-fit-cover rounded-circle"
                 />
                 <div className="">
                   <h5 className="mb-8 fw-medium">Hardik</h5>
