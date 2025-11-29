@@ -528,7 +528,7 @@ const FooterTwo = () => {
                       className="text-white d-block hover-text-main-600 mb-0"
                     >
                       <li className="mb-16">Alekhya Nam</li>
-                      <li className="mb-16">Rohitha Kanta</li>
+                      <li className="mb-16">Priya Reethika Lanka</li>
                       <li className="mb-16">Sricharan Illandula</li>
                       <li className="mb-16">Charan Raju Pakalapati</li>
                       <li className="mb-16">Sravanthi Kanuri</li>
